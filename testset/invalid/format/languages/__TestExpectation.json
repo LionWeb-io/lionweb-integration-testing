@@ -11,7 +11,7 @@
     },
     {
       "file": "emptyObject.json",
-      "error": "PropertyNull"
+      "error": "PropertyMissing"
     },
     {
       "file": "missing.json",
