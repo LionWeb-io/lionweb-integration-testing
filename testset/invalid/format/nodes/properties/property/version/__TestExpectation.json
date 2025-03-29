@@ -11,8 +11,7 @@
     },
     {
       "file": "nullValue.json",
-      "error": "LanguageUnknown",
-      "TODO": "should give an error on key format being null"
+      "error": "PropertyNull"
     },
     {
       "file": "numValue.json",

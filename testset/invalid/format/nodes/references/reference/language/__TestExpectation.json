@@ -11,7 +11,7 @@
     },
     {
       "file": "nullValue.json",
-      "error": "KeyFormat"
+      "error": "PropertyNull"
     },
     {
       "file": "numValue.json",
