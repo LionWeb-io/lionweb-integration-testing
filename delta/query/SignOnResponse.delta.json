@@ -1,0 +1,15 @@
+{
+  "messageKind": "SignOnResponse",
+  "participationId": "participation01",
+  "queryId": "q1",
+  "protocolMessage": {
+    "kind": "msgKind",
+    "message": "Human message",
+    "data": [
+      {
+        "key": "dataKey",
+        "value": "dataValue"
+      }
+    ]
+  }
+}
