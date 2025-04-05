@@ -1,8 +1,5 @@
 {
-  "messageKind": "SubscribePartitionsRequest",
-  "creation": false,
-  "deletion": false,
-  "partitions": false,
+  "messageKind": "SubscribeToChangingPartitionsResponse",
   "queryId": "q1",
   "protocolMessage": {
     "kind": "msgKind",
