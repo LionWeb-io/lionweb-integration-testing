@@ -1,5 +1,5 @@
 {
-  "messageKind": "SubscribePartitionRequest",
+  "messageKind": "SubscribeToPartitionContentsRequest",
   "partition": "nodeId",
   "queryId": "q1",
   "protocolMessage": {

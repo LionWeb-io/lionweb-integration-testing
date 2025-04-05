@@ -1,5 +1,6 @@
 {
-  "messageKind": "UnsubscribePartitionResponse",
+  "messageKind": "UnsubscribeFromPartitionContentsRequest",
+  "partition": "nodeId",
   "queryId": "q1",
   "protocolMessage": {
     "kind": "msgKind",
