@@ -1,5 +1,6 @@
 {
   "messageKind": "SignOnRequest",
+  "deltaProtocolVersion": "2025.1",
   "queryId": "q1",
   "protocolMessage": {
     "kind": "msgKind",

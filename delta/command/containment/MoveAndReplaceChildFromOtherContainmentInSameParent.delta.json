@@ -3,7 +3,7 @@
   "newContainment": {
     "language": "MyLang",
     "version": "4",
-    "key": "MyProperty"
+    "key": "MyContainment"
   },
   "newIndex": "3",
   "movedChild": "otherNodeId",

@@ -1,12 +1,13 @@
 {
-  "messageKind": "MoveChildFromOtherContainmentInSameParent",
-  "newContainment": {
+  "messageKind": "MoveEntryInSameReference",
+  "parent": "nodeId",
+  "reference": {
     "language": "MyLang",
     "version": "4",
-    "key": "MyContainment"
+    "key": "MyReference"
   },
   "newIndex": "3",
-  "movedChild": "otherNodeId",
+  "oldIndex": "23",
   "commandId": "cmdId",
   "protocolMessage": {
     "kind": "msgKind",

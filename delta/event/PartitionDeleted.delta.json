@@ -1,7 +1,6 @@
 {
-  "messageKind": "AddChild",
-  "parent": "nodeId",
-  "newChild": [
+  "messageKind": "PartitionDeleted",
+  "deletedPartition": [
     {
       "id": "a",
       "classifier": {
@@ -29,13 +28,17 @@
       "parent": "a"
     }
   ],
-  "containment": {
-    "language": "MyLang",
-    "version": "4",
-    "key": "MyContainment"
-  },
-  "index": "3",
-  "commandId": "cmdId",
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
   "protocolMessage": {
     "kind": "msgKind",
     "message": "Human message",

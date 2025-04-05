@@ -1,5 +1,5 @@
 {
-  "messageKind": "AddChild",
+  "messageKind": "ChildReplaced",
   "parent": "nodeId",
   "newChild": [
     {
@@ -29,13 +29,51 @@
       "parent": "a"
     }
   ],
+  "replacedChild": [
+    {
+      "id": "c",
+      "classifier": {
+        "language": "myLang",
+        "version": "1",
+        "key": "myConcept"
+      },
+      "properties": [],
+      "containments": [],
+      "references": [],
+      "annotations": [],
+      "parent": null
+    },
+    {
+      "id": "d",
+      "classifier": {
+        "language": "myLang",
+        "version": "1",
+        "key": "myConcept"
+      },
+      "properties": [],
+      "containments": [],
+      "references": [],
+      "annotations": [],
+      "parent": "c"
+    }
+  ],
   "containment": {
     "language": "MyLang",
     "version": "4",
     "key": "MyContainment"
   },
   "index": "3",
-  "commandId": "cmdId",
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
   "protocolMessage": {
     "kind": "msgKind",
     "message": "Human message",

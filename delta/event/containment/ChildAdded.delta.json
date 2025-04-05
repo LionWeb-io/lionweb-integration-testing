@@ -1,5 +1,5 @@
 {
-  "messageKind": "AddChild",
+  "messageKind": "ChildAdded",
   "parent": "nodeId",
   "newChild": [
     {
@@ -35,7 +35,17 @@
     "key": "MyContainment"
   },
   "index": "3",
-  "commandId": "cmdId",
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
   "protocolMessage": {
     "kind": "msgKind",
     "message": "Human message",

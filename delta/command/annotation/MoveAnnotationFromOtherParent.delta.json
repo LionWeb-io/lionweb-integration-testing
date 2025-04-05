@@ -1,12 +1,8 @@
 {
-  "messageKind": "MoveChildFromOtherContainmentInSameParent",
-  "newContainment": {
-    "language": "MyLang",
-    "version": "4",
-    "key": "MyContainment"
-  },
+  "messageKind": "MoveAnnotationFromOtherParent",
+  "newParent": "nodeId",
   "newIndex": "3",
-  "movedChild": "otherNodeId",
+  "movedAnnotation": "otherNodeId",
   "commandId": "cmdId",
   "protocolMessage": {
     "kind": "msgKind",

@@ -1,11 +1,6 @@
 {
-  "messageKind": "DeleteChild",
+  "messageKind": "DeleteAnnotation",
   "parent": "nodeId",
-  "containment": {
-    "language": "MyLang",
-    "version": "4",
-    "key": "MyContainment"
-  },
   "index": "3",
   "commandId": "cmdId",
   "protocolMessage": {
