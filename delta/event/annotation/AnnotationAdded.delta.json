@@ -1,7 +1,7 @@
 {
-  "messageKind": "AddChild",
+  "messageKind": "AnnotationAdded",
   "parent": "nodeId",
-  "newChild": [
+  "newAnnotation": [
     {
       "id": "a",
       "classifier": {
@@ -29,13 +29,18 @@
       "parent": "a"
     }
   ],
-  "containment": {
-    "language": "MyLang",
-    "version": "4",
-    "key": "MyContainment"
-  },
   "index": "3",
-  "commandId": "cmdId",
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
   "protocolMessage": {
     "kind": "msgKind",
     "message": "Human message",

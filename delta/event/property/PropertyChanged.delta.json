@@ -1,0 +1,32 @@
+{
+  "messageKind": "PropertyChanged",
+  "node": "nodeId",
+  "property": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyProperty"
+  },
+  "oldValue": "hello",
+  "newValue": "bye",
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
+  "protocolMessage": {
+    "kind": "msgKind",
+    "message": "Human message",
+    "data": [
+      {
+        "key": "dataKey",
+        "value": "dataValue"
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "messageKind": "NoOpEvent",
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
+  "protocolMessage": {
+    "kind": "msgKind",
+    "message": "Human message",
+    "data": [
+      {
+        "key": "dataKey",
+        "value": "dataValue"
+      }
+    ]
+  }
+}

@@ -1,13 +1,19 @@
 {
-  "messageKind": "MoveChildFromOtherContainment",
+  "messageKind": "MoveAndReplaceEntryFromOtherReference",
   "newParent": "nodeId",
-  "newContainment": {
+  "newReference": {
     "language": "MyLang",
     "version": "4",
-    "key": "MyContainment"
+    "key": "MyNewReference"
   },
   "newIndex": "3",
-  "movedChild": "otherNodeId",
+  "oldParent": "oldNodeId",
+  "oldReference": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyOldReference"
+  },
+  "oldIndex": "23",
   "commandId": "cmdId",
   "protocolMessage": {
     "kind": "msgKind",
