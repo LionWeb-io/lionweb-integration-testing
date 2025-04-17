@@ -1,6 +1,5 @@
 {
   "messageKind": "ReconnectResponse",
-  "participationValid": true,
   "lastSentSequenceNumber": "123",
   "queryId": "q1",
   "protocolMessage": {

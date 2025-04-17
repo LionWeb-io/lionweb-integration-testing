@@ -10,7 +10,7 @@
         "key": "MyProperty"
       },
       "newValue": "hello",
-      "commandId": "cmdId",
+      "commandId": "cmdId0",
       "protocolMessage": {
         "kind": "msgKind",
         "message": "Human message",
@@ -30,7 +30,7 @@
         "version": "3",
         "key": "MyClassifier"
       },
-      "commandId": "cmdId",
+      "commandId": "cmdId1",
       "protocolMessage": {
         "kind": "msgKind",
         "message": "Human message",
@@ -41,9 +41,26 @@
           }
         ]
       }
+    },
+    {
+      "messageKind": "CompositeCommand",
+      "parts": [
+        {
+          "messageKind": "DeleteChild",
+          "parent": "nodeId",
+          "containment": {
+            "language": "MyLang",
+            "version": "4",
+            "key": "MyContainment"
+          },
+          "index": "3",
+          "commandId": "cmdId2"
+        }
+      ],
+      "commandId": "cmdId3"
     }
   ],
-  "commandId": "cmdId",
+  "commandId": "cmdId4",
   "protocolMessage": {
     "kind": "msgKind",
     "message": "Human message",
