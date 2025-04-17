@@ -48,7 +48,7 @@
           "commandId": "otherCmdId"
         }
       ],
-      "sequenceNumber": "123",
+      "sequenceNumber": "122",
       "protocolMessage": {
         "kind": "msgKind",
         "message": "Human message",
@@ -111,6 +111,50 @@
           }
         ]
       }
+    },
+    {
+      "messageKind": "ChildDeleted",
+      "parent": "nodeId",
+      "deletedChild": [
+        {
+          "id": "a",
+          "classifier": {
+            "language": "myLang",
+            "version": "1",
+            "key": "myConcept"
+          },
+          "properties": [],
+          "containments": [],
+          "references": [],
+          "annotations": [],
+          "parent": null
+        }
+      ],
+      "containment": {
+        "language": "MyLang",
+        "version": "4",
+        "key": "MyContainment"
+      },
+      "index": "3",
+      "originCommands": [
+        {
+          "participationId": "partId",
+          "commandId": "cmdId"
+        }
+      ],
+      "sequenceNumber": "124"
+    },
+    {
+      "messageKind": "Error",
+      "errorCode": "myErrorCode",
+      "message": "something is not right",
+      "originCommands": [
+        {
+          "participationId": "partId",
+          "commandId": "cmdId"
+        }
+      ],
+      "sequenceNumber": "125"
     }
   ],
   "protocolMessage": {
