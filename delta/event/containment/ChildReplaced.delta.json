@@ -1,62 +1,66 @@
 {
   "messageKind": "ChildReplaced",
   "parent": "nodeId",
-  "newChild": [
-    {
-      "id": "a",
-      "classifier": {
-        "language": "myLang",
-        "version": "1",
-        "key": "myConcept"
+  "newChild": {
+    "nodes": [
+      {
+        "id": "a",
+        "classifier": {
+          "language": "myLang",
+          "version": "1",
+          "key": "myConcept"
+        },
+        "properties": [],
+        "containments": [],
+        "references": [],
+        "annotations": [],
+        "parent": null
       },
-      "properties": [],
-      "containments": [],
-      "references": [],
-      "annotations": [],
-      "parent": null
-    },
-    {
-      "id": "b",
-      "classifier": {
-        "language": "myLang",
-        "version": "1",
-        "key": "myConcept"
+      {
+        "id": "b",
+        "classifier": {
+          "language": "myLang",
+          "version": "1",
+          "key": "myConcept"
+        },
+        "properties": [],
+        "containments": [],
+        "references": [],
+        "annotations": [],
+        "parent": "a"
+      }
+    ]
+  },
+  "replacedChild": {
+    "nodes": [
+      {
+        "id": "c",
+        "classifier": {
+          "language": "myLang",
+          "version": "1",
+          "key": "myConcept"
+        },
+        "properties": [],
+        "containments": [],
+        "references": [],
+        "annotations": [],
+        "parent": null
       },
-      "properties": [],
-      "containments": [],
-      "references": [],
-      "annotations": [],
-      "parent": "a"
-    }
-  ],
-  "replacedChild": [
-    {
-      "id": "c",
-      "classifier": {
-        "language": "myLang",
-        "version": "1",
-        "key": "myConcept"
-      },
-      "properties": [],
-      "containments": [],
-      "references": [],
-      "annotations": [],
-      "parent": null
-    },
-    {
-      "id": "d",
-      "classifier": {
-        "language": "myLang",
-        "version": "1",
-        "key": "myConcept"
-      },
-      "properties": [],
-      "containments": [],
-      "references": [],
-      "annotations": [],
-      "parent": "c"
-    }
-  ],
+      {
+        "id": "d",
+        "classifier": {
+          "language": "myLang",
+          "version": "1",
+          "key": "myConcept"
+        },
+        "properties": [],
+        "containments": [],
+        "references": [],
+        "annotations": [],
+        "parent": "c"
+      }
+    ]
+  },
   "containment": {
     "language": "MyLang",
     "version": "4",
