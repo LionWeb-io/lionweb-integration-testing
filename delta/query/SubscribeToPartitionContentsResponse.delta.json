@@ -1,33 +1,35 @@
 {
   "messageKind": "SubscribeToPartitionContentsResponse",
-  "contents": [
-    {
-      "id": "a",
-      "classifier": {
-        "language": "myLang",
-        "version": "1",
-        "key": "myConcept"
+  "contents": {
+    "nodes": [
+      {
+        "id": "a",
+        "classifier": {
+          "language": "myLang",
+          "version": "1",
+          "key": "myConcept"
+        },
+        "properties": [],
+        "containments": [],
+        "references": [],
+        "annotations": [],
+        "parent": null
       },
-      "properties": [],
-      "containments": [],
-      "references": [],
-      "annotations": [],
-      "parent": null
-    },
-    {
-      "id": "b",
-      "classifier": {
-        "language": "myLang",
-        "version": "1",
-        "key": "myConcept"
-      },
-      "properties": [],
-      "containments": [],
-      "references": [],
-      "annotations": [],
-      "parent": "a"
-    }
-  ],
+      {
+        "id": "b",
+        "classifier": {
+          "language": "myLang",
+          "version": "1",
+          "key": "myConcept"
+        },
+        "properties": [],
+        "containments": [],
+        "references": [],
+        "annotations": [],
+        "parent": "a"
+      }
+    ]
+  },
   "queryId": "q1",
   "protocolMessage": {
     "kind": "msgKind",

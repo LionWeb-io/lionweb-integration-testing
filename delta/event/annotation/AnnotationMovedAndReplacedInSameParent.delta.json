@@ -4,34 +4,36 @@
   "movedAnnotation": "movedNodeId",
   "parent": "nodeId",
   "oldIndex": "44",
-  "replacedAnnotation": [
-    {
-      "id": "c",
-      "classifier": {
-        "language": "myLang",
-        "version": "1",
-        "key": "myConcept"
+  "replacedAnnotation": {
+    "nodes": [
+      {
+        "id": "c",
+        "classifier": {
+          "language": "myLang",
+          "version": "1",
+          "key": "myConcept"
+        },
+        "properties": [],
+        "containments": [],
+        "references": [],
+        "annotations": [],
+        "parent": null
       },
-      "properties": [],
-      "containments": [],
-      "references": [],
-      "annotations": [],
-      "parent": null
-    },
-    {
-      "id": "d",
-      "classifier": {
-        "language": "myLang",
-        "version": "1",
-        "key": "myConcept"
-      },
-      "properties": [],
-      "containments": [],
-      "references": [],
-      "annotations": [],
-      "parent": "c"
-    }
-  ],
+      {
+        "id": "d",
+        "classifier": {
+          "language": "myLang",
+          "version": "1",
+          "key": "myConcept"
+        },
+        "properties": [],
+        "containments": [],
+        "references": [],
+        "annotations": [],
+        "parent": "c"
+      }
+    ]
+  },
   "originCommands": [
     {
       "participationId": "partId",
