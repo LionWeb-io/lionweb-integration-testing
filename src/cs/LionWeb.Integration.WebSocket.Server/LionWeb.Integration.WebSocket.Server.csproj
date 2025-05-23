@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>LionWeb.Integration.WebSocket.Server</RootNamespace>
+        <StartupObject>LionWeb.Integration.WebSocket.Server.WebSocketServer</StartupObject>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LionWeb.Integration.Languages\LionWeb.Integration.Languages.csproj" />
+    </ItemGroup>
+
+</Project>
