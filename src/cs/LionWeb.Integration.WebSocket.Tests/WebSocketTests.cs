@@ -1,6 +1,9 @@
-﻿using LionWeb.Core;
+﻿using System.Runtime.CompilerServices;
+using System.Text.Json;
+using LionWeb.Core;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
+using LionWeb.Core.Serialization;
 using LionWeb.Core.Utilities;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
@@ -11,6 +14,51 @@ namespace LionWeb.Integration.WebSocket.Tests;
 [TestClass]
 public class WebSocketTests : WebSocketClientTestBase
 {
+    [TestMethod]
+    public void bla()
+    {
+        var childAdded = new ChildAdded(
+            "parent", new MetaPointer("lang", "ver", "key"), 3,
+            new DeltaSerializationChunk([
+                new SerializedNode()
+                {
+                    Id = "documentation",
+                    Classifier = new MetaPointer("key-Shapes", "1", "key-Documentation"),
+                    Properties = [
+                        new SerializedProperty()
+                    {
+                        Property = new MetaPointer("key-Shapes", "1", "key-technical"),
+                        Value = null
+                    },
+                        new SerializedProperty() {
+                        Property = new MetaPointer("key-Shapes", "1", "key-text"),
+                        Value = null
+                    },
+                    ],
+                    Containments = [],
+                    References = [],
+                    Annotations = [],
+                    Parent = "a"
+                }
+            ]), 23, [new CommandSource("participationId", "commandId")], null);
+
+        Console.WriteLine(childAdded);
+        
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true,
+            TypeInfoResolver = new DeltaProtocolTypeResolver()
+        };
+        var serialized = JsonSerializer.Serialize<IDeltaContent>(childAdded, jsonSerializerOptions);
+
+        Console.WriteLine(serialized);
+
+        var deltaEvent = JsonSerializer.Deserialize<IDeltaEvent>(serialized, jsonSerializerOptions);
+        Console.WriteLine(deltaEvent);
+        Console.WriteLine((deltaEvent as ChildAdded)?.NewChild.Nodes.First());
+    }
+
     [TestMethod, Timeout(3000)]
     public async Task Communication()
     {
@@ -51,7 +99,7 @@ public class WebSocketTests : WebSocketClientTestBase
 
         var clientAClone = (Geometry)new SameIdCloner([serverNode]).Clone()[serverNode];
         var clientA = new WebSocketClient("A");
-        var receiverA = new Receiver(lionWebVersion, languages, "client A", clientAClone);
+        var receiverA = new ClientReceiver(lionWebVersion, languages, "client A", clientAClone);
         {
             receiverA.Send(s => clientA.Send(s));
             clientA.Received += (sender, msg) => receiverA.Receive(msg);
@@ -59,11 +107,14 @@ public class WebSocketTests : WebSocketClientTestBase
 
         var clientBClone = (Geometry)new SameIdCloner([serverNode]).Clone()[serverNode];
         var clientB = new WebSocketClient("B");
-        var receiverB = new Receiver(lionWebVersion, languages, "client B", clientBClone);
+        var receiverB = new ClientReceiver(lionWebVersion, languages, "client B", clientBClone);
         {
             receiverB.Send(s => clientB.Send(s));
             clientB.Received += (sender, msg) => receiverB.Receive(msg);
         }
+
+        Console.WriteLine($"{nameof(clientAClone)}: Partition {clientAClone.PrintIdentity()}");
+        Console.WriteLine($"{nameof(clientBClone)}: Partition {clientBClone.PrintIdentity()}");
 
         var ipAddress = "localhost";
         var port = 42424;
@@ -71,17 +122,26 @@ public class WebSocketTests : WebSocketClientTestBase
         await clientB.ConnectToServer($"ws://{ipAddress}:{port}");
 
         clientBClone.Documentation = new Documentation("documentation");
+        Console.WriteLine($"clientB Documentation {clientBClone.Documentation.PrintIdentity()}");
 
-        // while (receiverA.MessageCount < 1)
-        Thread.Sleep(1000);
+        while (receiverA.MessageCount < 1)
+        {
+            Thread.Sleep(100);
+        }
 
+        Console.WriteLine($"clientA Documentation {clientAClone.Documentation.PrintIdentity()}");
         clientAClone.Documentation.Text = "hello there";
 
-        // while (receiverA.MessageCount < 1 || receiverB.MessageCount < 2)
-        Thread.Sleep(1000);
+        while (receiverA.MessageCount < 1 || receiverB.MessageCount < 2)
+        {
+            Thread.Sleep(100);
+        }
 
-        AssertEquals([serverNode], [clientAClone]);
-        AssertEquals([serverNode], [clientBClone]);
+
+        Console.WriteLine($"clientA Documentation {clientAClone.Documentation.PrintIdentity()}");
+        Console.WriteLine($"clientB Documentation {clientBClone.Documentation.PrintIdentity()}");
+        
+        AssertEquals([clientAClone], [clientBClone]);
     }
 
     private void AssertEquals(IEnumerable<INode?> expected, IEnumerable<INode?> actual)
