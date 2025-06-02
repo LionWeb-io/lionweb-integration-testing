@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
+using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
@@ -19,11 +20,12 @@ public class WebSocketServer
         await server.StartServer(IpAddress, Port);
         
         var serverPartition = new Geometry("a");
+        Console.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         // serverPartition.Documentation = new Documentation("documentation");
         
         // var serverPartition = new LenientPartition("serverPartition", server.LionWebVersion.BuiltIns.Node);
-        var receiver = new Receiver(server.LionWebVersion, server.Languages, "server", serverPartition, true);
-        // receiver.Send(s => server.Send(s));
+        var receiver = new ServerReceiver(server.LionWebVersion, server.Languages, "server", serverPartition, true);
+        receiver.Send(s => server.Send(s));
         server.Received += (sender, msg) => receiver.Receive(msg);
         Console.ReadLine();
     }

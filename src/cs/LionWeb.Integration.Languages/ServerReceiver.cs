@@ -3,29 +3,32 @@ using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event.Partition;
 using LionWeb.Core.M3;
 using LionWeb.Core.Serialization;
+using LionWeb.Core.Utilities;
 
 namespace LionWeb.Integration.Languages;
 
-public class Receiver
+public class ServerReceiver
 {
     private readonly LionWebVersions _lionWebVersion;
     private readonly string _name;
     private readonly Dictionary<String, IReadableNode> _sharedNodeMap;
-    private readonly DeltaProtocolPartitionEventReceiver _eventReceiver;
+    private readonly DeltaProtocolPartitionCommandReceiver _commandReceiver;
     private readonly DeltaSerializer _deltaSerializer;
     private readonly IPartitionPublisher _publisher;
 
     private long _messageCount;
+    private readonly CommandToEventMapper _commandToEventMapper;
+    private readonly DeltaProtocolPartitionCommandSender _commandSender;
 
     public long MessageCount => Interlocked.Read(ref _messageCount);
 
-    public Receiver(LionWebVersions lionWebVersion, List<Language> languages, string name, IPartitionInstance partition,
+    public ServerReceiver(LionWebVersions lionWebVersion, List<Language> languages, string name, IPartitionInstance partition,
         bool replicateChanges = false)
     {
         _lionWebVersion = lionWebVersion;
         _name = name;
         _sharedNodeMap = [];
-        var partitionEventHandler = new PartitionEventHandler(null);
+        var partitionEventHandler = new PartitionEventHandler(name);
         DeserializerBuilder deserializerBuilder = new DeserializerBuilder()
             .WithLionWebVersion(lionWebVersion)
             .WithLanguages(languages)
@@ -33,7 +36,7 @@ public class Receiver
             ;
         Dictionary<CompressedMetaPointer, IKeyed>
             sharedKeyedMap = CommandToEventMapper.BuildSharedKeyMap(languages);
-        _eventReceiver = new DeltaProtocolPartitionEventReceiver(
+        _commandReceiver = new DeltaProtocolPartitionCommandReceiver(
             partitionEventHandler,
             _sharedNodeMap,
             sharedKeyedMap,
@@ -44,6 +47,8 @@ public class Receiver
         _deltaSerializer = new DeltaSerializer();
 
         _publisher = replicateChanges ? partition.GetPublisher() : replicator;
+        _commandToEventMapper = new CommandToEventMapper(_name, _sharedNodeMap);
+        _commandSender = new DeltaProtocolPartitionCommandSender(_publisher, new CommandIdProvider(), _lionWebVersion);
     }
 
     private class ReceiverDeserializerHandler : DeserializerExceptionHandler
@@ -56,16 +61,11 @@ public class Receiver
 
     public void Send(Action<string> action)
     {
-        var commandToEventMapper = new CommandToEventMapper(_sharedNodeMap);
-
-        var commandSender =
-            new DeltaProtocolPartitionCommandSender(_publisher, new CommandIdProvider(), _lionWebVersion);
-
-        commandSender.DeltaCommand += (sender, command) =>
+        _commandSender.DeltaCommand += (sender, command) =>
         {
-            var @event = commandToEventMapper.Map(command);
+            var @event = _commandToEventMapper.Map(command);
 
-            Console.WriteLine($"{_name} sending event: {@event}");
+            Console.WriteLine($"{_name}: sending event: {@event.GetType()}({@event.EventSequenceNumber})");
             var deltaSerializer = new DeltaSerializer();
             action(deltaSerializer.Serialize(@event));
         };
@@ -75,9 +75,10 @@ public class Receiver
     {
         try
         {
-            Console.WriteLine($"{_name} received: {msg}");
-            var @event = _deltaSerializer.Deserialize<IDeltaEvent>(msg);
-            _eventReceiver.Receive(@event);
+            // Console.WriteLine($"{_name} received command: {msg}");
+            var command = _deltaSerializer.Deserialize<IDeltaCommand>(msg);
+            Console.WriteLine($"{_name}: received command: {command.GetType()}({command.CommandId})");
+            _commandReceiver.Receive(command);
             Interlocked.Increment(ref _messageCount);
         }
         catch (Exception e)
