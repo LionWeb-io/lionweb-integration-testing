@@ -31,36 +31,10 @@
       }
     ]
   },
-  "replacedChild": {
-    "nodes": [
-      {
-        "id": "c",
-        "classifier": {
-          "language": "myLang",
-          "version": "1",
-          "key": "myConcept"
-        },
-        "properties": [],
-        "containments": [],
-        "references": [],
-        "annotations": [],
-        "parent": null
-      },
-      {
-        "id": "d",
-        "classifier": {
-          "language": "myLang",
-          "version": "1",
-          "key": "myConcept"
-        },
-        "properties": [],
-        "containments": [],
-        "references": [],
-        "annotations": [],
-        "parent": "c"
-      }
-    ]
-  },
+  "replacedChild": "c",
+  "replacedDescendants": [
+    "d"
+  ],
   "containment": {
     "language": "MyLang",
     "version": "4",

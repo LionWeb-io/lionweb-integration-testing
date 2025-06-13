@@ -1,36 +1,10 @@
 {
   "messageKind": "AnnotationDeleted",
   "parent": "nodeId",
-  "deletedAnnotation": {
-    "nodes": [
-      {
-        "id": "a",
-        "classifier": {
-          "language": "myLang",
-          "version": "1",
-          "key": "myConcept"
-        },
-        "properties": [],
-        "containments": [],
-        "references": [],
-        "annotations": [],
-        "parent": null
-      },
-      {
-        "id": "b",
-        "classifier": {
-          "language": "myLang",
-          "version": "1",
-          "key": "myConcept"
-        },
-        "properties": [],
-        "containments": [],
-        "references": [],
-        "annotations": [],
-        "parent": "a"
-      }
-    ]
-  },
+  "deletedAnnotation": "a",
+  "deletedDescendants": [
+    "b"
+  ],
   "index": "3",
   "originCommands": [
     {
