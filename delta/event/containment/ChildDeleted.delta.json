@@ -10,7 +10,7 @@
     "version": "4",
     "key": "MyContainment"
   },
-  "index": "3",
+  "index": 3,
   "originCommands": [
     {
       "participationId": "partId",

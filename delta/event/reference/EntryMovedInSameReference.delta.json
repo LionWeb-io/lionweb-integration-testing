@@ -6,8 +6,8 @@
     "version": "4",
     "key": "MyReference"
   },
-  "newIndex": "3",
-  "oldIndex": "55",
+  "newIndex": 3,
+  "oldIndex": 55,
   "target": "targetNodeId",
   "resolveInfo": "otherNode name",
   "originCommands": [

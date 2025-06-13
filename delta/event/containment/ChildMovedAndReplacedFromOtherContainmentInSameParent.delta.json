@@ -5,7 +5,7 @@
     "version": "4",
     "key": "MyNewContainment"
   },
-  "newIndex": "3",
+  "newIndex": 3,
   "movedChild": "movedNodeId",
   "parent": "nodeId",
   "oldContainment": {
@@ -13,7 +13,7 @@
     "version": "4",
     "key": "MyOldContainment"
   },
-  "oldIndex": "55",
+  "oldIndex": 55,
   "replacedChild": "a",
   "replacedDescendants": [
     "b"

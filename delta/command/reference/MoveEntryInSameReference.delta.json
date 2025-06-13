@@ -6,8 +6,8 @@
     "version": "4",
     "key": "MyReference"
   },
-  "newIndex": "3",
-  "oldIndex": "23",
+  "newIndex": 3,
+  "oldIndex": 23,
   "movedTarget": "targetNodeId",
   "movedResolveInfo": "TargetNode name",
   "commandId": "cmdId",

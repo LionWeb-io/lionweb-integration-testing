@@ -1,6 +1,6 @@
 {
   "messageKind": "MoveAndReplaceAnnotationInSameParent",
-  "newIndex": "3",
+  "newIndex": 3,
   "replacedAnnotation": "replacedNodeId",
   "movedAnnotation": "otherNodeId",
   "commandId": "cmdId",

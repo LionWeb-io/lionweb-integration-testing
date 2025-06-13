@@ -39,7 +39,7 @@
         "version": "4",
         "key": "MyContainment"
       },
-      "index": "3",
+      "index": 3,
       "originCommands": [
         {
           "participationId": "partId",
@@ -64,36 +64,10 @@
     },
     {
       "messageKind": "PartitionDeleted",
-      "deletedPartition": {
-        "nodes": [
-          {
-            "id": "a",
-            "classifier": {
-              "language": "myLang",
-              "version": "1",
-              "key": "myConcept"
-            },
-            "properties": [],
-            "containments": [],
-            "references": [],
-            "annotations": [],
-            "parent": null
-          },
-          {
-            "id": "b",
-            "classifier": {
-              "language": "myLang",
-              "version": "1",
-              "key": "myConcept"
-            },
-            "properties": [],
-            "containments": [],
-            "references": [],
-            "annotations": [],
-            "parent": "a"
-          }
-        ]
-      },
+      "deletedPartition": "a",
+      "deletedDescendants": [
+        "b"
+      ],
       "originCommands": [
         {
           "participationId": "partId",
@@ -119,29 +93,14 @@
     {
       "messageKind": "ChildDeleted",
       "parent": "nodeId",
-      "deletedChild": {
-        "nodes": [
-          {
-            "id": "a",
-            "classifier": {
-              "language": "myLang",
-              "version": "1",
-              "key": "myConcept"
-            },
-            "properties": [],
-            "containments": [],
-            "references": [],
-            "annotations": [],
-            "parent": null
-          }
-        ]
-      },
+      "deletedChild": "a",
+      "deletedDescendants": [],
       "containment": {
         "language": "MyLang",
         "version": "4",
         "key": "MyContainment"
       },
-      "index": "3",
+      "index": 3,
       "originCommands": [
         {
           "participationId": "partId",

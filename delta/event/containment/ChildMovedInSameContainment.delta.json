@@ -1,6 +1,6 @@
 {
   "messageKind": "ChildMovedInSameContainment",
-  "newIndex": "3",
+  "newIndex": 3,
   "movedChild": "movedNodeId",
   "parent": "nodeId",
   "containment": {
@@ -8,7 +8,7 @@
     "version": "4",
     "key": "MyContainment"
   },
-  "oldIndex": "55",
+  "oldIndex": 55,
   "originCommands": [
     {
       "participationId": "partId",
