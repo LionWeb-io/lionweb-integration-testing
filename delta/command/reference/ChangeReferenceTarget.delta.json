@@ -11,14 +11,16 @@
   "oldTarget": "oldTargetNodeId",
   "newTarget": "targetNodeId",
   "commandId": "cmdId",
-  "protocolMessage": {
-    "kind": "msgKind",
-    "message": "Human message",
-    "data": [
-      {
-        "key": "dataKey",
-        "value": "dataValue"
-      }
-    ]
-  }
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
 }
