@@ -6,10 +6,10 @@
     "version": "4",
     "key": "MyReference"
   },
-  "newIndex": "3",
+  "newIndex": 3,
   "movedTarget": "targetNodeId",
   "movedResolveInfo": "otherNode name",
-  "oldIndex": "55",
+  "oldIndex": 55,
   "replacedTarget": "replacedNodeId",
   "replacedResolveInfo": "replacedNode name",
   "originCommands": [

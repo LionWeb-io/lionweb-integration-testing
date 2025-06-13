@@ -6,13 +6,13 @@
     "version": "4",
     "key": "MyReference"
   },
-  "newIndex": "3",
+  "newIndex": 3,
   "oldReference": {
     "language": "MyLang",
     "version": "4",
     "key": "MyOtherReference"
   },
-  "oldIndex": "55",
+  "oldIndex": 55,
   "target": "targetNodeId",
   "resolveInfo": "otherNode name",
   "originCommands": [

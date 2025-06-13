@@ -1,7 +1,7 @@
 {
   "messageKind": "MoveAnnotationFromOtherParent",
   "newParent": "nodeId",
-  "newIndex": "3",
+  "newIndex": 3,
   "movedAnnotation": "otherNodeId",
   "commandId": "cmdId",
   "protocolMessage": {

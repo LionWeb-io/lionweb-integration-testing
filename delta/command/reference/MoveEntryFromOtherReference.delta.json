@@ -6,14 +6,14 @@
     "version": "4",
     "key": "MyNewReference"
   },
-  "newIndex": "3",
+  "newIndex": 3,
   "oldParent": "oldNodeId",
   "oldReference": {
     "language": "MyLang",
     "version": "4",
     "key": "MyOldReference"
   },
-  "oldIndex": "23",
+  "oldIndex": 23,
   "movedTarget": "targetNodeId",
   "movedResolveInfo": "TargetNode name",
   "commandId": "cmdId",

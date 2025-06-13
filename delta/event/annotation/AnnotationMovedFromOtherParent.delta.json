@@ -1,10 +1,10 @@
 {
   "messageKind": "AnnotationMovedFromOtherParent",
   "newParent": "newNodeId",
-  "newIndex": "3",
+  "newIndex": 3,
   "movedAnnotation": "movedNodeId",
   "oldParent": "oldNodeId",
-  "oldIndex": "44",
+  "oldIndex": 44,
   "originCommands": [
     {
       "participationId": "partId",

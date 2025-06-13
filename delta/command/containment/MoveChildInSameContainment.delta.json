@@ -1,6 +1,6 @@
 {
   "messageKind": "MoveChildInSameContainment",
-  "newIndex": "3",
+  "newIndex": 3,
   "movedChild": "otherNodeId",
   "commandId": "cmdId",
   "protocolMessage": {

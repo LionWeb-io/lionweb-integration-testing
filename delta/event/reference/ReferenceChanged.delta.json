@@ -6,7 +6,7 @@
     "version": "4",
     "key": "MyReference"
   },
-  "index": "3",
+  "index": 3,
   "newTarget": "targetNodeId",
   "newResolveInfo": "otherNode name",
   "replacedTarget": "replacedNodeId",
