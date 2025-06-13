@@ -14,6 +14,8 @@
     "key": "MyOldReference"
   },
   "oldIndex": "23",
+  "movedTarget": "targetNodeId",
+  "movedResolveInfo": "TargetNode name",
   "commandId": "cmdId",
   "protocolMessage": {
     "kind": "msgKind",

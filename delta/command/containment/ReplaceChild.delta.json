@@ -37,6 +37,7 @@
     "key": "MyProperty"
   },
   "index": "3",
+  "replacedChild": "replacedNodeId",
   "commandId": "cmdId",
   "protocolMessage": {
     "kind": "msgKind",

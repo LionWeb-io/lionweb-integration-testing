@@ -32,6 +32,7 @@
     ]
   },
   "index": "3",
+  "replacedAnnotation": "replacedNodeId",
   "commandId": "cmdId",
   "protocolMessage": {
     "kind": "msgKind",

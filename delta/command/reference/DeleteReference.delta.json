@@ -7,6 +7,8 @@
     "key": "MyReference"
   },
   "index": "3",
+  "deletedTarget": "targetNodeId",
+  "deletedResolveInfo": "TargetNode name",
   "commandId": "cmdId",
   "protocolMessage": {
     "kind": "msgKind",

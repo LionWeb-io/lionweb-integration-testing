@@ -2,6 +2,7 @@
   "messageKind": "DeleteAnnotation",
   "parent": "nodeId",
   "index": "3",
+  "deletedAnnotation": "deletedNodeId",
   "commandId": "cmdId",
   "protocolMessage": {
     "kind": "msgKind",

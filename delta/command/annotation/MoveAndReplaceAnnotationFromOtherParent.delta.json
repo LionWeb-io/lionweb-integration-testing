@@ -2,6 +2,7 @@
   "messageKind": "MoveAndReplaceAnnotationFromOtherParent",
   "newParent": "nodeId",
   "newIndex": "3",
+  "replacedAnnotation": "replacedNodeId",
   "movedAnnotation": "otherNodeId",
   "commandId": "cmdId",
   "protocolMessage": {
