@@ -4,14 +4,16 @@
   "newIndex": 3,
   "movedAnnotation": "otherNodeId",
   "commandId": "cmdId",
-  "protocolMessage": {
-    "kind": "msgKind",
-    "message": "Human message",
-    "data": [
-      {
-        "key": "dataKey",
-        "value": "dataValue"
-      }
-    ]
-  }
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
 }

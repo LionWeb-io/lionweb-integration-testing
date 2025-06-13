@@ -11,16 +11,18 @@
       },
       "newValue": "hello",
       "commandId": "cmdId0",
-      "protocolMessage": {
-        "kind": "msgKind",
-        "message": "Human message",
-        "data": [
-          {
-            "key": "dataKey",
-            "value": "dataValue"
-          }
-        ]
-      }
+      "protocolMessages": [
+        {
+          "kind": "msgKind",
+          "message": "Human message",
+          "data": [
+            {
+              "key": "dataKey",
+              "value": "dataValue"
+            }
+          ]
+        }
+      ]
     },
     {
       "messageKind": "ChangeClassifier",
@@ -31,16 +33,18 @@
         "key": "MyClassifier"
       },
       "commandId": "cmdId1",
-      "protocolMessage": {
-        "kind": "msgKind",
-        "message": "Human message",
-        "data": [
-          {
-            "key": "dataKey",
-            "value": "dataValue"
-          }
-        ]
-      }
+      "protocolMessages": [
+        {
+          "kind": "msgKind",
+          "message": "Human message",
+          "data": [
+            {
+              "key": "dataKey",
+              "value": "dataValue"
+            }
+          ]
+        }
+      ]
     },
     {
       "messageKind": "CompositeCommand",
@@ -62,14 +66,16 @@
     }
   ],
   "commandId": "cmdId4",
-  "protocolMessage": {
-    "kind": "msgKind",
-    "message": "Human message",
-    "data": [
-      {
-        "key": "dataKey",
-        "value": "dataValue"
-      }
-    ]
-  }
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
 }
