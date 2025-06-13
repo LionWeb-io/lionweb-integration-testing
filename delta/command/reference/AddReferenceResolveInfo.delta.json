@@ -7,6 +7,7 @@
     "key": "MyReference"
   },
   "index": "3",
+  "target": "targetNodeId",
   "newResolveInfo": "TargetNode name",
   "commandId": "cmdId",
   "protocolMessage": {

@@ -6,6 +6,7 @@
     "key": "MyContainment"
   },
   "newIndex": "3",
+  "replacedChild": "replacedNodeId",
   "movedChild": "otherNodeId",
   "commandId": "cmdId",
   "protocolMessage": {

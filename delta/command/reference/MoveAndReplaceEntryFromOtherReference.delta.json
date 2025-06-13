@@ -7,6 +7,8 @@
     "key": "MyNewReference"
   },
   "newIndex": "3",
+  "replacedTarget": "replacedTargetNodeId",
+  "replacedResolveInfo": "Replaced TargetNode name",
   "oldParent": "oldNodeId",
   "oldReference": {
     "language": "MyLang",
@@ -14,6 +16,8 @@
     "key": "MyOldReference"
   },
   "oldIndex": "23",
+  "movedTarget": "targetNodeId",
+  "movedResolveInfo": "TargetNode name",
   "commandId": "cmdId",
   "protocolMessage": {
     "kind": "msgKind",

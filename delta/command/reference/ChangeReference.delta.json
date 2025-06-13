@@ -7,6 +7,8 @@
     "key": "MyReference"
   },
   "index": "3",
+  "oldTarget": "oldTargetNodeId",
+  "oldResolveInfo": "TargetNode name",
   "newTarget": "otherNodeId",
   "newResolveInfo": "otherNode name",
   "commandId": "cmdId",

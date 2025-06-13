@@ -7,7 +7,11 @@
     "key": "MyReference"
   },
   "newIndex": "3",
+  "movedTarget": "targetNodeId",
+  "movedResolveInfo": "TargetNode name",
   "oldIndex": "23",
+  "replacedTarget": "replacedTargetNodeId",
+  "replacedResolveInfo": "Replaced TargetNode name",
   "commandId": "cmdId",
   "protocolMessage": {
     "kind": "msgKind",
