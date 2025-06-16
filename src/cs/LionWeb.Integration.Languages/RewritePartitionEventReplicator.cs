@@ -28,13 +28,13 @@ internal class RewritePartitionEventReplicator(
 {
     private readonly Dictionary<IEventId, IEventId> _originalEventIds = [];
         
-    protected override void SuppressEventForwarding(IPartitionEvent @event, Action action)
+    protected override void SuppressEventForwarding(IPartitionEvent partitionEvent, Action action)
     {
         IEventId? eventId = null;
         if (_localCommander != null)
         {
             eventId = _localCommander.CreateEventId();
-            var originalEventId = @event.EventId;
+            var originalEventId = partitionEvent.EventId;
             _originalEventIds[eventId] = originalEventId;
             _localCommander.RegisterEventId(eventId);
             RegisterEventId(eventId);
@@ -53,14 +53,14 @@ internal class RewritePartitionEventReplicator(
         }
     }
 
-    protected override TSubscribedEvent? Filter<TSubscribedEvent>(IPartitionEvent @event) where TSubscribedEvent : class
+    protected override TSubscribedEvent? Filter<TSubscribedEvent>(IPartitionEvent partitionEvent) where TSubscribedEvent : class
     {
-        IPartitionEvent? result = base.Filter<TSubscribedEvent>(@event);
+        IPartitionEvent? result = base.Filter<TSubscribedEvent>(partitionEvent);
         Console.WriteLine($"result: {result}");
-        if (_originalEventIds.TryGetValue(@event.EventId, out var originalId))
+        if (_originalEventIds.TryGetValue(partitionEvent.EventId, out var originalId))
         {
             Console.WriteLine($"originalId: {originalId}");
-            result = @event;
+            result = partitionEvent;
             result.EventId = originalId;
         }
 
