@@ -15,6 +15,7 @@
 // // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // // SPDX-License-Identifier: Apache-2.0
 
+using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M1.Event.Partition;
@@ -56,10 +57,10 @@ internal class RewritePartitionEventReplicator(
     protected override TSubscribedEvent? Filter<TSubscribedEvent>(IPartitionEvent partitionEvent) where TSubscribedEvent : class
     {
         IPartitionEvent? result = base.Filter<TSubscribedEvent>(partitionEvent);
-        Console.WriteLine($"result: {result}");
+        Debug.WriteLine($"result: {result}");
         if (_originalEventIds.TryGetValue(partitionEvent.EventId, out var originalId))
         {
-            Console.WriteLine($"originalId: {originalId}");
+            Debug.WriteLine($"originalId: {originalId}");
             result = partitionEvent;
             result.EventId = originalId;
         }
