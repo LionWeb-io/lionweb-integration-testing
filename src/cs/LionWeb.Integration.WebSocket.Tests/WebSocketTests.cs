@@ -24,16 +24,18 @@ public class WebSocketTests : WebSocketClientTestBase
                 {
                     Id = "documentation",
                     Classifier = new MetaPointer("key-Shapes", "1", "key-Documentation"),
-                    Properties = [
+                    Properties =
+                    [
                         new SerializedProperty()
-                    {
-                        Property = new MetaPointer("key-Shapes", "1", "key-technical"),
-                        Value = null
-                    },
-                        new SerializedProperty() {
-                        Property = new MetaPointer("key-Shapes", "1", "key-text"),
-                        Value = null
-                    },
+                        {
+                            Property = new MetaPointer("key-Shapes", "1", "key-technical"),
+                            Value = null
+                        },
+                        new SerializedProperty()
+                        {
+                            Property = new MetaPointer("key-Shapes", "1", "key-text"),
+                            Value = null
+                        },
                     ],
                     Containments = [],
                     References = [],
@@ -43,7 +45,7 @@ public class WebSocketTests : WebSocketClientTestBase
             ]), 23, [new CommandSource("participationId", "commandId")], null);
 
         Console.WriteLine(childAdded);
-        
+
         var jsonSerializerOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -98,33 +100,35 @@ public class WebSocketTests : WebSocketClientTestBase
 
 
         var clientAClone = (Geometry)new SameIdCloner([serverNode]).Clone()[serverNode];
-        var clientA = new WebSocketClient("A");
-        var receiverA = new ClientReceiver(lionWebVersion, languages, "client A", clientAClone);
-        {
-            receiverA.Send(s => clientA.Send(s));
-            clientA.Received += (sender, msg) => receiverA.Receive(msg);
-        }
+        ((EventHandlerBase)clientAClone.GetCommander()).ParticipationId = "client_A_partition";
+        var webSocketA = new WebSocketClient("A");
+        var lionWebA = new LionWebClient(lionWebVersion, languages, "client_A", clientAClone, s => webSocketA.Send(s));
+        webSocketA.Received += (sender, msg) => lionWebA.Receive(msg);
 
         var clientBClone = (Geometry)new SameIdCloner([serverNode]).Clone()[serverNode];
-        var clientB = new WebSocketClient("B");
-        var receiverB = new ClientReceiver(lionWebVersion, languages, "client B", clientBClone);
-        {
-            receiverB.Send(s => clientB.Send(s));
-            clientB.Received += (sender, msg) => receiverB.Receive(msg);
-        }
+        ((EventHandlerBase)clientBClone.GetCommander()).ParticipationId = "client_B_partition";
+        var webSocketB = new WebSocketClient("B");
+        var lionWebB = new LionWebClient(lionWebVersion, languages, "client_B", clientBClone, s => webSocketB.Send(s));
+        webSocketB.Received += (sender, msg) => lionWebB.Receive(msg);
 
         Console.WriteLine($"{nameof(clientAClone)}: Partition {clientAClone.PrintIdentity()}");
         Console.WriteLine($"{nameof(clientBClone)}: Partition {clientBClone.PrintIdentity()}");
 
         var ipAddress = "localhost";
         var port = 42424;
-        await clientA.ConnectToServer($"ws://{ipAddress}:{port}");
-        await clientB.ConnectToServer($"ws://{ipAddress}:{port}");
+        await webSocketA.ConnectToServer($"ws://{ipAddress}:{port}");
+        lionWebA.Send(new SignOnRequest("2025.1", IdUtils.NewId(), null));
+        await webSocketB.ConnectToServer($"ws://{ipAddress}:{port}");
+        lionWebB.Send(new SignOnRequest("2025.1", IdUtils.NewId(), null));
+        while (lionWebA.MessageCount < 1 || lionWebB.MessageCount < 1)
+        {
+            Thread.Sleep(100);
+        }
 
         clientBClone.Documentation = new Documentation("documentation");
         Console.WriteLine($"clientB Documentation {clientBClone.Documentation.PrintIdentity()}");
 
-        while (receiverA.MessageCount < 1)
+        while (lionWebA.MessageCount < 2)
         {
             Thread.Sleep(100);
         }
@@ -132,7 +136,7 @@ public class WebSocketTests : WebSocketClientTestBase
         Console.WriteLine($"clientA Documentation {clientAClone.Documentation.PrintIdentity()}");
         clientAClone.Documentation.Text = "hello there";
 
-        while (receiverA.MessageCount < 1 || receiverB.MessageCount < 2)
+        while (lionWebA.MessageCount < 1 || lionWebB.MessageCount < 2)
         {
             Thread.Sleep(100);
         }
@@ -140,13 +144,13 @@ public class WebSocketTests : WebSocketClientTestBase
 
         Console.WriteLine($"clientA Documentation {clientAClone.Documentation.PrintIdentity()}");
         Console.WriteLine($"clientB Documentation {clientBClone.Documentation.PrintIdentity()}");
-        
+
         AssertEquals([clientAClone], [clientBClone]);
     }
 
     private void AssertEquals(IEnumerable<INode?> expected, IEnumerable<INode?> actual)
     {
         List<IDifference> differences = new Comparer(expected.ToList(), actual.ToList()).Compare().ToList();
-        Assert.IsFalse(differences.Count != 0, differences.DescribeAll(new()));
+        Assert.IsTrue(differences.Count == 0, differences.DescribeAll(new()));
     }
 }
