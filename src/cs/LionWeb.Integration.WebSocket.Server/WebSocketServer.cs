@@ -7,6 +7,7 @@ using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
+using ParticipationId = string;
 
 namespace LionWeb.Integration.WebSocket.Server;
 
@@ -20,12 +21,12 @@ public class WebSocketServer
         await server.StartServer(IpAddress, Port);
         
         var serverPartition = new Geometry("a");
+        ((EventHandlerBase)serverPartition.GetCommander()).ParticipationId = "server_partition";
         Console.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         // serverPartition.Documentation = new Documentation("documentation");
         
         // var serverPartition = new LenientPartition("serverPartition", server.LionWebVersion.BuiltIns.Node);
-        var receiver = new ServerReceiver(server.LionWebVersion, server.Languages, "server", serverPartition, true);
-        receiver.Send(s => server.Send(s));
+        var receiver = new LionWebServer(server.LionWebVersion, server.Languages, "server", serverPartition,s => server.SendAll(s), (i,s)=> server.Send(i,s));
         server.Received += (sender, msg) => receiver.Receive(msg);
         Console.ReadLine();
     }
@@ -36,10 +37,12 @@ public class WebSocketServer
     protected LionWebVersions LionWebVersion { get; init; } = LionWebVersions.v2023_1;
     public List<Language> Languages { get; init; } = [ShapesLanguage.Instance];
 
-    private readonly ConcurrentDictionary<System.Net.WebSockets.WebSocket, byte> _openSockets = [];
+    private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];
+    private int nextParticipationId = 0;
+    
     private HttpListener _listener;
 
-    public event EventHandler<string> Received;
+    public event EventHandler<IWebSocketMessage> Received;
     
     public async Task StartServer(string ipAddress, int port)
     {
@@ -74,12 +77,24 @@ public class WebSocketServer
         _listener.Stop();
     }
 
-    public async Task Send(string msg)
+    public async Task SendAll(string msg)
     {
-        foreach ((System.Net.WebSockets.WebSocket socket, var _) in _openSockets)
+        var encoded = Encode(msg);
+        foreach ((_, System.Net.WebSockets.WebSocket socket) in _knownClients)
         {
-            await socket.SendAsync(Encoding.UTF8.GetBytes(msg), WebSocketMessageType.Text, true,
-                CancellationToken.None);
+            await socket.SendAsync(encoded, WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+    }
+
+    private static byte[] Encode(string msg) =>
+        Encoding.UTF8.GetBytes(msg);
+
+    public async Task Send(IClientInfo clientInfo, string msg)
+    {
+        if (_knownClients.TryGetValue(clientInfo, out var socket))
+        {
+            var encoded = Encode(msg);
+            await socket.SendAsync(encoded, WebSocketMessageType.Text, true, CancellationToken.None);
         }
     }
 
@@ -87,7 +102,8 @@ public class WebSocketServer
     {
         HttpListenerWebSocketContext webSocketContext = await context.AcceptWebSocketAsync(null);
         System.Net.WebSockets.WebSocket socket = webSocketContext.WebSocket;
-        _openSockets.TryAdd(socket, 1);
+        var clientInfo = new ClientInfo() {ParticipationId = GetNextParticipationId()};
+        _knownClients.TryAdd(clientInfo, socket);
 
         Console.WriteLine($"WebSocket connection accepted: {context.Request.RemoteEndPoint}");
 
@@ -97,18 +113,43 @@ public class WebSocketServer
         {
             WebSocketReceiveResult result =
                 await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            if (result.MessageType == WebSocketMessageType.Text)
+            switch (result.MessageType)
             {
-                string receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                Received?.Invoke(this, receivedMessage);
-            } else if (result.MessageType == WebSocketMessageType.Close)
-            {
-                await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "",
-                    CancellationToken.None);
-                _openSockets.TryRemove(socket, out _);
+                case WebSocketMessageType.Text:
+                {
+                    string receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    Received?.Invoke(this, new WebSocketMessage(clientInfo, receivedMessage));
+                    break;
+                }
+                case WebSocketMessageType.Close:
+                    await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "",
+                        CancellationToken.None);
+                    _knownClients.TryRemove(clientInfo, out _);
+                    break;
             }
         }
 
-        _openSockets.TryRemove(socket, out _);
+        _knownClients.TryRemove(clientInfo, out _);
+    }
+
+    private string GetNextParticipationId()
+    {
+        lock (this)
+        {
+            return "participation" + nextParticipationId++;
+        }
+    }
+}
+
+internal record WebSocketMessage(IClientInfo ClientInfo, string MessageContent) : IWebSocketMessage;
+
+internal record ClientInfo : IClientInfo
+{
+    private readonly ParticipationId? _participationId;
+
+    public required ParticipationId ParticipationId
+    {
+        get => _participationId ?? throw new ArgumentException("ParticipationId not set");
+        init => _participationId = value;
     }
 }
