@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Net;
 using System.Net.WebSockets;
 using System.Text;
@@ -17,32 +18,33 @@ public class WebSocketServer
 
     public static async Task Main(string[] args)
     {
-        var server = new WebSocketServer();
-        await server.StartServer(IpAddress, Port);
-        
+        var webSocketServer = new WebSocketServer();
+        await webSocketServer.StartServer(IpAddress, Port);
+
         var serverPartition = new Geometry("a");
         Console.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         // serverPartition.Documentation = new Documentation("documentation");
-        
+
         // var serverPartition = new LenientPartition("serverPartition", server.LionWebVersion.BuiltIns.Node);
-        var receiver = new LionWebServer(server.LionWebVersion, server.Languages, "server", serverPartition,s => server.SendAll(s), (i,s)=> server.Send(i,s));
-        server.Received += (sender, msg) => receiver.Receive(msg);
+        var lionWebServer = new LionWebServer(webSocketServer.LionWebVersion, webSocketServer.Languages, "server", serverPartition,
+            async s => await webSocketServer.SendAll(s), async (i, s) => await webSocketServer.Send(i, s));
+        webSocketServer.Received += async (sender, msg) => await lionWebServer.Receive(msg);
         Console.ReadLine();
     }
 
     protected static string IpAddress { get; set; } = "localhost";
     protected static int Port { get; set; } = 42424;
-    
+
     protected LionWebVersions LionWebVersion { get; init; } = LionWebVersions.v2023_1;
     public List<Language> Languages { get; init; } = [ShapesLanguage.Instance];
 
     private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];
     private int nextParticipationId = 0;
-    
+
     private HttpListener _listener;
 
     public event EventHandler<IWebSocketMessage> Received;
-    
+
     public async Task StartServer(string ipAddress, int port)
     {
         var _listener = new HttpListener();
@@ -59,7 +61,8 @@ public class WebSocketServer
                 if (context.Request.IsWebSocketRequest)
                 {
                     ProcessWebSocketRequest(context);
-                } else
+                }
+                else
                 {
                     context.Response.StatusCode = 400;
                     context.Response.Close();
@@ -72,7 +75,7 @@ public class WebSocketServer
     {
         if (_listener == null)
             return;
-        
+
         _listener.Stop();
     }
 
@@ -101,7 +104,7 @@ public class WebSocketServer
     {
         HttpListenerWebSocketContext webSocketContext = await context.AcceptWebSocketAsync(null);
         System.Net.WebSockets.WebSocket socket = webSocketContext.WebSocket;
-        var clientInfo = new ClientInfo() {ParticipationId = GetNextParticipationId()};
+        var clientInfo = new ClientInfo() { ParticipationId = GetNextParticipationId() };
         _knownClients.TryAdd(clientInfo, socket);
 
         Console.WriteLine($"WebSocket connection accepted: {context.Request.RemoteEndPoint}");
