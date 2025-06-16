@@ -93,12 +93,12 @@ public class WebSocketTests : WebSocketClientTestBase
 
         var clientAClone = (Geometry)new SameIdCloner([serverNode]).Clone()[serverNode];
         var webSocketA = new WebSocketClient("A");
-        var lionWebA = new LionWebClient(lionWebVersion, languages, "client_A", clientAClone, s => webSocketA.Send(s));
+        var lionWebA = new LionWebClient(lionWebVersion, languages, "client_A", clientAClone, async s => await webSocketA.Send(s));
         webSocketA.Received += (sender, msg) => lionWebA.Receive(msg);
 
         var clientBClone = (Geometry)new SameIdCloner([serverNode]).Clone()[serverNode];
         var webSocketB = new WebSocketClient("B");
-        var lionWebB = new LionWebClient(lionWebVersion, languages, "client_B", clientBClone, s => webSocketB.Send(s));
+        var lionWebB = new LionWebClient(lionWebVersion, languages, "client_B", clientBClone, async s => await webSocketB.Send(s));
         webSocketB.Received += (sender, msg) => lionWebB.Receive(msg);
 
         Console.WriteLine($"{nameof(clientAClone)}: Partition {clientAClone.PrintIdentity()}");
@@ -107,9 +107,9 @@ public class WebSocketTests : WebSocketClientTestBase
         var ipAddress = "localhost";
         var port = 42424;
         await webSocketA.ConnectToServer($"ws://{ipAddress}:{port}");
-        lionWebA.Send(new SignOnRequest("2025.1", IdUtils.NewId(), null));
+        await lionWebA.Send(new SignOnRequest("2025.1", IdUtils.NewId(), null));
         await webSocketB.ConnectToServer($"ws://{ipAddress}:{port}");
-        lionWebB.Send(new SignOnRequest("2025.1", IdUtils.NewId(), null));
+        await lionWebB.Send(new SignOnRequest("2025.1", IdUtils.NewId(), null));
         while (lionWebA.MessageCount < 1 || lionWebB.MessageCount < 1)
         {
             Thread.Sleep(100);
