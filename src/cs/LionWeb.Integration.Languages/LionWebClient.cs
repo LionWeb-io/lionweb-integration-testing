@@ -1,9 +1,11 @@
-﻿using LionWeb.Core;
+﻿using System.Collections.Concurrent;
+using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event.Partition;
 using LionWeb.Core.M3;
 using LionWeb.Core.Serialization;
 using ParticipationId = string;
+using CommandId = string;
 
 namespace LionWeb.Integration.Languages;
 
@@ -14,8 +16,9 @@ public class LionWebClient
     private readonly DeltaProtocolPartitionEventReceiver _eventReceiver;
     private readonly DeltaSerializer _deltaSerializer;
     private readonly PartitionEventToDeltaCommandMapper _mapper;
+    private readonly ConcurrentDictionary<CommandId, int> _ownCommands = [];
+    
     private ParticipationId? _participationId;
-
     private long _messageCount;
 
     public long MessageCount => Interlocked.Read(ref _messageCount);
@@ -64,6 +67,10 @@ public class LionWebClient
     {
         if (deltaContent.RequiresParticipationId)
             deltaContent.InternalParticipationId = _participationId;
+        
+        if (deltaContent is IDeltaCommand { CommandId: { } commandId })
+            _ownCommands.TryAdd(commandId, 1);
+        
         Console.WriteLine($"{_name}: sending: {deltaContent.GetType()}");
         _send(_deltaSerializer.Serialize(deltaContent));
     }
@@ -77,13 +84,25 @@ public class LionWebClient
             Interlocked.Increment(ref _messageCount);
             switch (content)
             {
-                case IDeltaEvent @event:
-                    var commandSource = @event is ISingleDeltaEvent { OriginCommands: { } cmds } ? cmds.First() : null;
+                case IDeltaEvent deltaEvent:
+                    CommandSource? commandSource = null;
+                    if (deltaEvent is ISingleDeltaEvent singleDeltaEvent)
+                    {
+                        commandSource = singleDeltaEvent.OriginCommands.FirstOrDefault();
+                        if (singleDeltaEvent.OriginCommands.All(cmd =>
+                                _participationId == cmd.ParticipationId &&
+                                _ownCommands.TryRemove(cmd.CommandId, out _)))
+                        {
+                            Console.WriteLine(
+                                $"{_name}: ignoring own event: {deltaEvent.GetType()}({commandSource},{deltaEvent.EventSequenceNumber})");
+                            return;
+                        }
+                    }
 
                     Console.WriteLine(
-                        $"{_name}: received event: {@event.GetType()}({commandSource},{@event.EventSequenceNumber})");
-                    @event.InternalParticipationId = commandSource?.ParticipationId;
-                    _eventReceiver.Receive(@event);
+                        $"{_name}: received event: {deltaEvent.GetType()}({commandSource},{deltaEvent.EventSequenceNumber})");
+                    deltaEvent.InternalParticipationId = commandSource?.ParticipationId;
+                    _eventReceiver.Receive(deltaEvent);
                     break;
 
                 case SignOnResponse signOnResponse:

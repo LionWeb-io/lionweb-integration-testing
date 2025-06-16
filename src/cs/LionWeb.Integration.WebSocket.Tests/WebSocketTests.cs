@@ -126,7 +126,7 @@ public class WebSocketTests : WebSocketClientTestBase
         Console.WriteLine($"clientA Documentation {clientAClone.Documentation.PrintIdentity()}");
         clientAClone.Documentation.Text = "hello there";
 
-        while (lionWebA.MessageCount < 1 || lionWebB.MessageCount < 2)
+        while (lionWebA.MessageCount < 2 || lionWebB.MessageCount < 3)
         {
             Thread.Sleep(100);
         }
