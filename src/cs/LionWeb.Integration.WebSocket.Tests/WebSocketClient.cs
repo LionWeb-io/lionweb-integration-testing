@@ -1,15 +1,17 @@
 ﻿using System.Net.WebSockets;
 using System.Text;
+using LionWeb.Core.Serialization;
+using LionWeb.Integration.Languages;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
-class WebSocketClient(string name)
+class WebSocketClient(string name) : IDeltaClientConnector
 {
     public const int BUFFER_SIZE = 0x10000;
 
+    private readonly DeltaSerializer _deltaSerializer = new();
     private readonly ClientWebSocket _clientWebSocket = new ClientWebSocket();
-
-    public event EventHandler<string> Received;
+    public event EventHandler<IDeltaContent>? Receive;
 
     public async Task ConnectToServer(string serverUri)
     {
@@ -28,15 +30,16 @@ class WebSocketClient(string name)
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
                     string receivedMessage = Encoding.UTF8.GetString(receiveBuffer, 0, result.Count);
-                    Received?.Invoke(this, receivedMessage);
+                    Receive?.Invoke(this, _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage));
                 }
             }
         });
     }
 
-    public async Task Send(string msg)
-    {
+    public async Task Send(IDeltaContent content) =>
+        await Send(_deltaSerializer.Serialize(content));
+
+    public async Task Send(string msg) =>
         await _clientWebSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(msg)), WebSocketMessageType.Text,
             true, CancellationToken.None);
-    }
 }

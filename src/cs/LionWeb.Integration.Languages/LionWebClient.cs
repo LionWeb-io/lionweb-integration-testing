@@ -10,12 +10,17 @@ using CommandId = string;
 
 namespace LionWeb.Integration.Languages;
 
+public interface IDeltaClientConnector
+{
+    Task Send(IDeltaContent content);
+    event EventHandler<IDeltaContent> Receive;
+}
+
 public class LionWebClient
 {
     private readonly string _name;
-    private readonly Func<string, Task> _send;
+    private readonly IDeltaClientConnector _connector;
     private readonly DeltaProtocolPartitionEventReceiver _eventReceiver;
-    private readonly DeltaSerializer _deltaSerializer;
     private readonly PartitionEventToDeltaCommandMapper _mapper;
     private readonly ConcurrentDictionary<CommandId, int> _ownCommands = [];
     
@@ -25,10 +30,10 @@ public class LionWebClient
     public long MessageCount => Interlocked.Read(ref _messageCount);
 
     public LionWebClient(LionWebVersions lionWebVersion, List<Language> languages, string name,
-        IPartitionInstance partition, Func<string, Task> send)
+        IPartitionInstance partition, IDeltaClientConnector connector)
     {
         _name = name;
-        _send = send;
+        _connector = connector;
         _mapper = new PartitionEventToDeltaCommandMapper(new CommandIdProvider(), lionWebVersion);
         
         Dictionary<string, IReadableNode> sharedNodeMap = [];
@@ -48,12 +53,13 @@ public class LionWebClient
         );
         var replicator = new PartitionEventReplicator(partition, sharedNodeMap);
         replicator.ReplicateFrom(partitionEventHandler);
-        _deltaSerializer = new DeltaSerializer();
 
         IPartitionPublisher publisher = replicator;
         publisher.Subscribe<IPartitionEvent>(SendPartitionEventToRepository);
-    }
 
+        connector.Receive += (_, content) => Receive(content);
+    }
+    
     private void SendPartitionEventToRepository(object? sender, IPartitionEvent? partitionEvent)
     {
         if (partitionEvent == null)
@@ -73,14 +79,13 @@ public class LionWebClient
             _ownCommands.TryAdd(commandId, 1);
         
         Debug.WriteLine($"{_name}: sending: {deltaContent.GetType()}");
-        await _send.Invoke(_deltaSerializer.Serialize(deltaContent));
+        await _connector.Send(deltaContent);
     }
-    
-    public void Receive(string msg)
+
+    private void Receive(IDeltaContent content)
     {
         try
         {
-            IDeltaContent content = _deltaSerializer.Deserialize<IDeltaContent>(msg);
             Interlocked.Increment(ref _messageCount);
             switch (content)
             {
