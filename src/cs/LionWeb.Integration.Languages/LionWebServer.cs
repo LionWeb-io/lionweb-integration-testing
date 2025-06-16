@@ -26,6 +26,8 @@ public class LionWebServer
         _name = name;
         _sendAll = sendAll;
         _send = send;
+        _mapper = new PartitionEventToDeltaEventMapper(new ExceptionParticipationIdProvider(), new EventSequenceNumberProvider(), lionWebVersion);
+        
         Dictionary<string, IReadableNode> sharedNodeMap = [];
         var partitionEventHandler = new PartitionEventHandler(name);
         DeserializerBuilder deserializerBuilder = new DeserializerBuilder()
@@ -41,16 +43,15 @@ public class LionWebServer
             sharedKeyedMap,
             deserializerBuilder
         );
-        var replicator = new PartitionEventReplicator(partition, sharedNodeMap);
+        var replicator = new RewritePartitionEventReplicator(partition, sharedNodeMap);
         replicator.ReplicateFrom(partitionEventHandler);
         _deltaSerializer = new DeltaSerializer();
 
-        var publisher = partition.GetPublisher();
-        _mapper = new PartitionEventToDeltaEventMapper(new ExceptionParticipationIdProvider(), new EventSequenceNumberProvider(), lionWebVersion);
-        publisher.Subscribe<IPartitionEvent>(ProcessEvent);
+        var publisher = replicator;
+        publisher.Subscribe<IPartitionEvent>(SendPartitionEventToAllClients);
     }
 
-    private void ProcessEvent(object? sender, IPartitionEvent? @event)
+    private void SendPartitionEventToAllClients(object? sender, IPartitionEvent? @event)
     {
         if (@event == null)
             return;
@@ -92,6 +93,8 @@ public class LionWebServer
             // Console.WriteLine($"{_name} received command: {msg}");
             var content = _deltaSerializer.Deserialize<IDeltaContent>(msg.MessageContent);
             content.InternalParticipationId = msg.ClientInfo.ParticipationId;
+            Console.WriteLine(
+                $"{_name}: received {content.GetType().Name} for {msg.ClientInfo.ParticipationId}: {content})");
             Interlocked.Increment(ref _messageCount);
 
             switch (content)

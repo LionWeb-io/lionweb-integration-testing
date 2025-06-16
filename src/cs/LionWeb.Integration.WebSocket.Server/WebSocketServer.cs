@@ -21,7 +21,6 @@ public class WebSocketServer
         await server.StartServer(IpAddress, Port);
         
         var serverPartition = new Geometry("a");
-        ((EventHandlerBase)serverPartition.GetCommander()).ParticipationId = "server_partition";
         Console.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         // serverPartition.Documentation = new Documentation("documentation");
         
