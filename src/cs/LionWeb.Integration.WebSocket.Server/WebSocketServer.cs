@@ -17,18 +17,19 @@ public class WebSocketServer : IDeltaRepositoryConnector
 {
     private const int BUFFER_SIZE = 0x10000;
 
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
         var webSocketServer = new WebSocketServer();
-        await webSocketServer.StartServer(IpAddress, Port);
+        webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
+        // var serverPartition = new LenientPartition("serverPartition", webSocketServer.LionWebVersion.BuiltIns.Node);
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
-        // var serverPartition = new LenientPartition("serverPartition", server.LionWebVersion.BuiltIns.Node);
         var lionWebServer = new LionWebServer(webSocketServer.LionWebVersion, webSocketServer.Languages, "server", serverPartition,
             webSocketServer);
         Console.ReadLine();
+        webSocketServer.Stop();
     }
 
     private static string IpAddress { get; set; } = "localhost";
@@ -41,12 +42,12 @@ public class WebSocketServer : IDeltaRepositoryConnector
     private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];
     private int _nextParticipationId = 0;
 
-    private HttpListener _listener;
+    private HttpListener? _listener;
 
     /// <inheritdoc />
     public event EventHandler<IDeltaMessageContext>? Receive;
 
-    public async Task StartServer(string ipAddress, int port)
+    public void StartServer(string ipAddress, int port)
     {
         _listener = new HttpListener();
         _listener.Prefixes.Add($"http://{ipAddress}:{port}/");
@@ -54,6 +55,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
 
         Console.WriteLine("Server started. Waiting for connections...");
 
+        // do NOT await!
         Task.Run(async () =>
         {
             while (true)
@@ -61,6 +63,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
                 HttpListenerContext context = await _listener.GetContextAsync();
                 if (context.Request.IsWebSocketRequest)
                 {
+                    // do NOT await!
                     ProcessWebSocketRequest(context);
                 }
                 else
