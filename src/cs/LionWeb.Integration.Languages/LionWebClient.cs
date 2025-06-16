@@ -12,7 +12,7 @@ namespace LionWeb.Integration.Languages;
 public class LionWebClient
 {
     private readonly string _name;
-    private readonly Action<string> _send;
+    private readonly Func<string, Task> _send;
     private readonly DeltaProtocolPartitionEventReceiver _eventReceiver;
     private readonly DeltaSerializer _deltaSerializer;
     private readonly PartitionEventToDeltaCommandMapper _mapper;
@@ -24,7 +24,7 @@ public class LionWebClient
     public long MessageCount => Interlocked.Read(ref _messageCount);
 
     public LionWebClient(LionWebVersions lionWebVersion, List<Language> languages, string name,
-        IPartitionInstance partition, Action<string> send)
+        IPartitionInstance partition, Func<string, Task> send)
     {
         _name = name;
         _send = send;
@@ -63,7 +63,7 @@ public class LionWebClient
         Send(deltaCommand);
     }
     
-    public void Send(IDeltaContent deltaContent)
+    public async Task Send(IDeltaContent deltaContent)
     {
         if (deltaContent.RequiresParticipationId)
             deltaContent.InternalParticipationId = _participationId;
@@ -72,7 +72,7 @@ public class LionWebClient
             _ownCommands.TryAdd(commandId, 1);
         
         Console.WriteLine($"{_name}: sending: {deltaContent.GetType()}");
-        _send(_deltaSerializer.Serialize(deltaContent));
+        await _send.Invoke(_deltaSerializer.Serialize(deltaContent));
     }
     
     public void Receive(string msg)

@@ -11,8 +11,8 @@ namespace LionWeb.Integration.Languages;
 public class LionWebServer
 {
     private readonly string _name;
-    private readonly Action<string> _sendAll;
-    private readonly Action<IClientInfo, string> _send;
+    private readonly Func<string, Task> _sendAll;
+    private readonly Func<IClientInfo, string, Task> _send;
     private readonly DeltaProtocolPartitionCommandReceiver _commandReceiver;
     private readonly DeltaSerializer _deltaSerializer;
     private readonly PartitionEventToDeltaEventMapper _mapper;
@@ -21,7 +21,7 @@ public class LionWebServer
     public long MessageCount => Interlocked.Read(ref _messageCount);
 
     public LionWebServer(LionWebVersions lionWebVersion, List<Language> languages, string name,
-        IPartitionInstance partition, Action<string> sendAll, Action<IClientInfo, string> send)
+        IPartitionInstance partition, Func<string, Task> sendAll, Func<IClientInfo, string, Task> send)
     {
         _name = name;
         _sendAll = sendAll;
@@ -51,16 +51,16 @@ public class LionWebServer
         publisher.Subscribe<IPartitionEvent>(SendPartitionEventToAllClients);
     }
 
-    private void SendPartitionEventToAllClients(object? sender, IPartitionEvent? @event)
+    private void SendPartitionEventToAllClients(object? sender, IPartitionEvent? partitionEvent)
     {
-        if (@event == null)
+        if (partitionEvent == null)
             return;
 
-        IDeltaEvent deltaEvent = _mapper.Map(@event);
+        IDeltaEvent deltaEvent = _mapper.Map(partitionEvent);
         SendAll(deltaEvent);
     }
 
-    private void SendAll(IDeltaContent deltaContent)
+    private async Task SendAll(IDeltaContent deltaContent)
     {
         switch (deltaContent)
         {
@@ -77,16 +77,16 @@ public class LionWebServer
                 break;
         }
 
-        _sendAll(_deltaSerializer.Serialize(deltaContent));
+        await _sendAll(_deltaSerializer.Serialize(deltaContent));
     }
 
-    private void Send(IClientInfo clientInfo, IDeltaContent deltaContent)
+    private async Task Send(IClientInfo clientInfo, IDeltaContent deltaContent)
     {
         Console.WriteLine($"{_name}: sending to {clientInfo}: {deltaContent.GetType()}");
-        _send(clientInfo, _deltaSerializer.Serialize(deltaContent));
+        await _send(clientInfo, _deltaSerializer.Serialize(deltaContent));
     }
 
-    public void Receive(IWebSocketMessage msg)
+    public async Task Receive(IWebSocketMessage msg)
     {
         try
         {
@@ -107,7 +107,7 @@ public class LionWebServer
                 case SignOnRequest signOnRequest:
                     Console.WriteLine(
                         $"{_name}: received {nameof(SignOnRequest)} for {msg.ClientInfo}: {signOnRequest})");
-                    Send(msg.ClientInfo,
+                    await Send(msg.ClientInfo,
                         new SignOnResponse(msg.ClientInfo.ParticipationId, signOnRequest.QueryId, null));
                     break;
 
