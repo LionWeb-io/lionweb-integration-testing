@@ -34,7 +34,7 @@ public abstract class WebSocketClientTestBase : IDisposable
 
     protected WebSocketClientTestBase()
     {
-        Console.WriteLine(Directory.GetCurrentDirectory());
+        Debug.WriteLine(Directory.GetCurrentDirectory());
         StartServer();
     }
 

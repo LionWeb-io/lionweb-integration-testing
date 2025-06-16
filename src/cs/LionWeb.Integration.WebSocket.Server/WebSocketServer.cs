@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Net;
 using System.Net.WebSockets;
 using System.Text;
@@ -22,7 +23,7 @@ public class WebSocketServer
         await webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
-        Console.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         // serverPartition.Documentation = new Documentation("documentation");
 
         // var serverPartition = new LenientPartition("serverPartition", server.LionWebVersion.BuiltIns.Node);
@@ -107,7 +108,7 @@ public class WebSocketServer
         var clientInfo = new ClientInfo() { ParticipationId = GetNextParticipationId() };
         _knownClients.TryAdd(clientInfo, socket);
 
-        Console.WriteLine($"WebSocket connection accepted: {context.Request.RemoteEndPoint}");
+        Debug.WriteLine($"WebSocket connection accepted: {context.Request.RemoteEndPoint}");
 
         // Handle incoming messages
         byte[] buffer = new byte[BUFFER_SIZE];

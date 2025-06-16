@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event.Partition;
@@ -71,7 +72,7 @@ public class LionWebClient
         if (deltaContent is IDeltaCommand { CommandId: { } commandId })
             _ownCommands.TryAdd(commandId, 1);
         
-        Console.WriteLine($"{_name}: sending: {deltaContent.GetType()}");
+        Debug.WriteLine($"{_name}: sending: {deltaContent.GetType()}");
         await _send.Invoke(_deltaSerializer.Serialize(deltaContent));
     }
     
@@ -79,7 +80,6 @@ public class LionWebClient
     {
         try
         {
-            // Console.WriteLine($"{_name} received event: {msg}");
             IDeltaContent content = _deltaSerializer.Deserialize<IDeltaContent>(msg);
             Interlocked.Increment(ref _messageCount);
             switch (content)
@@ -93,31 +93,31 @@ public class LionWebClient
                                 _participationId == cmd.ParticipationId &&
                                 _ownCommands.TryRemove(cmd.CommandId, out _)))
                         {
-                            Console.WriteLine(
+                            Debug.WriteLine(
                                 $"{_name}: ignoring own event: {deltaEvent.GetType()}({commandSource},{deltaEvent.EventSequenceNumber})");
                             return;
                         }
                     }
 
-                    Console.WriteLine(
+                    Debug.WriteLine(
                         $"{_name}: received event: {deltaEvent.GetType()}({commandSource},{deltaEvent.EventSequenceNumber})");
                     deltaEvent.InternalParticipationId = commandSource?.ParticipationId;
                     _eventReceiver.Receive(deltaEvent);
                     break;
 
                 case SignOnResponse signOnResponse:
-                    Console.WriteLine($"{_name}: received {nameof(SignOnResponse)}: {signOnResponse})");
+                    Debug.WriteLine($"{_name}: received {nameof(SignOnResponse)}: {signOnResponse})");
                     _participationId = signOnResponse.ParticipationId;
                     break;
 
                 default:
-                    Console.WriteLine($"{_name}: ignoring received: {content.GetType()}({content.InternalParticipationId})");
+                    Debug.WriteLine($"{_name}: ignoring received: {content.GetType()}({content.InternalParticipationId})");
                     break;
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Debug.WriteLine(e);
         }
     }
 }

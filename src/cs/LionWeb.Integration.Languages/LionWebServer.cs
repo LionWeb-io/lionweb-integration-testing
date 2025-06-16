@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics;
+using System.Text.Json;
 using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event.Partition;
@@ -68,12 +69,12 @@ public class LionWebServer
                 var commandSource = deltaEvent is ISingleDeltaEvent { OriginCommands: { } cmds }
                     ? cmds.First()
                     : null;
-                Console.WriteLine(
+                Debug.WriteLine(
                     $"{_name}: sending event: {deltaEvent.GetType()}({commandSource},{deltaEvent.EventSequenceNumber})");
                 break;
 
             default:
-                Console.WriteLine($"{_name}: sending: {deltaContent.GetType()}");
+                Debug.WriteLine($"{_name}: sending: {deltaContent.GetType()}");
                 break;
         }
 
@@ -82,7 +83,7 @@ public class LionWebServer
 
     private async Task Send(IClientInfo clientInfo, IDeltaContent deltaContent)
     {
-        Console.WriteLine($"{_name}: sending to {clientInfo}: {deltaContent.GetType()}");
+        Debug.WriteLine($"{_name}: sending to {clientInfo}: {deltaContent.GetType()}");
         await _send(clientInfo, _deltaSerializer.Serialize(deltaContent));
     }
 
@@ -90,40 +91,39 @@ public class LionWebServer
     {
         try
         {
-            // Console.WriteLine($"{_name} received command: {msg}");
             var content = _deltaSerializer.Deserialize<IDeltaContent>(msg.MessageContent);
             content.InternalParticipationId = msg.ClientInfo.ParticipationId;
-            Console.WriteLine(
+            Debug.WriteLine(
                 $"{_name}: received {content.GetType().Name} for {msg.ClientInfo.ParticipationId}: {content})");
             Interlocked.Increment(ref _messageCount);
 
             switch (content)
             {
                 case IDeltaCommand command:
-                    Console.WriteLine($"{_name}: received command: {command.GetType()}({command.CommandId})");
+                    Debug.WriteLine($"{_name}: received command: {command.GetType()}({command.CommandId})");
                     _commandReceiver.Receive(command);
                     break;
 
                 case SignOnRequest signOnRequest:
-                    Console.WriteLine(
+                    Debug.WriteLine(
                         $"{_name}: received {nameof(SignOnRequest)} for {msg.ClientInfo}: {signOnRequest})");
                     await Send(msg.ClientInfo,
                         new SignOnResponse(msg.ClientInfo.ParticipationId, signOnRequest.QueryId, null));
                     break;
 
                 default:
-                    Console.WriteLine($"{_name}: ignoring received: {content.GetType()}({content.InternalParticipationId})");
+                    Debug.WriteLine($"{_name}: ignoring received: {content.GetType()}({content.InternalParticipationId})");
                     break;
             }
         }
         catch (JsonException e)
         {
-            Console.WriteLine(msg.MessageContent);
-            Console.WriteLine(e);
+            Debug.WriteLine(msg.MessageContent);
+            Debug.WriteLine(e);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Debug.WriteLine(e);
         }
     }
 }
