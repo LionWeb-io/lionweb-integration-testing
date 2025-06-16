@@ -22,8 +22,11 @@ public class WebSocketServer : IDeltaRepositoryConnector
         var webSocketServer = new WebSocketServer();
         webSocketServer.StartServer(IpAddress, Port);
 
+        Trace.Listeners.Add(new ConsoleTraceListener());
+
         var serverPartition = new Geometry("a");
-        // var serverPartition = new LenientPartition("serverPartition", webSocketServer.LionWebVersion.BuiltIns.Node);
+        // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
+        // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer = new LionWebServer(webSocketServer.LionWebVersion, webSocketServer.Languages, "server", serverPartition,

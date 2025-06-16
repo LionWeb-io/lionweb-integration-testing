@@ -89,7 +89,7 @@ public class WebSocketTests : WebSocketClientTestBase
     private static readonly string _ipAddress = "localhost";
     private static readonly int _port = 42424;
 
-    [TestMethod, Timeout(13000)]
+    [TestMethod, Timeout(6000)]
     public async Task Model()
     {
         var serverNode = new Geometry("a");
