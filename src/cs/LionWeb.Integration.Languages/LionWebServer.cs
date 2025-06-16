@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Text.Json;
 using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event.Partition;
@@ -9,24 +8,39 @@ using ParticipationId = string;
 
 namespace LionWeb.Integration.Languages;
 
+public interface IDeltaRepositoryConnector
+{
+    Task Send(IClientInfo clientInfo, IDeltaContent content);
+    Task SendAll(IDeltaContent content);
+    event EventHandler<IDeltaMessageContext> Receive;
+}
+
+public interface IDeltaMessageContext
+{
+    IClientInfo ClientInfo { get; }
+    IDeltaContent Content { get; }
+}
+
+public interface IClientInfo
+{
+    ParticipationId ParticipationId { get; }
+}
+
 public class LionWebServer
 {
     private readonly string _name;
-    private readonly Func<string, Task> _sendAll;
-    private readonly Func<IClientInfo, string, Task> _send;
+    private readonly IDeltaRepositoryConnector _connector;
     private readonly DeltaProtocolPartitionCommandReceiver _commandReceiver;
-    private readonly DeltaSerializer _deltaSerializer;
     private readonly PartitionEventToDeltaEventMapper _mapper;
 
     private long _messageCount;
     public long MessageCount => Interlocked.Read(ref _messageCount);
 
     public LionWebServer(LionWebVersions lionWebVersion, List<Language> languages, string name,
-        IPartitionInstance partition, Func<string, Task> sendAll, Func<IClientInfo, string, Task> send)
+        IPartitionInstance partition, IDeltaRepositoryConnector connector)
     {
         _name = name;
-        _sendAll = sendAll;
-        _send = send;
+        _connector = connector;
         _mapper = new PartitionEventToDeltaEventMapper(new ExceptionParticipationIdProvider(), new EventSequenceNumberProvider(), lionWebVersion);
         
         Dictionary<string, IReadableNode> sharedNodeMap = [];
@@ -46,10 +60,11 @@ public class LionWebServer
         );
         var replicator = new RewritePartitionEventReplicator(partition, sharedNodeMap);
         replicator.ReplicateFrom(partitionEventHandler);
-        _deltaSerializer = new DeltaSerializer();
 
         var publisher = replicator;
         publisher.Subscribe<IPartitionEvent>(SendPartitionEventToAllClients);
+
+        connector.Receive += (_, content) => Receive(content);
     }
 
     private void SendPartitionEventToAllClients(object? sender, IPartitionEvent? partitionEvent)
@@ -78,23 +93,23 @@ public class LionWebServer
                 break;
         }
 
-        await _sendAll(_deltaSerializer.Serialize(deltaContent));
+        await _connector.SendAll(deltaContent);
     }
 
     private async Task Send(IClientInfo clientInfo, IDeltaContent deltaContent)
     {
         Debug.WriteLine($"{_name}: sending to {clientInfo}: {deltaContent.GetType()}");
-        await _send(clientInfo, _deltaSerializer.Serialize(deltaContent));
+        await _connector.Send(clientInfo, deltaContent);
     }
 
-    public async Task Receive(IWebSocketMessage msg)
+    private async Task Receive(IDeltaMessageContext messageContext)
     {
         try
         {
-            var content = _deltaSerializer.Deserialize<IDeltaContent>(msg.MessageContent);
-            content.InternalParticipationId = msg.ClientInfo.ParticipationId;
+            var content = messageContext.Content;
+            content.InternalParticipationId = messageContext.ClientInfo.ParticipationId;
             Debug.WriteLine(
-                $"{_name}: received {content.GetType().Name} for {msg.ClientInfo.ParticipationId}: {content})");
+                $"{_name}: received {content.GetType().Name} for {messageContext.ClientInfo.ParticipationId}: {content})");
             Interlocked.Increment(ref _messageCount);
 
             switch (content)
@@ -106,20 +121,15 @@ public class LionWebServer
 
                 case SignOnRequest signOnRequest:
                     Debug.WriteLine(
-                        $"{_name}: received {nameof(SignOnRequest)} for {msg.ClientInfo}: {signOnRequest})");
-                    await Send(msg.ClientInfo,
-                        new SignOnResponse(msg.ClientInfo.ParticipationId, signOnRequest.QueryId, null));
+                        $"{_name}: received {nameof(SignOnRequest)} for {messageContext.ClientInfo}: {signOnRequest})");
+                    await Send(messageContext.ClientInfo,
+                        new SignOnResponse(messageContext.ClientInfo.ParticipationId, signOnRequest.QueryId, null));
                     break;
 
                 default:
                     Debug.WriteLine($"{_name}: ignoring received: {content.GetType()}({content.InternalParticipationId})");
                     break;
             }
-        }
-        catch (JsonException e)
-        {
-            Debug.WriteLine(msg.MessageContent);
-            Debug.WriteLine(e);
         }
         catch (Exception e)
         {
@@ -145,15 +155,4 @@ public class EventSequenceNumberProvider : IEventSequenceNumberProvider
 {
     private long next = 0;
     public long Create() => ++next;
-}
-
-public interface IWebSocketMessage
-{
-    IClientInfo ClientInfo { get; }
-    string MessageContent { get; }
-}
-
-public interface IClientInfo
-{
-    ParticipationId ParticipationId { get; }
 }

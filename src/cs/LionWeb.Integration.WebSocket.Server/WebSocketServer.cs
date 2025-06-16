@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Net.WebSockets;
@@ -7,15 +6,16 @@ using System.Text;
 using LionWeb.Core;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
+using LionWeb.Core.Serialization;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using ParticipationId = string;
 
 namespace LionWeb.Integration.WebSocket.Server;
 
-public class WebSocketServer
+public class WebSocketServer : IDeltaRepositoryConnector
 {
-    public const int BUFFER_SIZE = 0x10000;
+    private const int BUFFER_SIZE = 0x10000;
 
     public static async Task Main(string[] args)
     {
@@ -24,31 +24,31 @@ public class WebSocketServer
 
         var serverPartition = new Geometry("a");
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
-        // serverPartition.Documentation = new Documentation("documentation");
 
         // var serverPartition = new LenientPartition("serverPartition", server.LionWebVersion.BuiltIns.Node);
         var lionWebServer = new LionWebServer(webSocketServer.LionWebVersion, webSocketServer.Languages, "server", serverPartition,
-            async s => await webSocketServer.SendAll(s), async (i, s) => await webSocketServer.Send(i, s));
-        webSocketServer.Received += async (sender, msg) => await lionWebServer.Receive(msg);
+            webSocketServer);
         Console.ReadLine();
     }
 
-    protected static string IpAddress { get; set; } = "localhost";
-    protected static int Port { get; set; } = 42424;
+    private static string IpAddress { get; set; } = "localhost";
+    private static int Port { get; set; } = 42424;
 
-    protected LionWebVersions LionWebVersion { get; init; } = LionWebVersions.v2023_1;
-    public List<Language> Languages { get; init; } = [ShapesLanguage.Instance];
+    private LionWebVersions LionWebVersion { get; init; } = LionWebVersions.v2023_1;
+    private List<Language> Languages { get; init; } = [ShapesLanguage.Instance];
 
+    private readonly DeltaSerializer _deltaSerializer = new();
     private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];
-    private int nextParticipationId = 0;
+    private int _nextParticipationId = 0;
 
     private HttpListener _listener;
 
-    public event EventHandler<IWebSocketMessage> Received;
+    /// <inheritdoc />
+    public event EventHandler<IDeltaMessageContext>? Receive;
 
     public async Task StartServer(string ipAddress, int port)
     {
-        var _listener = new HttpListener();
+        _listener = new HttpListener();
         _listener.Prefixes.Add($"http://{ipAddress}:{port}/");
         _listener.Start();
 
@@ -80,7 +80,11 @@ public class WebSocketServer
         _listener.Stop();
     }
 
-    public async Task SendAll(string msg)
+    /// <inheritdoc />
+    public async Task SendAll(IDeltaContent content) =>
+        await SendAll(_deltaSerializer.Serialize(content));
+
+    private async Task SendAll(string msg)
     {
         var encoded = Encode(msg);
         foreach ((_, System.Net.WebSockets.WebSocket socket) in _knownClients)
@@ -92,7 +96,12 @@ public class WebSocketServer
     private static byte[] Encode(string msg) =>
         Encoding.UTF8.GetBytes(msg);
 
-    public async Task Send(IClientInfo clientInfo, string msg)
+
+    /// <inheritdoc />
+    public async Task Send(IClientInfo clientInfo, IDeltaContent content) =>
+        await Send(clientInfo, _deltaSerializer.Serialize(content));
+
+    private async Task Send(IClientInfo clientInfo, string msg)
     {
         if (_knownClients.TryGetValue(clientInfo, out var socket))
         {
@@ -121,7 +130,7 @@ public class WebSocketServer
                 case WebSocketMessageType.Text:
                 {
                     string receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Received?.Invoke(this, new WebSocketMessage(clientInfo, receivedMessage));
+                    Receive?.Invoke(this, new DeltaMessageContext(clientInfo, _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage)));
                     break;
                 }
                 case WebSocketMessageType.Close:
@@ -139,12 +148,12 @@ public class WebSocketServer
     {
         lock (this)
         {
-            return "participation" + nextParticipationId++;
+            return "participation" + _nextParticipationId++;
         }
     }
 }
 
-internal record WebSocketMessage(IClientInfo ClientInfo, string MessageContent) : IWebSocketMessage;
+internal record DeltaMessageContext(IClientInfo ClientInfo, IDeltaContent Content) : IDeltaMessageContext; 
 
 internal record ClientInfo : IClientInfo
 {
