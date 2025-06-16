@@ -90,23 +90,13 @@ public class WebSocketTests : WebSocketClientTestBase
     public async Task Model()
     {
         var serverNode = new Geometry("a");
-        // var server = Server;
-        // Console.WriteLine(server);
-        // {
-        //     var receiverServer = new Receiver(lionWebVersion, languages, "server", serverNode, true);
-        //     receiverServer.Send(s => server.Send(s));
-        //     server.Received += (sender, msg) => receiverServer.Receive(msg);
-        // }
-
 
         var clientAClone = (Geometry)new SameIdCloner([serverNode]).Clone()[serverNode];
-        ((EventHandlerBase)clientAClone.GetCommander()).ParticipationId = "client_A_partition";
         var webSocketA = new WebSocketClient("A");
         var lionWebA = new LionWebClient(lionWebVersion, languages, "client_A", clientAClone, s => webSocketA.Send(s));
         webSocketA.Received += (sender, msg) => lionWebA.Receive(msg);
 
         var clientBClone = (Geometry)new SameIdCloner([serverNode]).Clone()[serverNode];
-        ((EventHandlerBase)clientBClone.GetCommander()).ParticipationId = "client_B_partition";
         var webSocketB = new WebSocketClient("B");
         var lionWebB = new LionWebClient(lionWebVersion, languages, "client_B", clientBClone, s => webSocketB.Send(s));
         webSocketB.Received += (sender, msg) => lionWebB.Receive(msg);

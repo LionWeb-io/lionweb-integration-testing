@@ -25,6 +25,8 @@ public class LionWebClient
     {
         _name = name;
         _send = send;
+        _mapper = new PartitionEventToDeltaCommandMapper(new CommandIdProvider(), lionWebVersion);
+        
         Dictionary<string, IReadableNode> sharedNodeMap = [];
         var partitionEventHandler = new PartitionEventHandler(name);
         DeserializerBuilder deserializerBuilder = new DeserializerBuilder()
@@ -45,16 +47,15 @@ public class LionWebClient
         _deltaSerializer = new DeltaSerializer();
 
         IPartitionPublisher publisher = replicator;
-        _mapper = new PartitionEventToDeltaCommandMapper(new CommandIdProvider(), lionWebVersion);
-        publisher.Subscribe<IPartitionEvent>(ProcessEvent);
+        publisher.Subscribe<IPartitionEvent>(SendPartitionEventToRepository);
     }
 
-    private void ProcessEvent(object? sender, IPartitionEvent? @event)
+    private void SendPartitionEventToRepository(object? sender, IPartitionEvent? partitionEvent)
     {
-        if (@event == null)
+        if (partitionEvent == null)
             return;
 
-        IDeltaCommand deltaCommand = _mapper.Map(@event);
+        IDeltaCommand deltaCommand = _mapper.Map(partitionEvent);
 
         Send(deltaCommand);
     }
@@ -81,6 +82,7 @@ public class LionWebClient
 
                     Console.WriteLine(
                         $"{_name}: received event: {@event.GetType()}({commandSource},{@event.EventSequenceNumber})");
+                    @event.InternalParticipationId = commandSource?.ParticipationId;
                     _eventReceiver.Receive(@event);
                     break;
 
