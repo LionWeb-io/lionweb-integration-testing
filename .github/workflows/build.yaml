@@ -14,6 +14,8 @@ jobs:
         with:
           schema: 'delta.schema.json'
           file: 'delta/**/*.json'
+      - name: Download serialization.schema.json from specification repository
+        run: ./serialization.schema.json.sh
       - name: Validate serialization JSON
         uses: cardinalby/schema-validator-action@v3
         with:
