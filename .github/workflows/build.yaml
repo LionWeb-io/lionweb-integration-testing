@@ -20,7 +20,13 @@ jobs:
         uses: cardinalby/schema-validator-action@v3
         with:
           schema: 'serialization.schema.json'
-          file: 'testchanges/**/*.json|testset/valid/**.json|testset/withLanguage/valid/**.json'
+          file:
+            'testchanges/**/*.json
+            |testset/valid/**/*.json
+            |testset/valid/**.json
+            |testset/withLanguage/valid/**/*.json
+            |testset/withLanguage/valid/*.json
+            '
 #      - uses: denoland/setup-deno@v1.1.1
 #        with:
 #          deno-version: v1.x  # run with the latest stable version of Deno
