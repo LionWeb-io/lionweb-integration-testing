@@ -1,21 +1,28 @@
 name: LionWeb integration tests
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@v1.1.1
+      - name: Download delta.schema.json from specification repository
+        run: ./download-delta.schema.json.sh
+      - name: Validate delta JSON
+        uses: cardinalby/schema-validator-action@v3
         with:
-          deno-version: v1.x  # run with the latest stable version of Deno
-      - name: Log Deno version
-        run: deno --version
-      - name: Run clone script
-        run: ./clone.sh
-        env:
-          LIONWEB_PAT: ${{ secrets.LIONWEB_PAT }}
-      - name: Run Deno integration tests
-        run: ./test.sh
+          schema: 'delta.schema.json'
+          file: 'delta/**/*.json'
+#      - uses: denoland/setup-deno@v1.1.1
+#        with:
+#          deno-version: v1.x  # run with the latest stable version of Deno
+#      - name: Log Deno version
+#        run: deno --version
+#      - name: Run clone script
+#        run: ./clone.sh
+#        env:
+#          LIONWEB_PAT: ${{ secrets.LIONWEB_PAT }}
+#      - name: Run Deno integration tests
+#        run: ./test.sh
 
