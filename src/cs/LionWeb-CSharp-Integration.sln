@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Integration.WebSock
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Integration.Languages", "LionWeb.Integration.Languages\LionWeb.Integration.Languages.csproj", "{A2ADB115-27FE-4E19-A640-016231B94762}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Integration.WebSocket.Client", "LionWeb.Integration.WebSocket.Client\LionWeb.Integration.WebSocket.Client.csproj", "{AE07F89A-476F-456F-A15E-A081E281499D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{A2ADB115-27FE-4E19-A640-016231B94762}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2ADB115-27FE-4E19-A640-016231B94762}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2ADB115-27FE-4E19-A640-016231B94762}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE07F89A-476F-456F-A15E-A081E281499D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE07F89A-476F-456F-A15E-A081E281499D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE07F89A-476F-456F-A15E-A081E281499D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE07F89A-476F-456F-A15E-A081E281499D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DC2F0113-2B6B-44C9-BDAC-E0A82EC06722} = {A7AD74F7-DCEF-411B-9913-228A914A7234}

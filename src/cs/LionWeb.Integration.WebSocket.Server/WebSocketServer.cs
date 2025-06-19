@@ -1,4 +1,21 @@
-﻿using System.Collections.Concurrent;
+﻿// Copyright 2025 LionWeb Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-FileCopyrightText: 2025 LionWeb Project
+// SPDX-License-Identifier: Apache-2.0
+
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using System.Net.WebSockets;
@@ -17,12 +34,15 @@ public class WebSocketServer : IDeltaRepositoryConnector
 {
     private const int BUFFER_SIZE = 0x10000;
 
+    private static string IpAddress { get; set; } = "localhost";
+    private static int Port { get; set; } = 42424;
+
     public static void Main(string[] args)
     {
+        Trace.Listeners.Add(new ConsoleTraceListener());
+        
         var webSocketServer = new WebSocketServer();
         webSocketServer.StartServer(IpAddress, Port);
-
-        Trace.Listeners.Add(new ConsoleTraceListener());
 
         var serverPartition = new Geometry("a");
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
@@ -35,11 +55,8 @@ public class WebSocketServer : IDeltaRepositoryConnector
         webSocketServer.Stop();
     }
 
-    private static string IpAddress { get; set; } = "localhost";
-    private static int Port { get; set; } = 42424;
-
-    private LionWebVersions LionWebVersion { get; init; } = LionWebVersions.v2023_1;
-    private List<Language> Languages { get; init; } = [ShapesLanguage.Instance];
+    public LionWebVersions LionWebVersion { get; init; } = LionWebVersions.v2023_1;
+    public List<Language> Languages { get; init; } = [ShapesLanguage.Instance];
 
     private readonly DeltaSerializer _deltaSerializer = new();
     private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];

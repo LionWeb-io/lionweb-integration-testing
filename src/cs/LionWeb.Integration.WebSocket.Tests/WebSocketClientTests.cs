@@ -1,5 +1,21 @@
-﻿using System.Diagnostics;
-using System.Runtime.CompilerServices;
+﻿// Copyright 2025 LionWeb Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-FileCopyrightText: 2025 LionWeb Project
+// SPDX-License-Identifier: Apache-2.0
+
+using System.Diagnostics;
 using System.Text.Json;
 using LionWeb.Core;
 using LionWeb.Core.M1.Event;
@@ -8,15 +24,19 @@ using LionWeb.Core.Serialization;
 using LionWeb.Core.Utilities;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
+using LionWeb.Integration.WebSocket.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
 [TestClass]
-public class WebSocketTests : WebSocketClientTestBase
+public class WebSocketClientTests : WebSocketClientTestBase
 {
     private static readonly IVersion2023_1 _lionWebVersion = LionWebVersions.v2023_1;
-    private static readonly List<Language> _languages = [ShapesLanguage.Instance, _lionWebVersion.BuiltIns, _lionWebVersion.LionCore];
+
+    private static readonly List<Language> _languages =
+        [ShapesLanguage.Instance, _lionWebVersion.BuiltIns, _lionWebVersion.LionCore];
+
     private const string IpAddress = "localhost";
     private const int Port = 42424;
 
@@ -78,8 +98,8 @@ public class WebSocketTests : WebSocketClientTestBase
 
         var ipAddress = "localhost";
         var port = 42424;
-        await clientA.ConnectToServer($"ws://{ipAddress}:{port}");
-        await clientB.ConnectToServer($"ws://{ipAddress}:{port}");
+        await clientA.ConnectToServer(ipAddress, port);
+        await clientB.ConnectToServer(ipAddress, port);
         await clientA.Send("hello from client A");
         Thread.Sleep(100);
     }
@@ -114,35 +134,16 @@ public class WebSocketTests : WebSocketClientTestBase
         bPartition.Documentation.Text = "bye there";
         aClient.WaitForCount(4);
 
-        AssertEquals([aPartition], [bPartition]);
+        AssertEquals(aPartition, bPartition);
     }
 
-    private static async Task<LionWebClient> ConnectWebSocket(Geometry clientAClone, string name)
+    private static async Task<LionWebClient> ConnectWebSocket(Geometry partition, string name)
     {
         var webSocket = new WebSocketClient(name);
-        var lionWeb = new LionWebClient(_lionWebVersion, _languages, $"client_{name}", clientAClone, webSocket);
-        await webSocket.ConnectToServer($"ws://{IpAddress}:{Port}");
+        var lionWeb = new LionWebClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocket);
+        await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.Send(new SignOnRequest("2025.1", IdUtils.NewId(), null));
         lionWeb.WaitForCount(1);
         return lionWeb;
-    }
-
-    private void AssertEquals(IEnumerable<INode?> expected, IEnumerable<INode?> actual)
-    {
-        List<IDifference> differences = new Comparer(expected.ToList(), actual.ToList()).Compare().ToList();
-        Assert.IsTrue(differences.Count == 0, differences.DescribeAll(new()));
-    }
-}
-
-static class ClientExtensions
-{
-    private const int SleepInterval = 100;
-
-    public static void WaitForCount(this LionWebClient client, int count)
-    {
-        while (client.MessageCount < count)
-        {
-            Thread.Sleep(SleepInterval);
-        }
     }
 }
