@@ -1,6 +1,6 @@
 {
   "messageKind": "PartitionAdded",
-  "newPartition": {
+  "newwPartition": {
     "nodes": [
       {
         "id": "a",
