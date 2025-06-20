@@ -102,12 +102,12 @@ public class LionWebServer
     {
         switch (deltaContent)
         {
-            case ISingleDeltaEvent deltaEvent:
-                var commandSource = deltaEvent is ISingleDeltaEvent { OriginCommands: { } cmds }
+            case IDeltaEvent deltaEvent:
+                var commandSource = deltaEvent is { OriginCommands: { } cmds }
                     ? cmds.First()
                     : null;
                 Debug.WriteLine(
-                    $"{_name}: sending event: {deltaEvent.GetType()}({commandSource},{deltaEvent.EventSequenceNumber})");
+                    $"{_name}: sending event: {deltaEvent.GetType()}({commandSource},{deltaEvent.SequenceNumber})");
                 break;
 
             default:

@@ -113,7 +113,7 @@ public class LionWebClient
             {
                 case IDeltaEvent deltaEvent:
                     CommandSource? commandSource = null;
-                    if (deltaEvent is ISingleDeltaEvent singleDeltaEvent)
+                    if (deltaEvent is IDeltaEvent singleDeltaEvent)
                     {
                         commandSource = singleDeltaEvent.OriginCommands.FirstOrDefault();
                         if (singleDeltaEvent.OriginCommands.All(cmd =>
@@ -121,13 +121,13 @@ public class LionWebClient
                                 _ownCommands.TryRemove(cmd.CommandId, out _)))
                         {
                             Debug.WriteLine(
-                                $"{_name}: ignoring own event: {deltaEvent.GetType()}({commandSource},{deltaEvent.EventSequenceNumber})");
+                                $"{_name}: ignoring own event: {deltaEvent.GetType()}({commandSource},{deltaEvent.SequenceNumber})");
                             return;
                         }
                     }
 
                     Debug.WriteLine(
-                        $"{_name}: received event: {deltaEvent.GetType()}({commandSource},{deltaEvent.EventSequenceNumber})");
+                        $"{_name}: received event: {deltaEvent.GetType()}({commandSource},{deltaEvent.SequenceNumber})");
                     deltaEvent.InternalParticipationId = commandSource?.ParticipationId;
                     _eventReceiver.Receive(deltaEvent);
                     break;
