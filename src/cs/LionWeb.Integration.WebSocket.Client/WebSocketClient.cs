@@ -21,6 +21,8 @@ using System.Text;
 using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Core.Serialization;
+using LionWeb.Core.Serialization.Delta;
+using LionWeb.Core.Serialization.Delta.Query;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 

@@ -24,11 +24,13 @@ using LionWeb.Core;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
 using LionWeb.Core.Serialization;
+using LionWeb.Core.Serialization.Delta;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
-using ParticipationId = string;
 
 namespace LionWeb.Integration.WebSocket.Server;
+
+using ParticipationId = NodeId;
 
 public class WebSocketServer : IDeltaRepositoryConnector
 {
@@ -40,7 +42,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     public static void Main(string[] args)
     {
         Trace.Listeners.Add(new ConsoleTraceListener());
-        
+
         var webSocketServer = new WebSocketServer();
         webSocketServer.StartServer(IpAddress, Port);
 
@@ -49,7 +51,8 @@ public class WebSocketServer : IDeltaRepositoryConnector
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
-        var lionWebServer = new LionWebServer(webSocketServer.LionWebVersion, webSocketServer.Languages, "server", serverPartition,
+        var lionWebServer = new LionWebServer(webSocketServer.LionWebVersion, webSocketServer.Languages, "server",
+            serverPartition,
             webSocketServer);
         Console.ReadLine();
         webSocketServer.Stop();
@@ -153,7 +156,9 @@ public class WebSocketServer : IDeltaRepositoryConnector
                 case WebSocketMessageType.Text:
                 {
                     string receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Receive?.Invoke(this, new DeltaMessageContext(clientInfo, _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage)));
+                    Receive?.Invoke(this,
+                        new DeltaMessageContext(clientInfo,
+                            _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage)));
                     break;
                 }
                 case WebSocketMessageType.Close:
@@ -176,7 +181,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     }
 }
 
-internal record DeltaMessageContext(IClientInfo ClientInfo, IDeltaContent Content) : IDeltaMessageContext; 
+internal record DeltaMessageContext(IClientInfo ClientInfo, IDeltaContent Content) : IDeltaMessageContext;
 
 internal record ClientInfo : IClientInfo
 {
