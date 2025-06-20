@@ -14,7 +14,7 @@ Deno.test("M3 instances (Deno)", async (tctx) => {
         /* const deserializationJava = */ deserializeLanguages(serializationJava as LionWebJsonChunk)
     })
 
-    await tctx.step("check whether Java and TypeScript serializations match", async () => {
+    await tctx.step("check whether Java (=\x1b[1;31mActual\x1b[0m/right) and TypeScript (=\x1b[1;32mExpected\x1b[0m/right) serializations match", async () => {
         const serializationJava = await readFileAsJson(fromRoot(pathOfSerialization("m3", "Java"))) as LionWebJsonChunk
         const serializationTypeScript = await readFileAsJson(fromRoot(pathOfSerialization("m3", "TypeScript"))) as LionWebJsonChunk
         assertEquals(sortedSerializationChunk(serializationJava), sortedSerializationChunk(serializationTypeScript))
