@@ -1,0 +1,37 @@
+{
+  "messageKind": "ChildDeleted",
+  "parent": "nodeId",
+  "deletedChild": "a",
+  "deletedDescendants": [
+    "b"
+  ],
+  "containment": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyContainment"
+  },
+  "index": 3,
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

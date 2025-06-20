@@ -1,0 +1,141 @@
+{
+  "messageKind": "CompositeEvent",
+  "parts": [
+    {
+      "messageKind": "ChildAdded",
+      "parent": "nodeId",
+      "newChild": {
+        "nodes": [
+          {
+            "id": "a",
+            "classifier": {
+              "language": "myLang",
+              "version": "1",
+              "key": "myConcept"
+            },
+            "properties": [],
+            "containments": [],
+            "references": [],
+            "annotations": [],
+            "parent": null
+          },
+          {
+            "id": "b",
+            "classifier": {
+              "language": "myLang",
+              "version": "1",
+              "key": "myConcept"
+            },
+            "properties": [],
+            "containments": [],
+            "references": [],
+            "annotations": [],
+            "parent": "a"
+          }
+        ]
+      },
+      "containment": {
+        "language": "MyLang",
+        "version": "4",
+        "key": "MyContainment"
+      },
+      "index": 3,
+      "originCommands": [
+        {
+          "participationId": "partId",
+          "commandId": "cmdId"
+        },
+        {
+          "participationId": "otherPartId",
+          "commandId": "otherCmdId"
+        }
+      ],
+      "sequenceNumber": "122",
+      "protocolMessages": [
+        {
+          "kind": "msgKind",
+          "message": "Human message",
+          "data": [
+            {
+              "key": "dataKey",
+              "value": "dataValue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "messageKind": "PartitionDeleted",
+      "deletedPartition": "a",
+      "deletedDescendants": [
+        "b"
+      ],
+      "originCommands": [
+        {
+          "participationId": "partId",
+          "commandId": "cmdId"
+        },
+        {
+          "participationId": "otherPartId",
+          "commandId": "otherCmdId"
+        }
+      ],
+      "sequenceNumber": "123",
+      "protocolMessages": [
+        {
+          "kind": "msgKind",
+          "message": "Human message",
+          "data": [
+            {
+              "key": "dataKey",
+              "value": "dataValue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "messageKind": "ChildDeleted",
+      "parent": "nodeId",
+      "deletedChild": "a",
+      "deletedDescendants": [],
+      "containment": {
+        "language": "MyLang",
+        "version": "4",
+        "key": "MyContainment"
+      },
+      "index": 3,
+      "originCommands": [
+        {
+          "participationId": "partId",
+          "commandId": "cmdId"
+        }
+      ],
+      "sequenceNumber": "124"
+    },
+    {
+      "messageKind": "Error",
+      "errorCode": "myErrorCode",
+      "message": "something is not right",
+      "originCommands": [
+        {
+          "participationId": "partId",
+          "commandId": "cmdId"
+        }
+      ],
+      "sequenceNumber": "125"
+    }
+  ],
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

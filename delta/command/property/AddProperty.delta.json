@@ -1,0 +1,23 @@
+{
+  "messageKind": "AddProperty",
+  "node": "nodeId",
+  "property": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyProperty"
+  },
+  "newValue": "hello",
+  "commandId": "cmdId",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

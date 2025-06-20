@@ -1,0 +1,35 @@
+{
+  "messageKind": "AnnotationMovedAndReplacedFromOtherParent",
+  "newParent": "newNodeId",
+  "newIndex": 3,
+  "movedAnnotation": "movedNodeId",
+  "oldParent": "oldNodeId",
+  "oldIndex": 44,
+  "replacedAnnotation": "c",
+  "replacedDescendants": [
+    "d"
+  ],
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

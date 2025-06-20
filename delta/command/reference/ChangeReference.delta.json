@@ -1,0 +1,27 @@
+{
+  "messageKind": "ChangeReference",
+  "parent": "nodeId",
+  "reference": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyReference"
+  },
+  "index": 3,
+  "oldTarget": "oldTargetNodeId",
+  "oldResolveInfo": "TargetNode name",
+  "newTarget": "otherNodeId",
+  "newResolveInfo": "otherNode name",
+  "commandId": "cmdId",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

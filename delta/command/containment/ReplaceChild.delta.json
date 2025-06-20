@@ -1,0 +1,54 @@
+{
+  "messageKind": "ReplaceChild",
+  "parent": "nodeId",
+  "newChild": {
+    "nodes": [
+      {
+        "id": "a",
+        "classifier": {
+          "language": "myLang",
+          "version": "1",
+          "key": "myConcept"
+        },
+        "properties": [],
+        "containments": [],
+        "references": [],
+        "annotations": [],
+        "parent": null
+      },
+      {
+        "id": "b",
+        "classifier": {
+          "language": "myLang",
+          "version": "1",
+          "key": "myConcept"
+        },
+        "properties": [],
+        "containments": [],
+        "references": [],
+        "annotations": [],
+        "parent": "a"
+      }
+    ]
+  },
+  "containment": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyProperty"
+  },
+  "index": 3,
+  "replacedChild": "replacedNodeId",
+  "commandId": "cmdId",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

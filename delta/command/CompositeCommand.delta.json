@@ -1,0 +1,81 @@
+{
+  "messageKind": "CompositeCommand",
+  "parts": [
+    {
+      "messageKind": "AddProperty",
+      "node": "nodeId",
+      "property": {
+        "language": "MyLang",
+        "version": "4",
+        "key": "MyProperty"
+      },
+      "newValue": "hello",
+      "commandId": "cmdId0",
+      "protocolMessages": [
+        {
+          "kind": "msgKind",
+          "message": "Human message",
+          "data": [
+            {
+              "key": "dataKey",
+              "value": "dataValue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "messageKind": "ChangeClassifier",
+      "node": "nodeId",
+      "newClassifier": {
+        "language": "MyLang",
+        "version": "3",
+        "key": "MyClassifier"
+      },
+      "commandId": "cmdId1",
+      "protocolMessages": [
+        {
+          "kind": "msgKind",
+          "message": "Human message",
+          "data": [
+            {
+              "key": "dataKey",
+              "value": "dataValue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "messageKind": "CompositeCommand",
+      "parts": [
+        {
+          "messageKind": "DeleteChild",
+          "parent": "nodeId",
+          "containment": {
+            "language": "MyLang",
+            "version": "4",
+            "key": "MyContainment"
+          },
+          "index": 3,
+          "deletedChild": "a",
+          "commandId": "cmdId2"
+        }
+      ],
+      "commandId": "cmdId3"
+    }
+  ],
+  "commandId": "cmdId4",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

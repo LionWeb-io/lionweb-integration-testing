@@ -1,0 +1,30 @@
+{
+  "messageKind": "AnnotationMovedInSameParent",
+  "newIndex": 3,
+  "movedAnnotation": "movedNodeId",
+  "parent": "nodeId",
+  "oldIndex": 44,
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "messageKind": "MoveAndReplaceAnnotationFromOtherParent",
+  "newParent": "nodeId",
+  "newIndex": 3,
+  "replacedAnnotation": "replacedNodeId",
+  "movedAnnotation": "otherNodeId",
+  "commandId": "cmdId",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

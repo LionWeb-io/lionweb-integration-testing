@@ -1,0 +1,40 @@
+{
+  "messageKind": "ChildMovedFromOtherContainmentInSameParent",
+  "newContainment": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyNewContainment"
+  },
+  "newIndex": 3,
+  "movedChild": "movedNodeId",
+  "parent": "nodeId",
+  "oldContainment": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyOldContainment"
+  },
+  "oldIndex": 55,
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

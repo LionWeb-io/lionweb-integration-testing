@@ -1,0 +1,17 @@
+{
+  "messageKind": "DeletePartition",
+  "deletedPartition": "nodeId",
+  "commandId": "cmdId",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

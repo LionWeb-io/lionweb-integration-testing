@@ -1,0 +1,17 @@
+{
+  "messageKind": "GetAvailableIdsRequest",
+  "count": 3,
+  "queryId": "q1",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

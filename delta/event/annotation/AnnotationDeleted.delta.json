@@ -1,0 +1,32 @@
+{
+  "messageKind": "AnnotationDeleted",
+  "parent": "nodeId",
+  "deletedAnnotation": "a",
+  "deletedDescendants": [
+    "b"
+  ],
+  "index": 3,
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
+  "sequenceNumber": "123",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

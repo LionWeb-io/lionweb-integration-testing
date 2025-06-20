@@ -1,0 +1,25 @@
+{
+  "messageKind": "MoveAndReplaceChildFromOtherContainment",
+  "newParent": "nodeId",
+  "newContainment": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyContainment"
+  },
+  "newIndex": 3,
+  "replacedChild": "replacedNodeId",
+  "movedChild": "otherNodeId",
+  "commandId": "cmdId",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}
