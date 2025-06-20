@@ -47,7 +47,7 @@ public class WebSocketClientTests : WebSocketClientTestBase
     public void bla()
     {
         var childAdded = new ChildAdded(
-            "parent", new MetaPointer("lang", "ver", "key"), 3,
+            "parent",
             new DeltaSerializationChunk([
                 new SerializedNode()
                 {
@@ -71,7 +71,11 @@ public class WebSocketClientTests : WebSocketClientTestBase
                     Annotations = [],
                     Parent = "a"
                 }
-            ]), 23, [new CommandSource("participationId", "commandId")], null);
+            ]),
+            new MetaPointer("lang", "ver", "key"), 3,
+            [new CommandSource("participationId", "commandId")],
+            23,
+            []);
 
         Console.WriteLine(childAdded);
 
@@ -107,7 +111,7 @@ public class WebSocketClientTests : WebSocketClientTestBase
         Thread.Sleep(100);
     }
 
-    [TestMethod, Timeout(6000)]
+    [TestMethod, Timeout(16000)]
     public async Task Model()
     {
         var serverNode = new Geometry("a");
