@@ -22,15 +22,15 @@ jobs:
           schema: 'serialization.schema.json'
           file:
             'testchanges/**/*.json|testset/valid/**/*.json|testset/valid/**.json|testset/withLanguage/valid/**/*.json|testset/withLanguage/valid/*.json'
-#      - uses: denoland/setup-deno@v1.1.1
-#        with:
-#          deno-version: v1.x  # run with the latest stable version of Deno
-#      - name: Log Deno version
-#        run: deno --version
-#      - name: Run clone script
-#        run: ./clone.sh
-#        env:
-#          LIONWEB_PAT: ${{ secrets.LIONWEB_PAT }}
-#      - name: Run Deno integration tests
-#        run: ./test.sh
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x  # run with the latest stable version 2 of Deno
+      - name: Log Deno version
+        run: deno --version
+      - name: Run clone script
+        run: ./clone.sh
+        env:
+          LIONWEB_PAT: ${{ secrets.LIONWEB_PAT }}
+      - name: Run Deno integration tests
+        run: ./test.sh
 

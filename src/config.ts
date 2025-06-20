@@ -1,4 +1,4 @@
-import {YamlLoader} from "./deps.ts"
+import {parse, readFileSync} from "./deps.ts"
 
 
 type Config = {
@@ -29,7 +29,7 @@ type Schema = {
 export type { Config, ModelKind, RepositoryKind, Schema, Serialization }
 
 
-export const config = (await new YamlLoader().parseFile("config.yaml")) as Config
+export const config = parse(readFileSync("config.yaml", {encoding: "utf-8"})) as Config
 
 export const pathOfSerialization = (kind: ModelKind, repo: RepositoryKind): string =>
     config.serializations
