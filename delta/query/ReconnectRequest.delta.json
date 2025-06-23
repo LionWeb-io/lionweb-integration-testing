@@ -1,7 +1,7 @@
 {
   "messageKind": "ReconnectRequest",
   "participationId": "partipId",
-  "lastReceivedSequenceNumber": "123",
+  "lastReceivedSequenceNumber": 123,
   "queryId": "q1",
   "protocolMessages": [
     {

@@ -1,6 +1,6 @@
 {
   "messageKind": "ReconnectResponse",
-  "lastSentSequenceNumber": "123",
+  "lastSentSequenceNumber": 123,
   "queryId": "q1",
   "protocolMessages": [
     {

@@ -9,8 +9,8 @@
   "index": 3,
   "newTarget": "targetNodeId",
   "newResolveInfo": "otherNode name",
-  "replacedTarget": "replacedNodeId",
-  "replacedResolveInfo": "replacedNode name",
+  "oldTarget": "replacedNodeId",
+  "oldResolveInfo": "replacedNode name",
   "originCommands": [
     {
       "participationId": "partId",
