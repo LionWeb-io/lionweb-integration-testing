@@ -1,8 +1,6 @@
 {
-  "messageKind": "ReconnectRequest",
-  "participationId": "partipId",
-  "lastReceivedSequenceNumber": 123,
-  "queryId": "q1",
+  "messageKind": "CommandResponse",
+  "commandId": "cmdId",
   "protocolMessages": [
     {
       "kind": "msgKind",
