@@ -22,7 +22,7 @@
       "commandId": "otherCmdId"
     }
   ],
-  "sequenceNumber": "123",
+  "sequenceNumber": 123,
   "protocolMessages": [
     {
       "kind": "msgKind",
