@@ -34,6 +34,12 @@ foreach (LionWebVersions lionWebVersion in LionWebVersions.AllPureVersions)
     [
         new(shapesLanguage, $"{prefix}.Shapes.M2")
     ];
+
+    if (lionWebVersion.LionCore is ILionCoreLanguageWithStructuredDataType)
+    {
+        var structureNameLanguage = DeserializeExternalLanguage(lionWebVersion, "structureName").First();
+        names.Add(new(structureNameLanguage, $"{prefix}.StructureName.M2"));
+    }
     
     var generationPath = $"../../../../LionWeb.Integration.Languages/Generated/{lionWebVersionDirectory}";
     Directory.CreateDirectory(generationPath);

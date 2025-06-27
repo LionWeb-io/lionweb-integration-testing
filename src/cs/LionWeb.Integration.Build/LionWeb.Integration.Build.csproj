@@ -17,5 +17,8 @@
       <Content Include="..\..\languages\shapes.2024.1.json">
         <Link>languages\shapes.2024.1.json</Link>
       </Content>
+      <Content Include="..\..\languages\structureName.2024.1.json">
+        <Link>languages\structureName.2024.1.json</Link>
+      </Content>
     </ItemGroup>
 </Project>
