@@ -17,8 +17,12 @@
 using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M3;
+using LionWeb.Core.Serialization.Delta.Query;
 using LionWeb.Core.Utilities;
+using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
+using LionWeb.Integration.Languages.Generated.V2024_1.StructureName.M2;
+using LionWeb.Integration.WebSocket.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests;
@@ -26,14 +30,21 @@ namespace LionWeb.Integration.WebSocket.Tests;
 [TestClass]
 public abstract class WebSocketClientTestBase : IDisposable
 {
+    private readonly LionWebVersions _lionWebVersion;
+
+    private readonly List<Language> _languages;
+
+    private const string IpAddress = "localhost";
+    private const int Port = 42424;
+
     private Process _process;
 
-    protected LionWebVersions LionWebVersion { get; init; } = LionWebVersions.v2023_1;
-    public List<Language> Languages { get; init; } = [ShapesLanguage.Instance];
-    
-
-    protected WebSocketClientTestBase()
+    protected WebSocketClientTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null)
     {
+        _lionWebVersion = lionWebVersion ?? LionWebVersions.v2023_1;
+        _languages = languages ?? [ShapesLanguage.Instance];
+        _languages.AddRange([_lionWebVersion.BuiltIns, _lionWebVersion.LionCore]);
+        
         Debug.WriteLine(Directory.GetCurrentDirectory());
         StartServer();
     }
@@ -43,13 +54,14 @@ public abstract class WebSocketClientTestBase : IDisposable
         _process = new Process();
         _process.StartInfo.FileName = "dotnet";
         _process.StartInfo.WorkingDirectory = $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Server";
-        _process.StartInfo.Arguments = """
+        _process.StartInfo.Arguments = $"""
                                        run
                                        -v q
                                        --nologo
                                        --property WarningLevel=0
                                        --property NoWarn=NU1507
                                        /clp:ErrorsOnly
+                                       {AdditionalServerParameters()}
                                        """.ReplaceLineEndings(" ");
         _process.StartInfo.UseShellExecute = false;
         _process.StartInfo.RedirectStandardError = true;
@@ -66,6 +78,9 @@ public abstract class WebSocketClientTestBase : IDisposable
         Assert.IsFalse(_process.HasExited);
     }
 
+    protected virtual string AdditionalServerParameters() =>
+        "";
+
     public void Dispose()
     {
         TestContext.WriteLine($"Killing WebSocket Server {_process.ProcessName}");
@@ -81,5 +96,15 @@ public abstract class WebSocketClientTestBase : IDisposable
     {
         List<IDifference> differences = new Comparer(expected.ToList(), actual.ToList()).Compare().ToList();
         Assert.IsTrue(differences.Count == 0, differences.DescribeAll(new()));
+    }
+
+    protected async Task<LionWebTestClient> ConnectWebSocket(IPartitionInstance partition, string name)
+    {
+        var webSocket = new WebSocketClient(name);
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocket);
+        await webSocket.ConnectToServer(WebSocketClientTests.IpAddress, WebSocketClientTests.Port);
+        await lionWeb.Send(new SignOnRequest("2025.1", IdUtils.NewId(), null));
+        lionWeb.WaitForReplies(1);
+        return lionWeb;
     }
 }

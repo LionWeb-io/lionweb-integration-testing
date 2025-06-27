@@ -35,14 +35,6 @@ namespace LionWeb.Integration.WebSocket.Tests;
 [TestClass]
 public class WebSocketClientTests : WebSocketClientTestBase
 {
-    private static readonly IVersion2023_1 _lionWebVersion = LionWebVersions.v2023_1;
-
-    private static readonly List<Language> _languages =
-        [ShapesLanguage.Instance, _lionWebVersion.BuiltIns, _lionWebVersion.LionCore];
-
-    private const string IpAddress = "localhost";
-    private const int Port = 42424;
-
     [TestMethod]
     public void bla()
     {
@@ -128,29 +120,19 @@ public class WebSocketClientTests : WebSocketClientTestBase
         bPartition.Documentation = new Documentation("documentation");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
-        aClient.WaitForCount(2);
+        aClient.WaitForReplies(1);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         aPartition.Documentation.Text = "hello there";
 
-        bClient.WaitForCount(3);
+        bClient.WaitForReplies(2);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
         bPartition.Documentation.Text = "bye there";
-        aClient.WaitForCount(4);
+        aClient.WaitForReplies(2);
 
         AssertEquals(aPartition, bPartition);
-    }
-
-    private static async Task<LionWebClient> ConnectWebSocket(Geometry partition, string name)
-    {
-        var webSocket = new WebSocketClient(name);
-        var lionWeb = new LionWebClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocket);
-        await webSocket.ConnectToServer(IpAddress, Port);
-        await lionWeb.Send(new SignOnRequest("2025.1", IdUtils.NewId(), null));
-        lionWeb.WaitForCount(1);
-        return lionWeb;
     }
 }

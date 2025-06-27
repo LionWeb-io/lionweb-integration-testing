@@ -45,7 +45,7 @@ public class LionWebClient
     private readonly DeltaProtocolPartitionEventReceiver _eventReceiver;
     private readonly PartitionEventToDeltaCommandMapper _mapper;
     private readonly ConcurrentDictionary<CommandId, int> _ownCommands = [];
-    
+
     private ParticipationId? _participationId;
     private long _messageCount;
 
@@ -57,7 +57,7 @@ public class LionWebClient
         _name = name;
         _connector = connector;
         _mapper = new PartitionEventToDeltaCommandMapper(new CommandIdProvider(), lionWebVersion);
-        
+
         Dictionary<string, IReadableNode> sharedNodeMap = [];
         var partitionEventHandler = new PartitionEventHandler(name);
         DeserializerBuilder deserializerBuilder = new DeserializerBuilder()
@@ -81,7 +81,7 @@ public class LionWebClient
 
         connector.Receive += (_, content) => Receive(content);
     }
-    
+
     private void SendPartitionEventToRepository(object? sender, IPartitionEvent? partitionEvent)
     {
         if (partitionEvent == null)
@@ -91,15 +91,15 @@ public class LionWebClient
 
         Send(deltaCommand);
     }
-    
+
     public async Task Send(IDeltaContent deltaContent)
     {
         if (deltaContent.RequiresParticipationId)
             deltaContent.InternalParticipationId = _participationId;
-        
+
         if (deltaContent is IDeltaCommand { CommandId: { } commandId })
             _ownCommands.TryAdd(commandId, 1);
-        
+
         Debug.WriteLine($"{_name}: sending: {deltaContent.GetType()}");
         await _connector.Send(deltaContent);
     }
@@ -138,7 +138,8 @@ public class LionWebClient
                     break;
 
                 default:
-                    Debug.WriteLine($"{_name}: ignoring received: {content.GetType()}({content.InternalParticipationId})");
+                    Debug.WriteLine(
+                        $"{_name}: ignoring received: {content.GetType()}({content.InternalParticipationId})");
                     break;
             }
         }
@@ -147,6 +148,30 @@ public class LionWebClient
             Debug.WriteLine(e);
         }
     }
+}
+
+public class LionWebTestClient(
+    LionWebVersions lionWebVersion,
+    List<Language> languages,
+    string name,
+    IPartitionInstance partition,
+    IDeltaClientConnector connector)
+    : LionWebClient(lionWebVersion, languages, name, partition, connector)
+{
+    public int WaitCount { get; private set; }
+
+    private const int SleepInterval = 100;
+
+    private void WaitForCount(int count)
+    {
+        while (MessageCount < count)
+        {
+            Thread.Sleep(SleepInterval);
+        }
+    }
+
+    public void WaitForReplies(int delta) =>
+        WaitForCount(WaitCount += delta);
 }
 
 public class CommandIdProvider : ICommandIdProvider

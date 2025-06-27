@@ -27,6 +27,7 @@ using LionWeb.Core.Serialization;
 using LionWeb.Core.Serialization.Delta;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
+using LionWeb.Integration.Languages.Generated.V2024_1.StructureName.M2;
 
 namespace LionWeb.Integration.WebSocket.Server;
 
@@ -43,23 +44,33 @@ public class WebSocketServer : IDeltaRepositoryConnector
     {
         Trace.Listeners.Add(new ConsoleTraceListener());
 
-        var webSocketServer = new WebSocketServer();
+        var useStructureName = args.Any(arg => string.Equals(arg, "StructureName", StringComparison.InvariantCultureIgnoreCase));
+
+        LionWebVersions lionWebVersion = useStructureName ? LionWebVersions.v2024_1 : LionWebVersions.v2023_1;
+        List<Language> languages = useStructureName ? [StructureNameLanguage.Instance] : [ShapesLanguage.Instance];
+        
+        var webSocketServer = new WebSocketServer()
+        {
+           LionWebVersion = lionWebVersion,
+           Languages = languages
+        };
         webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new Geometry("a");
+        
+        IPartitionInstance serverPartition = useStructureName ? new ConceptPartition("partition") : new Geometry("a");
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+        Debug.WriteLine($"Server partition: <{serverPartition.GetClassifier().Name}>{serverPartition.PrintIdentity()}");
 
-        var lionWebServer = new LionWebServer(webSocketServer.LionWebVersion, webSocketServer.Languages, "server",
+        var lionWebServer = new LionWebServer(lionWebVersion, webSocketServer.Languages, "server",
             serverPartition,
             webSocketServer);
         Console.ReadLine();
         webSocketServer.Stop();
     }
 
-    public LionWebVersions LionWebVersion { get; init; } = LionWebVersions.v2023_1;
-    public List<Language> Languages { get; init; } = [ShapesLanguage.Instance];
+    public required LionWebVersions LionWebVersion { get; init; }
+    public required List<Language> Languages { get; init; }
 
     private readonly DeltaSerializer _deltaSerializer = new();
     private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];

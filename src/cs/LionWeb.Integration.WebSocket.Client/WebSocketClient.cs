@@ -52,7 +52,7 @@ public class WebSocketClient(string name) : IDeltaClientConnector
 
         var webSocketClient = new WebSocketClient(name);
         var partition = new Geometry("a");
-        var lionWeb = new LionWebClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocketClient);
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocketClient);
 
         await webSocketClient.ConnectToServer(serverIp, serverPort);
 
@@ -62,38 +62,38 @@ public class WebSocketClient(string name) : IDeltaClientConnector
             {
                 case "SignOn":
                     await webSocketClient.SignOn(lionWeb);
-                    // webSocketClient.WaitForReplies(lionWeb, 1);
+                    // webSocketClient.WaitForReceived(lionWeb, 1);
                     break;
                 case "SignOff":
                     await webSocketClient.SignOff(lionWeb);
-                    webSocketClient.WaitForReplies(lionWeb, 1);
+                    lionWeb.WaitForReplies(1);
                     break;
                 case "AddDocs":
                     partition.Documentation = new Documentation("documentation");
-                    webSocketClient.WaitForReplies(lionWeb, 1);
+                    lionWeb.WaitForReplies(1);
                     break;
                 case "Wait":
-                    webSocketClient.WaitForReplies(lionWeb, 1);
+                    lionWeb.WaitForReplies(1);
                     break;
                 case "SetDocsText":
                     partition.Documentation.Text = "hello there";
-                    webSocketClient.WaitForReplies(lionWeb, 1);
+                    lionWeb.WaitForReplies(1);
                     break;
             }
         }
     }
 
-    private async Task SignOn(LionWebClient lionWeb)
+    private async Task SignOn(LionWebTestClient lionWeb)
     {
         await lionWeb.Send(new SignOnRequest("2025.1", QueryId(), null));
-        WaitForReplies(lionWeb, 1);
+        lionWeb.WaitForReplies(1);
     }
 
 
-    private async Task SignOff(LionWebClient lionWeb)
+    private async Task SignOff(LionWebTestClient lionWeb)
     {
         await lionWeb.Send(new SignOffRequest(QueryId(), null));
-        WaitForReplies(lionWeb, 1);
+        lionWeb.WaitForReplies(1);
     }
 
     private int nextQueryId = 0;
@@ -104,11 +104,6 @@ public class WebSocketClient(string name) : IDeltaClientConnector
     private readonly DeltaSerializer _deltaSerializer = new();
     private readonly ClientWebSocket _clientWebSocket = new ClientWebSocket();
     public event EventHandler<IDeltaContent>? Receive;
-
-    public int WaitCount { get; private set; }
-
-    private void WaitForReplies(LionWebClient lionWeb, int delta) =>
-        lionWeb.WaitForCount(WaitCount += delta);
 
     public async Task ConnectToServer(string ipAddress, int port) =>
         await ConnectToServer($"ws://{ipAddress}:{port}");

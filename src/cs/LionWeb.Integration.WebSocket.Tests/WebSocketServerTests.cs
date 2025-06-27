@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
+using LionWeb.Core;
 using LionWeb.Core.M1.Event;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
@@ -32,40 +33,40 @@ public class WebSocketServerTests : WebSocketServerTestBase
     [TestMethod, Timeout(6000)]
     public async Task SignIn_1()
     {
-        var webSocketServer = new WebSocketServer();
+        var webSocketServer = new WebSocketServer() {LionWebVersion = LionWebVersion, Languages = Languages};
         webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         
-        var lionWebServer = new LionWebServer(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
+        var lionWebServer = new LionWebTestServer(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
         
         StartClient("A", "SignOn");
         
-        lionWebServer.WaitForCount(1);
+        lionWebServer.WaitForReceived(1);
     }
     
     [TestMethod, Timeout(6000)]
     public async Task SignIn_2()
     {
-        var webSocketServer = new WebSocketServer();
+        var webSocketServer = new WebSocketServer() {LionWebVersion = LionWebVersion, Languages = Languages};
         webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         
-        var lionWebServer = new LionWebServer(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
+        var lionWebServer = new LionWebTestServer(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
         
         StartClient("A", "SignOn");
         StartClient("B", "SignOn");
         
-        lionWebServer.WaitForCount(2);
+        lionWebServer.WaitForReceived(2);
     }
     
     [TestMethod, Timeout(6000)]
     public async Task Model()
     {
-        var webSocketServer = new WebSocketServer();
+        var webSocketServer = new WebSocketServer() {LionWebVersion = LionWebVersion, Languages = Languages};
         webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
@@ -73,12 +74,12 @@ public class WebSocketServerTests : WebSocketServerTestBase
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         
-        var lionWebServer = new LionWebServer(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
+        var lionWebServer = new LionWebTestServer(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
         
         StartClient("A", "SignOn,Wait,SetDocsText");
         StartClient("B", "SignOn,AddDocs");
         
-        lionWebServer.WaitForCount(4);
+        lionWebServer.WaitForReceived(4);
         
         AssertEquals(new Geometry("g")
         {
