@@ -160,6 +160,30 @@ public class LionWebServer
     }
 }
 
+public class LionWebTestServer(
+    LionWebVersions lionWebVersion,
+    List<Language> languages,
+    string name,
+    IPartitionInstance partition,
+    IDeltaRepositoryConnector connector)
+    : LionWebServer(lionWebVersion, languages, name, partition, connector)
+{
+    public int WaitCount { get; private set; }
+
+    private const int SleepInterval = 100;
+
+    private void WaitForCount(int count)
+    {
+        while (MessageCount < count)
+        {
+            Thread.Sleep(SleepInterval);
+        }
+    }
+
+    public void WaitForReceived(int delta) =>
+        WaitForCount(WaitCount += delta);
+}
+
 public class ExceptionParticipationIdProvider : IParticipationIdProvider
 {
     public string ParticipationId => throw new NotImplementedException();
