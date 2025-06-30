@@ -14,6 +14,7 @@
 //
 // SPDX-FileCopyrightText: 2025 LionWeb Project
 // SPDX-License-Identifier: Apache-2.0
+
 using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M3;
@@ -38,14 +39,15 @@ public abstract class WebSocketClientTestBase : IDisposable
 
     private Process _process;
 
-    protected const int Timeout = 6000;
+    protected const int TestTimeout = 6000;
+    private const int ServerStartTimeout = 500;
 
     protected WebSocketClientTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null)
     {
         _lionWebVersion = lionWebVersion ?? LionWebVersions.v2023_1;
         _languages = languages ?? [ShapesLanguage.Instance];
         _languages.AddRange([_lionWebVersion.BuiltIns, _lionWebVersion.LionCore]);
-        
+
         Debug.WriteLine(Directory.GetCurrentDirectory());
         StartServer();
     }
@@ -54,26 +56,27 @@ public abstract class WebSocketClientTestBase : IDisposable
     {
         _process = new Process();
         _process.StartInfo.FileName = "dotnet";
-        _process.StartInfo.WorkingDirectory = $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Server";
+        _process.StartInfo.WorkingDirectory =
+            $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Server";
         _process.StartInfo.Arguments = $"""
-                                       run
-                                       -v q
-                                       --property WarningLevel=0
-                                       --property NoWarn=NU1507
-                                       {AdditionalServerParameters()}
-                                       """.ReplaceLineEndings(" ");
+                                        run
+                                        -v q
+                                        --property WarningLevel=0
+                                        --property NoWarn=NU1507
+                                        {AdditionalServerParameters()}
+                                        """.ReplaceLineEndings(" ");
         _process.StartInfo.UseShellExecute = false;
         _process.StartInfo.RedirectStandardError = true;
         _process.StartInfo.RedirectStandardInput = true;
         _process.StartInfo.RedirectStandardOutput = true;
-        
+
         _process.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
         _process.ErrorDataReceived += (sender, args) => Console.Error.WriteLine(args.Data);
-        
+
         Assert.IsTrue(_process.Start());
         _process.BeginErrorReadLine();
         _process.BeginOutputReadLine();
-        Thread.Sleep(500);
+        Thread.Sleep(ServerStartTimeout);
         Assert.IsFalse(_process.HasExited);
     }
 
@@ -87,14 +90,15 @@ public abstract class WebSocketClientTestBase : IDisposable
     }
 
     public TestContext TestContext { get; set; }
-    
-    protected void AssertEquals(INode? expected, INode? actual) =>
-        AssertEquals([expected], [actual]);
-    
-    protected void AssertEquals(IEnumerable<INode?> expected, IEnumerable<INode?> actual)
+
+    protected void AssertEquals(INode? a, INode? b) =>
+        AssertEquals([a], [b]);
+
+    protected void AssertEquals(IEnumerable<INode?> a, IEnumerable<INode?> b)
     {
-        List<IDifference> differences = new Comparer(expected.ToList(), actual.ToList()).Compare().ToList();
-        Assert.IsTrue(differences.Count == 0, differences.DescribeAll(new()));
+        List<IDifference> differences = new Comparer(a.ToList(), b.ToList()).Compare().ToList();
+        Assert.IsTrue(differences.Count == 0,
+            differences.DescribeAll(new() { LeftDescription = "a", RightDescription = "b" }));
     }
 
     protected async Task<LionWebTestClient> ConnectWebSocket(IPartitionInstance partition, string name)

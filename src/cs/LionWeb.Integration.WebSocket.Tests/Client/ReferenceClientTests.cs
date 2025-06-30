@@ -21,82 +21,86 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
 [TestClass]
-public class ContainmentClientTests : LinkClientTestBase
+public class ReferenceClientTests : LinkClientTestBase
 {
     [TestMethod, Timeout(TestTimeout)]
-    public void AddChild()
+    public void AddReference()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
-        bClient.WaitForReplies(1);
+        aPartition.Reference_0_1 = aPartition.Containment_0_1;
+        bClient.WaitForReplies(2);
 
         AssertEquals(aPartition, bPartition);
     }
 
     [TestMethod, Timeout(TestTimeout)]
-    public void DeleteChild()
+    public void DeleteReference()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
-        bClient.WaitForReplies(1);
+        aPartition.Reference_0_1 = aPartition.Containment_0_1;
+        bClient.WaitForReplies(2);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_0_1 = null;
+        bPartition.Reference_0_1 = null;
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     }
 
     [TestMethod, Timeout(TestTimeout)]
-    public void ReplaceChild()
+    public void ChangeReference()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
-        bClient.WaitForReplies(1);
+        aPartition.Containment_0_1 = new LinkTestConcept("childA");
+        aPartition.Containment_1 = new LinkTestConcept("childB");
+        aPartition.Reference_0_1 = aPartition.Containment_0_1;
+        bClient.WaitForReplies(3);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_0_1 = new LinkTestConcept("replacedChild") { Name = "replaced" };
+        bPartition.Reference_0_1 = bPartition.Containment_0_1;
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     }
 
     [TestMethod, Timeout(TestTimeout)]
-    public void MoveChildFromOtherContainment()
+    public void MoveEntryFromOtherReference()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = bPartition.Containment_0_1.Containment_0_1;
+        Assert.Fail("no way to move reference");
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     }
 
     [TestMethod, Timeout(TestTimeout)]
-    public void MoveChildFromOtherContainmentInSameParent()
+    public void MoveEntryFromOtherReferenceInSameParent()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = bPartition.Containment_0_1;
+        Assert.Fail("no way to move reference");
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     }
 
     [TestMethod, Timeout(TestTimeout)]
-    public void MoveChildInSameContainment()
+    public void MoveEntryInSameReference()
     {
         aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("child1")]);
         bClient.WaitForReplies(2);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.InsertContainment_0_n(0, [bPartition.Containment_0_n.Last()]);
+        Assert.Fail("no way to move reference");
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);

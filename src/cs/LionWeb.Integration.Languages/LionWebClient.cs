@@ -158,11 +158,9 @@ public class LionWebTestClient(
     IDeltaClientConnector connector)
     : LionWebClient(lionWebVersion, languages, name, partition, connector)
 {
-    public int WaitCount { get; private set; }
-
     private const int SleepInterval = 100;
 
-    private void WaitForCount(int count)
+    private void WaitForCount(long count)
     {
         while (MessageCount < count)
         {
@@ -171,7 +169,7 @@ public class LionWebTestClient(
     }
 
     public void WaitForReplies(int delta) =>
-        WaitForCount(WaitCount += delta);
+        WaitForCount(MessageCount + delta);
 }
 
 public class CommandIdProvider : ICommandIdProvider
