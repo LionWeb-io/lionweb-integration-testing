@@ -40,14 +40,41 @@ public class PropertyClientTests : WebSocketClientTestBase
         bClient = ConnectWebSocket(bPartition, "B").Result;
     }
 
+    /// <inheritdoc />
     protected override string AdditionalServerParameters() =>
         TestLanguageLanguage.Instance.DataTypeTestConcept.Key;
     
-    [TestMethod, Timeout(Timeout)]
+    [TestMethod, Timeout(TestTimeout)]
     public void AddProperty()
     {
         aPartition.StringValue_0_1 = "new property";
         bClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+    }
+    
+    [TestMethod, Timeout(TestTimeout)]
+    public void ChangeProperty()
+    {
+        aPartition.StringValue_0_1 = "new property";
+        bClient.WaitForReplies(1);
+        
+        bPartition.StringValue_0_1 = "changed property";
+        aClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+    }
+    
+    [TestMethod, Timeout(TestTimeout)]
+    public void DeleteProperty()
+    {
+        aPartition.StringValue_0_1 = "new property";
+        bClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+        
+        bPartition.StringValue_0_1 = null;
+        aClient.WaitForReplies(1);
         
         AssertEquals(aPartition, bPartition);
     }

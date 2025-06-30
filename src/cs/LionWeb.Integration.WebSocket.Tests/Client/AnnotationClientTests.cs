@@ -21,82 +21,70 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
 [TestClass]
-public class ContainmentClientTests : LinkClientTestBase
+public class AnnotationClientTests : LinkClientTestBase
 {
     [TestMethod, Timeout(TestTimeout)]
-    public void AddChild()
+    public void AddAnnotation()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        aPartition.AddAnnotations([new TestAnnotation("annotation")]);
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     }
 
     [TestMethod, Timeout(TestTimeout)]
-    public void DeleteChild()
+    public void DeleteAnnotation()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        aPartition.AddAnnotations([new TestAnnotation("annotation")]);
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_0_1 = null;
+        bPartition.RemoveAnnotations(bPartition.GetAnnotations());
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     }
 
     [TestMethod, Timeout(TestTimeout)]
-    public void ReplaceChild()
+    public void ReplaceAnnotation()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        aPartition.AddAnnotations([new TestAnnotation("annotation")]);
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_0_1 = new LinkTestConcept("replacedChild") { Name = "replaced" };
+        Assert.Fail("no way to replace annotation");
+//        bPartition.annContainment_0_1 = new LinkTestConcept("replacedChild") { Name = "replaced" };
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     }
 
     [TestMethod, Timeout(TestTimeout)]
-    public void MoveChildFromOtherContainment()
+    public void MoveAnnotationFromOtherParent()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
+        aPartition.Containment_0_1 = new LinkTestConcept("subHost");
+        aPartition.Containment_0_1.AddAnnotations([new TestAnnotation("annotation")]);
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = bPartition.Containment_0_1.Containment_0_1;
+        bPartition.AddAnnotations(bPartition.Containment_0_1.GetAnnotations());
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     }
 
     [TestMethod, Timeout(TestTimeout)]
-    public void MoveChildFromOtherContainmentInSameParent()
+    public void MoveAnnotationInSameParent()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
-        bClient.WaitForReplies(1);
-
-        AssertEquals(aPartition, bPartition);
-
-        bPartition.Containment_1 = bPartition.Containment_0_1;
-        aClient.WaitForReplies(1);
-
-        AssertEquals(aPartition, bPartition);
-    }
-
-    [TestMethod, Timeout(TestTimeout)]
-    public void MoveChildInSameContainment()
-    {
-        aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("child1")]);
+        aPartition.AddAnnotations([new TestAnnotation("annotation0"), new TestAnnotation("annotation1")]);
         bClient.WaitForReplies(2);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.InsertContainment_0_n(0, [bPartition.Containment_0_n.Last()]);
+        bPartition.InsertAnnotations(0, [bPartition.GetAnnotations().Last()]);
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
