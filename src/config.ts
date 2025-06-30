@@ -13,8 +13,8 @@ type Repository = {
     // TODO  add Git ref
 }
 
-type RepositoryKind = | "Java" | "TypeScript"
-type ModelKind = "m3"
+type RepositoryKind = | "Java" | "TypeScript" | "specification"
+type ModelKind = "m3" | "spec"
 type Serialization = {
     path: string
     kind: ModelKind
