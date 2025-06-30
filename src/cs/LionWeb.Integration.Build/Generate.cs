@@ -27,20 +27,16 @@ foreach (LionWebVersions lionWebVersion in LionWebVersions.AllPureVersions)
     Console.WriteLine($"\n### LionWeb specification version: {lionWebVersion}\n");
     
     var shapesLanguage = DeserializeExternalLanguage(lionWebVersion, "shapes").First();
+    var testLanguage = DeserializeExternalLanguage(lionWebVersion, "testLanguage").First();
 
     var lionWebVersionDirectory = "V" + lionWebVersion.VersionString.Replace('.', '_');
     string prefix = $"LionWeb.Integration.Languages.Generated.{lionWebVersionDirectory}";
     List<Names> names =
     [
-        new(shapesLanguage, $"{prefix}.Shapes.M2")
+        new(shapesLanguage, $"{prefix}.Shapes.M2"),
+        new(testLanguage, $"{prefix}.TestLanguage.M2")
     ];
 
-    if (lionWebVersion.LionCore is ILionCoreLanguageWithStructuredDataType)
-    {
-        var structureNameLanguage = DeserializeExternalLanguage(lionWebVersion, "structureName").First();
-        names.Add(new(structureNameLanguage, $"{prefix}.StructureName.M2"));
-    }
-    
     var generationPath = $"../../../../LionWeb.Integration.Languages/Generated/{lionWebVersionDirectory}";
     Directory.CreateDirectory(generationPath);
 

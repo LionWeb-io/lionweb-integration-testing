@@ -21,7 +21,6 @@ using LionWeb.Core.Serialization.Delta.Query;
 using LionWeb.Core.Utilities;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
-using LionWeb.Integration.Languages.Generated.V2024_1.StructureName.M2;
 using LionWeb.Integration.WebSocket.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -38,6 +37,8 @@ public abstract class WebSocketClientTestBase : IDisposable
     private const int Port = 42424;
 
     private Process _process;
+
+    protected const int Timeout = 6000;
 
     protected WebSocketClientTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null)
     {
@@ -57,10 +58,8 @@ public abstract class WebSocketClientTestBase : IDisposable
         _process.StartInfo.Arguments = $"""
                                        run
                                        -v q
-                                       --nologo
                                        --property WarningLevel=0
                                        --property NoWarn=NU1507
-                                       /clp:ErrorsOnly
                                        {AdditionalServerParameters()}
                                        """.ReplaceLineEndings(" ");
         _process.StartInfo.UseShellExecute = false;

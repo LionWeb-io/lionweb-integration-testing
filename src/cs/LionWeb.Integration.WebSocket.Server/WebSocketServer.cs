@@ -22,12 +22,13 @@ using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
 using LionWeb.Core.M1.Event;
+using LionWeb.Core.M2;
 using LionWeb.Core.M3;
 using LionWeb.Core.Serialization;
 using LionWeb.Core.Serialization.Delta;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
-using LionWeb.Integration.Languages.Generated.V2024_1.StructureName.M2;
+using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 
 namespace LionWeb.Integration.WebSocket.Server;
 
@@ -44,20 +45,32 @@ public class WebSocketServer : IDeltaRepositoryConnector
     {
         Trace.Listeners.Add(new ConsoleTraceListener());
 
-        var useStructureName = args.Any(arg => string.Equals(arg, "StructureName", StringComparison.InvariantCultureIgnoreCase));
+        Debug.WriteLine($"server args: {string.Join(", ", args)}");
 
-        LionWebVersions lionWebVersion = useStructureName ? LionWebVersions.v2024_1 : LionWebVersions.v2023_1;
-        List<Language> languages = useStructureName ? [StructureNameLanguage.Instance] : [ShapesLanguage.Instance];
-        
+        Concept? optionalTestPartition = args.Length > 0
+            ? TestLanguageLanguage.Instance
+                .Entities
+                .OfType<Concept>()
+                .Where(c => c.Partition)
+                .FirstOrDefault(p => p.Key == args[0])
+            : null;
+
+        LionWebVersions lionWebVersion = LionWebVersions.v2023_1;
+        List<Language> languages = optionalTestPartition is not null
+            ? [optionalTestPartition.GetLanguage()]
+            : [ShapesLanguage.Instance];
+
         var webSocketServer = new WebSocketServer()
         {
-           LionWebVersion = lionWebVersion,
-           Languages = languages
+            LionWebVersion = lionWebVersion,
+            Languages = languages
         };
         webSocketServer.StartServer(IpAddress, Port);
 
-        
-        IPartitionInstance serverPartition = useStructureName ? new ConceptPartition("partition") : new Geometry("a");
+        IPartitionInstance serverPartition = optionalTestPartition is not null
+            ? (IPartitionInstance)optionalTestPartition.GetLanguage().GetFactory()
+                .CreateNode("partition", optionalTestPartition)
+            : new Geometry("a");
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         Debug.WriteLine($"Server partition: <{serverPartition.GetClassifier().Name}>{serverPartition.PrintIdentity()}");

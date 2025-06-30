@@ -15,38 +15,18 @@
 // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // SPDX-License-Identifier: Apache-2.0
 
-using LionWeb.Core;
-using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
 [TestClass]
-public class PropertyClientTests : WebSocketClientTestBase
+public class ContainmentClientTests : LinkClientTestBase
 {
-    private readonly DataTypeTestConcept aPartition;
-    private readonly LionWebTestClient aClient;
-
-    private readonly DataTypeTestConcept bPartition;
-    private readonly LionWebTestClient bClient;
-
-    public PropertyClientTests() : base(LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
-    {
-        aPartition = new("partition");
-        aClient = ConnectWebSocket(aPartition, "A").Result;
-
-        bPartition = new("partition");
-        bClient = ConnectWebSocket(bPartition, "B").Result;
-    }
-
-    protected override string AdditionalServerParameters() =>
-        TestLanguageLanguage.Instance.DataTypeTestConcept.Key;
-    
     [TestMethod, Timeout(Timeout)]
-    public void AddProperty()
+    public void AddChild()
     {
-        aPartition.StringValue_0_1 = "new property";
+        aPartition.Containment_0_1 = new DataTypeTestConcept("child");
         bClient.WaitForReplies(1);
         
         AssertEquals(aPartition, bPartition);
