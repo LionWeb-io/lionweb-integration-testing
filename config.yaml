@@ -1,6 +1,6 @@
 repositories:
-  - name: Org
-    id: organization
+  - name: Specification
+    id: specification
   - name: Java
     id: lionweb-java
   - name: MPS
@@ -17,6 +17,9 @@ serializations:
   - path: lionweb-typescript/packages/artifacts/chunks/languages/lioncore.json
     kind: m3
     repo: TypeScript
+  - path: specification/2023.1/metametamodel/lioncore.json
+    kind: spec
+    repo: specification
 
 schemas:
   - path: lionweb-typescript/packages/artifacts/schemas/lioncore.serialization.schema.json
