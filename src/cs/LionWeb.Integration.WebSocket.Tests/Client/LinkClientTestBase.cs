@@ -17,21 +17,19 @@
 
 using LionWeb.Core;
 using LionWeb.Integration.Languages;
-using LionWeb.Integration.Languages.Generated.V2024_1.StructureName.M2;
+using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
-public abstract class SimpleClientTestBase : WebSocketClientTestBase
+public abstract class LinkClientTestBase : WebSocketClientTestBase
 {
-    protected const int Timeout = 6000;
-
-    protected readonly ConceptPartition aPartition;
+    protected readonly LinkTestConcept aPartition;
     protected readonly LionWebTestClient aClient;
 
-    protected readonly ConceptPartition bPartition;
+    protected readonly LinkTestConcept bPartition;
     protected readonly LionWebTestClient bClient;
 
-    public SimpleClientTestBase() : base(LionWebVersions.v2024_1, [StructureNameLanguage.Instance])
+    public LinkClientTestBase() : base(LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
     {
         aPartition = new("partition");
         aClient = ConnectWebSocket(aPartition, "A").Result;
@@ -41,5 +39,5 @@ public abstract class SimpleClientTestBase : WebSocketClientTestBase
     }
 
     protected override string AdditionalServerParameters() =>
-        "StructureName";
+        TestLanguageLanguage.Instance.LinkTestConcept.Key;
 }
