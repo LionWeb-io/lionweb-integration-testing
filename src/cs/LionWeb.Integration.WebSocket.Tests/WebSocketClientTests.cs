@@ -22,7 +22,8 @@ using LionWeb.Core.Serialization;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Protocol.Delta;
-using LionWeb.Protocol.Delta.Event;
+using LionWeb.Protocol.Delta.Message;
+using LionWeb.Protocol.Delta.Message.Event;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests;

@@ -27,7 +27,7 @@ using LionWeb.Core.M3;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
-using LionWeb.Protocol.Delta.Event;
+using LionWeb.Protocol.Delta.Message;
 using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Server;
@@ -141,6 +141,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     public async Task SendAll(IDeltaContent content) =>
         await SendAll(_deltaSerializer.Serialize(content));
 
+    /// <inheritdoc />
     public IDeltaContent Convert(IEvent @event) =>
         _mapper.Map(@event);
 
