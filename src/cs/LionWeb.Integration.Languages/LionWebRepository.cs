@@ -30,11 +30,11 @@ public interface IDeltaRepositoryConnector : IRepositoryConnector<IDeltaContent>
 
 public interface IDeltaMessageContext : IMessageContext<IDeltaContent>;
 
-public class LionWebServer : LionWebServerBase<IDeltaContent>
+public class LionWebRepository : LionWebRepositoryBase<IDeltaContent>
 {
     private readonly DeltaProtocolPartitionCommandReceiver _commandReceiver;
 
-    public LionWebServer(LionWebVersions lionWebVersion,
+    public LionWebRepository(LionWebVersions lionWebVersion,
         List<Language> languages,
         string name,
         IPartitionInstance partition,
@@ -122,13 +122,13 @@ public class LionWebServer : LionWebServerBase<IDeltaContent>
     }
 }
 
-public class LionWebTestServer(
+public class LionWebTestRepository(
     LionWebVersions lionWebVersion,
     List<Language> languages,
     string name,
     IPartitionInstance partition,
     IRepositoryConnector<IDeltaContent> connector)
-    : LionWebServer(lionWebVersion, languages, name, partition, connector)
+    : LionWebRepository(lionWebVersion, languages, name, partition, connector)
 {
     public int WaitCount { get; private set; }
 

@@ -1,19 +1,19 @@
-﻿// // Copyright 2024 TRUMPF Laser GmbH
-// //
-// // Licensed under the Apache License, Version 2.0 (the "License");
-// // you may not use this file except in compliance with the License.
-// // You may obtain a copy of the License at
-// //
-// //     http://www.apache.org/licenses/LICENSE-2.0
-// //
-// // Unless required by applicable law or agreed to in writing, software
-// // distributed under the License is distributed on an "AS IS" BASIS,
-// // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// // See the License for the specific language governing permissions and
-// // limitations under the License.
-// //
-// // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
-// // SPDX-License-Identifier: Apache-2.0
+﻿// Copyright 2024 TRUMPF Laser GmbH
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
+// SPDX-License-Identifier: Apache-2.0
 
 using LionWeb.Core;
 using LionWeb.Core.M1.Event.Partition;
@@ -21,7 +21,7 @@ using LionWeb.Core.M3;
 
 namespace LionWeb.Integration.Languages;
 
-public abstract class LionWebServerBase<T>
+public abstract class LionWebRepositoryBase<T>
 {
     protected readonly string _name;
     protected readonly IRepositoryConnector<T> _connector;
@@ -31,7 +31,7 @@ public abstract class LionWebServerBase<T>
     protected long _messageCount;
     public long MessageCount => Interlocked.Read(ref _messageCount);
 
-    public LionWebServerBase(LionWebVersions lionWebVersion, List<Language> languages, string name,
+    public LionWebRepositoryBase(LionWebVersions lionWebVersion, List<Language> languages, string name,
         IPartitionInstance partition, IRepositoryConnector<T> connector)
     {
         _name = name;
