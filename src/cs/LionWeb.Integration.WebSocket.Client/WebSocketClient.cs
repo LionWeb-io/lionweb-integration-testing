@@ -22,9 +22,9 @@ using LionWeb.Core;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M1.Event.Partition;
 using LionWeb.Core.M3;
-using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Protocol.Delta;
+using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Command;
 using LionWeb.Protocol.Delta.Query;
 

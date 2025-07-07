@@ -24,11 +24,11 @@ using LionWeb.Core;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M2;
 using LionWeb.Core.M3;
-using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Event;
+using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Server;
 

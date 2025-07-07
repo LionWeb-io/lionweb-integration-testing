@@ -18,6 +18,7 @@
 using LionWeb.Core;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+using LionWeb.Protocol.Delta.Client;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
