@@ -19,9 +19,9 @@ using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Core.Utilities;
-using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.WebSocket.Client;
+using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Query;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
