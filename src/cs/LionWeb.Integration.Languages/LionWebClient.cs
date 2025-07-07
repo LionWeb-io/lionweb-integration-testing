@@ -15,13 +15,11 @@
 // SPDX-FileCopyrightText: 2025 LionWeb Project
 // SPDX-License-Identifier: Apache-2.0
 
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M1;
-using LionWeb.Core.M1.Event.Partition;
+using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
-using LionWeb.Core.Serialization;
 using LionWeb.Core.Serialization.Delta;
 using LionWeb.Core.Serialization.Delta.Command;
 using LionWeb.Core.Serialization.Delta.Event;
@@ -29,37 +27,23 @@ using LionWeb.Core.Serialization.Delta.Query;
 
 namespace LionWeb.Integration.Languages;
 
-using ParticipationId = NodeId;
-using CommandId = NodeId;
+public interface IDeltaClientConnector : IClientConnector<IDeltaContent>;
 
-public interface IDeltaClientConnector
+public interface IEventClientConnector : IClientConnector<IEvent> 
 {
-    Task Send(IDeltaContent content);
-    event EventHandler<IDeltaContent> Receive;
+    IEvent IClientConnector<IEvent>.Convert(IEvent internalEvent) => internalEvent;
 }
 
-public class LionWebClient
+public class LionWebClient : LionWebClientBase<IDeltaContent>
 {
-    private readonly string _name;
-    private readonly IDeltaClientConnector _connector;
-    private readonly DeltaProtocolPartitionEventReceiver _eventReceiver;
-    private readonly PartitionEventToDeltaCommandMapper _mapper;
-    private readonly ConcurrentDictionary<CommandId, int> _ownCommands = [];
+    protected DeltaProtocolPartitionEventReceiver _eventReceiver;
 
-    private ParticipationId? _participationId;
-    private long _messageCount;
-
-    public long MessageCount => Interlocked.Read(ref _messageCount);
-
-    public LionWebClient(LionWebVersions lionWebVersion, List<Language> languages, string name,
-        IPartitionInstance partition, IDeltaClientConnector connector)
+    public LionWebClient(LionWebVersions lionWebVersion,
+        List<Language> languages,
+        string name,
+        IPartitionInstance partition,
+        IClientConnector<IDeltaContent> connector) : base(lionWebVersion, languages, name, partition, connector)
     {
-        _name = name;
-        _connector = connector;
-        _mapper = new PartitionEventToDeltaCommandMapper(new CommandIdProvider(), lionWebVersion);
-
-        Dictionary<string, IReadableNode> sharedNodeMap = [];
-        var partitionEventHandler = new PartitionEventHandler(name);
         DeserializerBuilder deserializerBuilder = new DeserializerBuilder()
                 .WithLionWebVersion(lionWebVersion)
                 .WithLanguages(languages)
@@ -68,31 +52,14 @@ public class LionWebClient
         Dictionary<CompressedMetaPointer, IKeyed>
             sharedKeyedMap = DeltaCommandToDeltaEventMapper.BuildSharedKeyMap(languages);
         _eventReceiver = new DeltaProtocolPartitionEventReceiver(
-            partitionEventHandler,
-            sharedNodeMap,
+            PartitionEventHandler,
+            SharedNodeMap,
             sharedKeyedMap,
             deserializerBuilder
         );
-        var replicator = new PartitionEventReplicator(partition, sharedNodeMap);
-        replicator.ReplicateFrom(partitionEventHandler);
-
-        IPartitionPublisher publisher = replicator;
-        publisher.Subscribe<IPartitionEvent>(SendPartitionEventToRepository);
-
-        connector.Receive += (_, content) => Receive(content);
     }
 
-    private void SendPartitionEventToRepository(object? sender, IPartitionEvent? partitionEvent)
-    {
-        if (partitionEvent == null)
-            return;
-
-        IDeltaCommand deltaCommand = _mapper.Map(partitionEvent);
-
-        Send(deltaCommand);
-    }
-
-    public async Task Send(IDeltaContent deltaContent)
+    public override async Task Send(IDeltaContent deltaContent)
     {
         if (deltaContent.RequiresParticipationId)
             deltaContent.InternalParticipationId = _participationId;
@@ -104,7 +71,7 @@ public class LionWebClient
         await _connector.Send(deltaContent);
     }
 
-    private void Receive(IDeltaContent content)
+    public override void Receive(IDeltaContent content)
     {
         try
         {

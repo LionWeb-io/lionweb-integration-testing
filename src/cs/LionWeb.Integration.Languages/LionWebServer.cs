@@ -18,9 +18,7 @@
 using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M1;
-using LionWeb.Core.M1.Event.Partition;
 using LionWeb.Core.M3;
-using LionWeb.Core.Serialization;
 using LionWeb.Core.Serialization.Delta;
 using LionWeb.Core.Serialization.Delta.Command;
 using LionWeb.Core.Serialization.Delta.Event;
@@ -28,77 +26,38 @@ using LionWeb.Core.Serialization.Delta.Query;
 
 namespace LionWeb.Integration.Languages;
 
-using ParticipationId = NodeId;
+public interface IDeltaRepositoryConnector : IRepositoryConnector<IDeltaContent>;
 
-public interface IDeltaRepositoryConnector
-{
-    Task Send(IClientInfo clientInfo, IDeltaContent content);
-    Task SendAll(IDeltaContent content);
-    event EventHandler<IDeltaMessageContext> Receive;
-}
+public interface IDeltaMessageContext : IMessageContext<IDeltaContent>;
 
-public interface IDeltaMessageContext
+public class LionWebServer : LionWebServerBase<IDeltaContent>
 {
-    IClientInfo ClientInfo { get; }
-    IDeltaContent Content { get; }
-}
-
-public interface IClientInfo
-{
-    ParticipationId ParticipationId { get; }
-}
-
-public class LionWebServer
-{
-    private readonly string _name;
-    private readonly IDeltaRepositoryConnector _connector;
     private readonly DeltaProtocolPartitionCommandReceiver _commandReceiver;
-    private readonly PartitionEventToDeltaEventMapper _mapper;
 
-    private long _messageCount;
-    public long MessageCount => Interlocked.Read(ref _messageCount);
-
-    public LionWebServer(LionWebVersions lionWebVersion, List<Language> languages, string name,
-        IPartitionInstance partition, IDeltaRepositoryConnector connector)
+    public LionWebServer(LionWebVersions lionWebVersion,
+        List<Language> languages,
+        string name,
+        IPartitionInstance partition,
+        IRepositoryConnector<IDeltaContent> connector) : base(lionWebVersion, languages, name, partition, connector)
     {
-        _name = name;
-        _connector = connector;
-        _mapper = new PartitionEventToDeltaEventMapper(new ExceptionParticipationIdProvider(), new EventSequenceNumberProvider(), lionWebVersion);
-        
-        Dictionary<string, IReadableNode> sharedNodeMap = [];
-        var partitionEventHandler = new PartitionEventHandler(name);
         DeserializerBuilder deserializerBuilder = new DeserializerBuilder()
                 .WithLionWebVersion(lionWebVersion)
                 .WithLanguages(languages)
                 .WithHandler(new ReceiverDeserializerHandler())
             ;
+
         Dictionary<CompressedMetaPointer, IKeyed>
             sharedKeyedMap = DeltaCommandToDeltaEventMapper.BuildSharedKeyMap(languages);
         _commandReceiver = new DeltaProtocolPartitionCommandReceiver(
-            partitionEventHandler,
-            sharedNodeMap,
+            PartitionEventHandler,
+            SharedNodeMap,
             sharedKeyedMap,
             deserializerBuilder
         );
-        var replicator = new RewritePartitionEventReplicator(partition, sharedNodeMap);
-        replicator.ReplicateFrom(partitionEventHandler);
-
-        var publisher = replicator;
-        publisher.Subscribe<IPartitionEvent>(SendPartitionEventToAllClients);
-
-        connector.Receive += (_, content) => Receive(content);
     }
 
-    private void SendPartitionEventToAllClients(object? sender, IPartitionEvent? partitionEvent)
-    {
-        if (partitionEvent == null)
-            return;
-
-        IDeltaEvent deltaEvent = _mapper.Map(partitionEvent);
-        SendAll(deltaEvent);
-    }
-
-    private async Task SendAll(IDeltaContent deltaContent)
+    /// <inheritdoc />
+    protected override async Task SendAll(IDeltaContent deltaContent)
     {
         switch (deltaContent)
         {
@@ -118,13 +77,15 @@ public class LionWebServer
         await _connector.SendAll(deltaContent);
     }
 
-    private async Task Send(IClientInfo clientInfo, IDeltaContent deltaContent)
+    /// <inheritdoc />
+    protected override async Task Send(IClientInfo clientInfo, IDeltaContent deltaContent)
     {
         Debug.WriteLine($"{_name}: sending to {clientInfo}: {deltaContent.GetType()}");
         await _connector.Send(clientInfo, deltaContent);
     }
 
-    private async Task Receive(IDeltaMessageContext messageContext)
+    /// <inheritdoc />
+    protected override async Task Receive(IMessageContext<IDeltaContent> messageContext)
     {
         try
         {
@@ -149,7 +110,8 @@ public class LionWebServer
                     break;
 
                 default:
-                    Debug.WriteLine($"{_name}: ignoring received: {content.GetType()}({content.InternalParticipationId})");
+                    Debug.WriteLine(
+                        $"{_name}: ignoring received: {content.GetType()}({content.InternalParticipationId})");
                     break;
             }
         }
@@ -165,7 +127,7 @@ public class LionWebTestServer(
     List<Language> languages,
     string name,
     IPartitionInstance partition,
-    IDeltaRepositoryConnector connector)
+    IRepositoryConnector<IDeltaContent> connector)
     : LionWebServer(lionWebVersion, languages, name, partition, connector)
 {
     public int WaitCount { get; private set; }
@@ -187,14 +149,6 @@ public class LionWebTestServer(
 public class ExceptionParticipationIdProvider : IParticipationIdProvider
 {
     public string ParticipationId => throw new NotImplementedException();
-}
-
-internal class ReceiverDeserializerHandler : DeserializerExceptionHandler
-{
-    public override bool SkipDeserializingDependentNode(CompressedId id)
-    {
-        return false;
-    }
 }
 
 public class EventSequenceNumberProvider : IEventSequenceNumberProvider

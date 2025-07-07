@@ -19,9 +19,12 @@ using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
+using LionWeb.Core.M1.Event;
+using LionWeb.Core.M1.Event.Partition;
 using LionWeb.Core.M3;
 using LionWeb.Core.Serialization;
 using LionWeb.Core.Serialization.Delta;
+using LionWeb.Core.Serialization.Delta.Command;
 using LionWeb.Core.Serialization.Delta.Query;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
@@ -83,6 +86,9 @@ public class WebSocketClient(string name) : IDeltaClientConnector
         }
     }
 
+    private readonly PartitionEventToDeltaCommandMapper _mapper =
+        new PartitionEventToDeltaCommandMapper(new CommandIdProvider(), _lionWebVersion);
+
     private async Task SignOn(LionWebTestClient lionWeb)
     {
         await lionWeb.Send(new SignOnRequest("2025.1", QueryId(), null));
@@ -137,4 +143,7 @@ public class WebSocketClient(string name) : IDeltaClientConnector
     public async Task Send(string msg) =>
         await _clientWebSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(msg)), WebSocketMessageType.Text,
             true, CancellationToken.None);
+
+    public IDeltaContent Convert(IEvent internalEvent)
+        => _mapper.Map(internalEvent as IPartitionEvent);
 }

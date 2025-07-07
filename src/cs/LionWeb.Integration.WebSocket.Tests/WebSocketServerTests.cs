@@ -16,7 +16,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
-using LionWeb.Core;
 using LionWeb.Core.M1.Event;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
@@ -33,7 +32,7 @@ public class WebSocketServerTests : WebSocketServerTestBase
     [TestMethod, Timeout(6000)]
     public async Task SignIn_1()
     {
-        var webSocketServer = new WebSocketServer() {LionWebVersion = LionWebVersion, Languages = Languages};
+        var webSocketServer = new WebSocketServer(LionWebVersion) {Languages = Languages};
         webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
@@ -49,7 +48,7 @@ public class WebSocketServerTests : WebSocketServerTestBase
     [TestMethod, Timeout(6000)]
     public async Task SignIn_2()
     {
-        var webSocketServer = new WebSocketServer() {LionWebVersion = LionWebVersion, Languages = Languages};
+        var webSocketServer = new WebSocketServer(LionWebVersion) {Languages = Languages};
         webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
@@ -66,7 +65,7 @@ public class WebSocketServerTests : WebSocketServerTestBase
     [TestMethod, Timeout(6000)]
     public async Task Model()
     {
-        var webSocketServer = new WebSocketServer() {LionWebVersion = LionWebVersion, Languages = Languages};
+        var webSocketServer = new WebSocketServer(LionWebVersion) {Languages = Languages};
         webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
