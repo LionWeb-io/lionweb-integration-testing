@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-<!--    <PackageVersion Include="LionWeb-CSharp" Version="0.3.0-rc.5"/>-->
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.0" PrivateAssets="All"/>
+    <!--    <PackageVersion Include="LionWeb-CSharp" Version="0.3.0-rc.5"/>-->
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.0" PrivateAssets="All" />
   </ItemGroup>
 </Project>

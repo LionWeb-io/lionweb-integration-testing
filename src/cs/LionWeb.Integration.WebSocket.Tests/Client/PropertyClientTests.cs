@@ -16,10 +16,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using LionWeb.Core;
-using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta.Client;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
@@ -44,39 +42,40 @@ public class PropertyClientTests : WebSocketClientTestBase
     /// <inheritdoc />
     protected override string AdditionalServerParameters() =>
         TestLanguageLanguage.Instance.DataTypeTestConcept.Key;
-    
-    [TestMethod, Timeout(TestTimeout)]
-    public void AddProperty()
+
+    [TestMethod]
+    public void AddProperty() => Timeout(() =>
     {
         aPartition.StringValue_0_1 = "new property";
         bClient.WaitForReplies(1);
-        
+
         AssertEquals(aPartition, bPartition);
-    }
-    
-    [TestMethod, Timeout(TestTimeout)]
-    public void ChangeProperty()
+    });
+
+    [TestMethod]
+    public void ChangeProperty() => Timeout(() =>
     {
         aPartition.StringValue_0_1 = "new property";
         bClient.WaitForReplies(1);
-        
+
         bPartition.StringValue_0_1 = "changed property";
         aClient.WaitForReplies(1);
-        
+
         AssertEquals(aPartition, bPartition);
-    }
+    });
     
-    [TestMethod, Timeout(TestTimeout)]
-    public void DeleteProperty()
+    [TestMethod]
+
+    public void DeleteProperty() => Timeout(() =>
     {
         aPartition.StringValue_0_1 = "new property";
         bClient.WaitForReplies(1);
-        
+
         AssertEquals(aPartition, bPartition);
-        
+
         bPartition.StringValue_0_1 = null;
         aClient.WaitForReplies(1);
-        
+
         AssertEquals(aPartition, bPartition);
-    }
+    });
 }

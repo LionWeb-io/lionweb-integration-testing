@@ -20,7 +20,6 @@ using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
 using LionWeb.Core.M1.Event;
-using LionWeb.Core.M1.Event.Partition;
 using LionWeb.Core.M3;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Protocol.Delta;
@@ -33,6 +32,8 @@ namespace LionWeb.Integration.WebSocket.Client;
 public class WebSocketClient(string name) : IDeltaClientConnector
 {
     public const int BUFFER_SIZE = 0x10000;
+
+    public const string ClientStartedMessage = "Client started.";
 
     private static readonly IVersion2023_1 _lionWebVersion = LionWebVersions.v2023_1;
 
@@ -119,7 +120,7 @@ public class WebSocketClient(string name) : IDeltaClientConnector
     {
         await _clientWebSocket.ConnectAsync(new Uri(serverUri), CancellationToken.None);
 
-        Console.WriteLine($"Client {name} Connected to the server: {serverUri}");
+        Console.WriteLine($"{name}: {ClientStartedMessage} Connected to the server: {serverUri}");
 
         Task.Run(async () =>
         {

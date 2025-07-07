@@ -16,24 +16,23 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
 [TestClass]
 public class AnnotationClientTests : LinkClientTestBase
 {
-    [TestMethod, Timeout(TestTimeout)]
-    public void AddAnnotation()
+    [TestMethod]
+    public void AddAnnotation() => Timeout(() =>
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 
-    [TestMethod, Timeout(TestTimeout)]
-    public void DeleteAnnotation()
+    [TestMethod]
+    public void DeleteAnnotation() => Timeout(() =>
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
         bClient.WaitForReplies(1);
@@ -44,10 +43,10 @@ public class AnnotationClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 
-    [TestMethod, Timeout(TestTimeout)]
-    public void ReplaceAnnotation()
+    [TestMethod]
+    public void ReplaceAnnotation() => Timeout(() =>
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
         bClient.WaitForReplies(1);
@@ -59,10 +58,10 @@ public class AnnotationClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 
-    [TestMethod, Timeout(TestTimeout)]
-    public void MoveAnnotationFromOtherParent()
+    [TestMethod]
+    public void MoveAnnotationFromOtherParent() => Timeout(() =>
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost");
         aPartition.Containment_0_1.AddAnnotations([new TestAnnotation("annotation")]);
@@ -74,10 +73,11 @@ public class AnnotationClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 
-    [TestMethod, Timeout(TestTimeout)]
-    public void MoveAnnotationInSameParent()
+    [TestMethod]
+    public void MoveAnnotationInSameParent() => Timeout( () =>
+
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation0"), new TestAnnotation("annotation1")]);
         bClient.WaitForReplies(2);
@@ -88,5 +88,5 @@ public class AnnotationClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 }

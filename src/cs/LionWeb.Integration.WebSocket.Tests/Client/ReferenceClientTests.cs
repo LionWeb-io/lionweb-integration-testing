@@ -16,25 +16,24 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
 [TestClass]
 public class ReferenceClientTests : LinkClientTestBase
 {
-    [TestMethod, Timeout(TestTimeout)]
-    public void AddReference()
+    [TestMethod]
+    public void AddReference() => Timeout(() =>
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         aPartition.Reference_0_1 = aPartition.Containment_0_1;
         bClient.WaitForReplies(2);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 
-    [TestMethod, Timeout(TestTimeout)]
-    public void DeleteReference()
+    [TestMethod]
+    public void DeleteReference() => Timeout(() =>
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         aPartition.Reference_0_1 = aPartition.Containment_0_1;
@@ -46,10 +45,10 @@ public class ReferenceClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 
-    [TestMethod, Timeout(TestTimeout)]
-    public void ChangeReference()
+    [TestMethod]
+    public void ChangeReference() => Timeout(() =>
     {
         aPartition.Containment_0_1 = new LinkTestConcept("childA");
         aPartition.Containment_1 = new LinkTestConcept("childB");
@@ -62,10 +61,10 @@ public class ReferenceClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 
-    [TestMethod, Timeout(TestTimeout)]
-    public void MoveEntryFromOtherReference()
+    [TestMethod]
+    public void MoveEntryFromOtherReference() => Timeout(() =>
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
         bClient.WaitForReplies(1);
@@ -76,10 +75,10 @@ public class ReferenceClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 
-    [TestMethod, Timeout(TestTimeout)]
-    public void MoveEntryFromOtherReferenceInSameParent()
+    [TestMethod]
+    public void MoveEntryFromOtherReferenceInSameParent() => Timeout(() =>
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         bClient.WaitForReplies(1);
@@ -90,10 +89,10 @@ public class ReferenceClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 
-    [TestMethod, Timeout(TestTimeout)]
-    public void MoveEntryInSameReference()
+    [TestMethod]
+    public void MoveEntryInSameReference() => Timeout(() =>
     {
         aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("child1")]);
         bClient.WaitForReplies(2);
@@ -104,5 +103,5 @@ public class ReferenceClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 }
