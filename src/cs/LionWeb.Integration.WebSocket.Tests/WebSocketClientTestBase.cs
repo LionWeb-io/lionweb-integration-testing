@@ -18,11 +18,11 @@
 using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M3;
-using LionWeb.Core.Serialization.Delta.Query;
 using LionWeb.Core.Utilities;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.WebSocket.Client;
+using LionWeb.Protocol.Delta.Query;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests;
@@ -105,7 +105,7 @@ public abstract class WebSocketClientTestBase : IDisposable
     {
         var webSocket = new WebSocketClient(name);
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocket);
-        await webSocket.ConnectToServer(WebSocketClientTests.IpAddress, WebSocketClientTests.Port);
+        await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.Send(new SignOnRequest("2025.1", IdUtils.NewId(), null));
         lionWeb.WaitForReplies(1);
         return lionWeb;

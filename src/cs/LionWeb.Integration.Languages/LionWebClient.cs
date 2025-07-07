@@ -20,10 +20,10 @@ using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
-using LionWeb.Core.Serialization.Delta;
-using LionWeb.Core.Serialization.Delta.Command;
-using LionWeb.Core.Serialization.Delta.Event;
-using LionWeb.Core.Serialization.Delta.Query;
+using LionWeb.Protocol.Delta;
+using LionWeb.Protocol.Delta.Command;
+using LionWeb.Protocol.Delta.Event;
+using LionWeb.Protocol.Delta.Query;
 
 namespace LionWeb.Integration.Languages;
 

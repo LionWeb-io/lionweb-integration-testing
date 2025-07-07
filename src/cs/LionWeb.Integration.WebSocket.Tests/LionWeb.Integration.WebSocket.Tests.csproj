@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />
+      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj" />
       <ProjectReference Include="..\LionWeb.Integration.Languages\LionWeb.Integration.Languages.csproj" />
       <ProjectReference Include="..\LionWeb.Integration.WebSocket.Client\LionWeb.Integration.WebSocket.Client.csproj" />
       <ProjectReference Include="..\LionWeb.Integration.WebSocket.Server\LionWeb.Integration.WebSocket.Server.csproj" />
