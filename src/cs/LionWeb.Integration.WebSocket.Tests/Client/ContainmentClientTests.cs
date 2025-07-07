@@ -37,8 +37,8 @@ public class ContainmentClientTests : LinkClientTestBase
     /// <summary>
     /// Added child is a (complex) subtree
     /// </summary>
-    [TestMethod, Timeout(TestTimeout)]
-    public void AddChild_AsASubtree()
+    [TestMethod]
+    public void AddChild_AsASubtree() => Timeout(() =>
     {
         var subTree = new LinkTestConcept("subtree")
         {
@@ -46,19 +46,19 @@ public class ContainmentClientTests : LinkClientTestBase
             Containment_0_1 = new LinkTestConcept("containment-1"),
             Containment_0_n = new List<LinkTestConcept> { new("child1"), new("child2") }
         };
-        
+
         aPartition.Containment_0_1 = subTree;
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    }
+    });
 
-    
+
     /// <summary>
     /// Node in an added subtree has a reference to already existing node
     /// </summary>
-    [TestMethod, Timeout(TestTimeout)]
-    public void AddChild_NodeInAddedSubtreeHasAReferenceToAlreadyExistingNodes()
+    [TestMethod]
+    public void AddChild_NodeInAddedSubtreeHasAReferenceToAlreadyExistingNodes() => Timeout(() =>
     {
         aPartition.Containment_1 = new LinkTestConcept("referenced-child");
         bClient.WaitForReplies(1);
@@ -69,12 +69,13 @@ public class ContainmentClientTests : LinkClientTestBase
         {
             Reference_1 = bPartition.Containment_1
         };
-        
-        aClient.WaitForReplies(1);
-        
-        AssertEquals(aPartition, bPartition);
-    }
 
+        aClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+    });
+
+    
     [TestMethod]
     public void DeleteChild() => Timeout(() =>
     {
