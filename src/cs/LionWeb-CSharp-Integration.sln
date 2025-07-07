@@ -28,6 +28,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb-CSharp-Build", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Generator.MpsSpecific", "..\..\..\lionweb-csharp\src\LionWeb.Generator.MpsSpecific\LionWeb.Generator.MpsSpecific.csproj", "{E78162CC-3E79-4A5E-BCD5-BF24D6F8A63F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Protocol.Delta", "..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj", "{0EB3B7AC-DBC3-45A9-877D-C0AF04F8D229}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Protocol.Delta.Test", "..\..\..\lionweb-csharp\test\LionWeb.Protocol.Delta.Test\LionWeb.Protocol.Delta.Test.csproj", "{533F261E-8449-4D16-8873-57D1E578D081}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +78,14 @@ Global
 		{E78162CC-3E79-4A5E-BCD5-BF24D6F8A63F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E78162CC-3E79-4A5E-BCD5-BF24D6F8A63F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E78162CC-3E79-4A5E-BCD5-BF24D6F8A63F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EB3B7AC-DBC3-45A9-877D-C0AF04F8D229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EB3B7AC-DBC3-45A9-877D-C0AF04F8D229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EB3B7AC-DBC3-45A9-877D-C0AF04F8D229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EB3B7AC-DBC3-45A9-877D-C0AF04F8D229}.Release|Any CPU.Build.0 = Release|Any CPU
+		{533F261E-8449-4D16-8873-57D1E578D081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{533F261E-8449-4D16-8873-57D1E578D081}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{533F261E-8449-4D16-8873-57D1E578D081}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{533F261E-8449-4D16-8873-57D1E578D081}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DC2F0113-2B6B-44C9-BDAC-E0A82EC06722} = {A7AD74F7-DCEF-411B-9913-228A914A7234}
@@ -81,5 +93,7 @@ Global
 		{1E4D2FC6-6146-4375-AC61-C74FD27B3C4B} = {A7AD74F7-DCEF-411B-9913-228A914A7234}
 		{482BFF5C-548C-4588-86EF-70779A2A0B7C} = {A7AD74F7-DCEF-411B-9913-228A914A7234}
 		{E78162CC-3E79-4A5E-BCD5-BF24D6F8A63F} = {A7AD74F7-DCEF-411B-9913-228A914A7234}
+		{0EB3B7AC-DBC3-45A9-877D-C0AF04F8D229} = {A7AD74F7-DCEF-411B-9913-228A914A7234}
+		{533F261E-8449-4D16-8873-57D1E578D081} = {A7AD74F7-DCEF-411B-9913-228A914A7234}
 	EndGlobalSection
 EndGlobal
