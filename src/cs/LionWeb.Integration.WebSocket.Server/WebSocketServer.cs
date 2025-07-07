@@ -37,6 +37,7 @@ using ParticipationId = NodeId;
 public class WebSocketServer : IDeltaRepositoryConnector
 {
     private const int BUFFER_SIZE = 0x10000;
+    public const string ServerStartedMessage = "Server started.";
 
     private static string IpAddress { get; set; } = "localhost";
     private static int Port { get; set; } = 42424;
@@ -107,7 +108,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
         _listener.Prefixes.Add($"http://{ipAddress}:{port}/");
         _listener.Start();
 
-        Console.WriteLine("Server started. Waiting for connections...");
+        Console.WriteLine(ServerStartedMessage + " Waiting for connections...");
 
         // do NOT await!
         Task.Run(async () =>

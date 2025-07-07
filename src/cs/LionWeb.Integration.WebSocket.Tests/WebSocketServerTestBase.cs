@@ -18,25 +18,19 @@
 using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M3;
-using LionWeb.Core.Utilities;
-using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using LionWeb.Integration.WebSocket.Client;
+using LionWeb.Integration.WebSocket.Server;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
 [TestClass]
-public abstract class WebSocketServerTestBase : IDisposable
+public abstract class WebSocketServerTestBase : WebSocketTestBase, IDisposable
 {
-    private readonly List<Process> _processes= [];
+    private readonly List<Process> _processes = [];
 
-    protected const string IpAddress = "localhost";
-    protected const int Port = 42424;
-    
-    protected LionWebVersions LionWebVersion { get; init; } = LionWebVersions.v2023_1;
-    protected List<Language> Languages { get; init; } = [ShapesLanguage.Instance];
-    
+    protected WebSocketServer _webSocketServer;
 
-    protected WebSocketServerTestBase()
+    protected WebSocketServerTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null) : base(lionWebVersion, languages)
     {
         Debug.WriteLine(Directory.GetCurrentDirectory());
     }
@@ -45,55 +39,65 @@ public abstract class WebSocketServerTestBase : IDisposable
     {
         var process = new Process();
         process.StartInfo.FileName = "dotnet";
-        process.StartInfo.WorkingDirectory = $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Client";
+        process.StartInfo.WorkingDirectory =
+            $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Client";
         process.StartInfo.Arguments = $"""
-                                         run
-                                         -v q
-                                         --property WarningLevel=0
-                                         --property NoWarn=NU1507
-                                         --
-                                         {name}
-                                         {IpAddress}
-                                         {Port}
-                                         {string.Join(",", tasks)}
-                                         """.ReplaceLineEndings(" ");
+                                       run
+                                       -v q
+                                       --property WarningLevel=0
+                                       --property NoWarn=NU1507
+                                       --
+                                       {name}
+                                       {IpAddress}
+                                       {Port}
+                                       {string.Join(",", tasks)}
+                                       """.ReplaceLineEndings(" ");
         process.StartInfo.UseShellExecute = false;
         process.StartInfo.RedirectStandardError = true;
         process.StartInfo.RedirectStandardInput = true;
         process.StartInfo.RedirectStandardOutput = true;
-        
-        process.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+
+        var clientStarted = false;
+
+        process.OutputDataReceived += (sender, args) =>
+        {
+            if (args.Data?.Contains(WebSocketClient.ClientStartedMessage) ?? false)
+                clientStarted = true;
+            Console.WriteLine(args.Data);
+        };
         process.ErrorDataReceived += (sender, args) => Console.Error.WriteLine(args.Data);
-        
+
         Assert.IsTrue(process.Start());
         process.BeginErrorReadLine();
         process.BeginOutputReadLine();
-        Thread.Sleep(500);
+
+        while (!clientStarted)
+        {
+            Thread.Sleep(100);
+        }
+
         Assert.IsFalse(process.HasExited);
-        
+
         _processes.Add(process);
     }
 
+    /// <inheritdoc />
+    [TestCleanup]
+    [ClassCleanup]
     public void Dispose()
     {
         foreach (var process in _processes)
         {
-            if(process.HasExited)
+            if (process.HasExited)
                 continue;
-            
+
             TestContext.WriteLine($"Killing WebSocket Client {process.ProcessName}");
             process.Kill();
         }
-    }
 
-    public TestContext TestContext { get; set; }
-    
-    protected void AssertEquals(INode? expected, INode? actual) =>
-        AssertEquals([expected], [actual]);
-    
-    protected void AssertEquals(IEnumerable<INode?> expected, IEnumerable<INode?> actual)
-    {
-        List<IDifference> differences = new Comparer(expected.ToList(), actual.ToList()).Compare().ToList();
-        Assert.IsTrue(differences.Count == 0, differences.DescribeAll(new()));
+        if (_webSocketServer != null)
+        {
+            _webSocketServer.Stop();
+        }
     }
 }

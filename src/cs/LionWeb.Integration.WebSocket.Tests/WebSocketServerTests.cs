@@ -20,66 +20,66 @@ using LionWeb.Core.M1.Event;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-[assembly: DoNotParallelize]
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
 [TestClass]
 public class WebSocketServerTests : WebSocketServerTestBase
 {
-    [TestMethod, Timeout(6000)]
-    public async Task SignIn_1()
+    [TestMethod]
+    public void SignIn_1() => Timeout(() =>
     {
-        var webSocketServer = new WebSocketServer(LionWebVersion) {Languages = Languages};
-        webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
-        
-        var lionWebServer = new LionWebTestRepository(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
-        
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+
         StartClient("A", "SignOn");
-        
+
         lionWebServer.WaitForReceived(1);
-    }
-    
-    [TestMethod, Timeout(6000)]
-    public async Task SignIn_2()
+    });
+
+    [TestMethod]
+    public void SignIn_2() => Timeout(() =>
     {
-        var webSocketServer = new WebSocketServer(LionWebVersion) {Languages = Languages};
-        webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
-        
-        var lionWebServer = new LionWebTestRepository(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
-        
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+
         StartClient("A", "SignOn");
         StartClient("B", "SignOn");
-        
+
         lionWebServer.WaitForReceived(2);
-    }
-    
-    [TestMethod, Timeout(6000)]
-    public async Task Model()
+    });
+
+    [TestMethod]
+    public void Model() => Timeout(() =>
     {
-        var webSocketServer = new WebSocketServer(LionWebVersion) {Languages = Languages};
-        webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new Geometry("a");
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
-        
-        var lionWebServer = new LionWebTestRepository(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
-        
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+
         StartClient("A", "SignOn,Wait,SetDocsText");
         StartClient("B", "SignOn,AddDocs");
-        
+
         lionWebServer.WaitForReceived(4);
-        
+
         AssertEquals(new Geometry("g")
         {
             Documentation = new Documentation("d")
@@ -87,5 +87,5 @@ public class WebSocketServerTests : WebSocketServerTestBase
                 Text = "hello there"
             }
         }, serverPartition);
-    }
+    });
 }

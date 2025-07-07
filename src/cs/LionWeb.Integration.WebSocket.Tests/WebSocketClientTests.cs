@@ -24,7 +24,6 @@ using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Message;
 using LionWeb.Protocol.Delta.Message.Event;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
@@ -32,7 +31,7 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public class WebSocketClientTests : WebSocketClientTestBase
 {
     [TestMethod]
-    public void bla()
+    public void bla() => Timeout(() =>
     {
         var childAdded = new ChildAdded(
             "parent",
@@ -80,7 +79,7 @@ public class WebSocketClientTests : WebSocketClientTestBase
         var deltaEvent = JsonSerializer.Deserialize<IDeltaEvent>(serialized, jsonSerializerOptions);
         Console.WriteLine(deltaEvent);
         Console.WriteLine((deltaEvent as ChildAdded)?.NewChild.Nodes.First());
-    }
+    });
 
     [TestMethod, Timeout(3000)]
     public async Task Communication()

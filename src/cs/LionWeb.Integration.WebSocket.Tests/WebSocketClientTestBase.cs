@@ -19,35 +19,20 @@ using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Core.Utilities;
-using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.WebSocket.Client;
+using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Message.Query;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
 [TestClass]
-public abstract class WebSocketClientTestBase : IDisposable
+public abstract class WebSocketClientTestBase : WebSocketTestBase, IDisposable
 {
-    private readonly LionWebVersions _lionWebVersion;
-
-    private readonly List<Language> _languages;
-
-    private const string IpAddress = "localhost";
-    private const int Port = 42424;
-
     private Process _process;
 
-    protected const int TestTimeout = 6000;
-    private const int ServerStartTimeout = 500;
-
-    protected WebSocketClientTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null)
+    protected WebSocketClientTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null) : base(lionWebVersion, languages)
     {
-        _lionWebVersion = lionWebVersion ?? LionWebVersions.v2023_1;
-        _languages = languages ?? [ShapesLanguage.Instance];
-        _languages.AddRange([_lionWebVersion.BuiltIns, _lionWebVersion.LionCore]);
-
         Debug.WriteLine(Directory.GetCurrentDirectory());
         StartServer();
     }
@@ -70,35 +55,48 @@ public abstract class WebSocketClientTestBase : IDisposable
         _process.StartInfo.RedirectStandardInput = true;
         _process.StartInfo.RedirectStandardOutput = true;
 
-        _process.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+        var serverStarted = false;
+
+        _process.OutputDataReceived += (sender, args) =>
+        {
+            if (args.Data?.Contains(WebSocketServer.ServerStartedMessage) ?? false)
+                serverStarted = true;
+            Console.WriteLine(args.Data);
+        };
         _process.ErrorDataReceived += (sender, args) => Console.Error.WriteLine(args.Data);
 
         Assert.IsTrue(_process.Start());
         _process.BeginErrorReadLine();
         _process.BeginOutputReadLine();
-        Thread.Sleep(ServerStartTimeout);
+
+        while (!serverStarted)
+        {
+            Thread.Sleep(100);
+        }
+
         Assert.IsFalse(_process.HasExited);
     }
 
     protected virtual string AdditionalServerParameters() =>
         "";
 
+    /// <inheritdoc />
+    [TestCleanup()]
+    [ClassCleanup(InheritanceBehavior.BeforeEachDerivedClass, ClassCleanupBehavior.EndOfClass)]
     public void Dispose()
     {
-        TestContext.WriteLine($"Killing WebSocket Server {_process.ProcessName}");
-        _process?.Kill();
-    }
+        if (_process == null || _process.HasExited)
+            return;
 
-    public TestContext TestContext { get; set; }
-
-    protected void AssertEquals(INode? a, INode? b) =>
-        AssertEquals([a], [b]);
-
-    protected void AssertEquals(IEnumerable<INode?> a, IEnumerable<INode?> b)
-    {
-        List<IDifference> differences = new Comparer(a.ToList(), b.ToList()).Compare().ToList();
-        Assert.IsTrue(differences.Count == 0,
-            differences.DescribeAll(new() { LeftDescription = "a", RightDescription = "b" }));
+        try
+        {
+            TestContext.WriteLine($"Killing WebSocket Server {_process.ProcessName}");
+            _process.Kill();
+        }
+        catch (Exception e)
+        {
+            TestContext.WriteLine("Dispose:" + e);
+        }
     }
 
     protected async Task<LionWebTestClient> ConnectWebSocket(IPartitionInstance partition, string name)
