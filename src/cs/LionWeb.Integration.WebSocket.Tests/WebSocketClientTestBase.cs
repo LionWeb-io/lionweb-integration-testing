@@ -22,7 +22,7 @@ using LionWeb.Core.Utilities;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Protocol.Delta.Client;
-using LionWeb.Protocol.Delta.Query;
+using LionWeb.Protocol.Delta.Message.Query;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LionWeb.Integration.WebSocket.Tests;
