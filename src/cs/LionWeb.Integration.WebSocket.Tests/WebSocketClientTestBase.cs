@@ -105,7 +105,6 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase, IDisposable
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocket);
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn();
-        lionWeb.WaitForReplies(1);
         return lionWeb;
     }
 }
