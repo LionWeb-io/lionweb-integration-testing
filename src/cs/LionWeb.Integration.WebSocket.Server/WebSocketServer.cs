@@ -24,8 +24,8 @@ using LionWeb.Core;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M2;
 using LionWeb.Core.M3;
-using LionWeb.Core.Serialization;
 using LionWeb.Core.Serialization.Delta;
+using LionWeb.Core.Serialization.Delta.Event;
 using LionWeb.Integration.Languages;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
@@ -60,9 +60,8 @@ public class WebSocketServer : IDeltaRepositoryConnector
             ? [optionalTestPartition.GetLanguage()]
             : [ShapesLanguage.Instance];
 
-        var webSocketServer = new WebSocketServer()
+        var webSocketServer = new WebSocketServer(lionWebVersion)
         {
-            LionWebVersion = lionWebVersion,
             Languages = languages
         };
         webSocketServer.StartServer(IpAddress, Port);
@@ -82,17 +81,25 @@ public class WebSocketServer : IDeltaRepositoryConnector
         webSocketServer.Stop();
     }
 
-    public required LionWebVersions LionWebVersion { get; init; }
+    public LionWebVersions LionWebVersion;
     public required List<Language> Languages { get; init; }
 
     private readonly DeltaSerializer _deltaSerializer = new();
+    private readonly EventToDeltaEventMapper _mapper;
+
     private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];
     private int _nextParticipationId = 0;
 
     private HttpListener? _listener;
 
+    public WebSocketServer(LionWebVersions lionWebVersion)
+    {
+        LionWebVersion = lionWebVersion;
+        _mapper = new(new PartitionEventToDeltaEventMapper(new ExceptionParticipationIdProvider(), new EventSequenceNumberProvider(), lionWebVersion));
+    }
+
     /// <inheritdoc />
-    public event EventHandler<IDeltaMessageContext>? Receive;
+    public event EventHandler<IMessageContext<IDeltaContent>> Receive;
 
     public void StartServer(string ipAddress, int port)
     {
@@ -133,6 +140,9 @@ public class WebSocketServer : IDeltaRepositoryConnector
     /// <inheritdoc />
     public async Task SendAll(IDeltaContent content) =>
         await SendAll(_deltaSerializer.Serialize(content));
+
+    public IDeltaContent Convert(IEvent @event) =>
+        _mapper.Map(@event);
 
     private async Task SendAll(string msg)
     {
