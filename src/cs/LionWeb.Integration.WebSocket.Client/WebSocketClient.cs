@@ -91,14 +91,14 @@ public class WebSocketClient(string name) : IDeltaClientConnector
 
     private async Task SignOn(LionWebTestClient lionWeb)
     {
-        await lionWeb.Send(new SignOnRequest("2025.1", QueryId(), null));
+        await lionWeb.SignOn();
         lionWeb.WaitForReplies(1);
     }
 
 
     private async Task SignOff(LionWebTestClient lionWeb)
     {
-        await lionWeb.Send(new SignOffRequest(QueryId(), null));
+        await lionWeb.SignOff();
         lionWeb.WaitForReplies(1);
     }
 

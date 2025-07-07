@@ -61,7 +61,6 @@ public class WebSocketClientTests : WebSocketClientTestBase
             ]),
             new MetaPointer("lang", "ver", "key"), 3,
             [new CommandSource("participationId", "commandId")],
-            23,
             []);
 
         Console.WriteLine(childAdded);

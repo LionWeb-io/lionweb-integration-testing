@@ -28,11 +28,10 @@ using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Message;
+using LionWeb.Protocol.Delta.Message.Event;
 using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Server;
-
-using ParticipationId = NodeId;
 
 public class WebSocketServer : IDeltaRepositoryConnector
 {
@@ -96,7 +95,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     public WebSocketServer(LionWebVersions lionWebVersion)
     {
         LionWebVersion = lionWebVersion;
-        _mapper = new(new PartitionEventToDeltaEventMapper(new ExceptionParticipationIdProvider(), new EventSequenceNumberProvider(), lionWebVersion));
+        _mapper = new(new PartitionEventToDeltaEventMapper(new ExceptionParticipationIdProvider(), lionWebVersion));
     }
 
     /// <inheritdoc />
@@ -139,21 +138,28 @@ public class WebSocketServer : IDeltaRepositoryConnector
     }
 
     /// <inheritdoc />
-    public async Task SendAll(IDeltaContent content) =>
-        await SendAll(_deltaSerializer.Serialize(content));
-
-    /// <inheritdoc />
-    public IDeltaContent Convert(IEvent @event) =>
-        _mapper.Map(@event);
-
-    private async Task SendAll(string msg)
+    public async Task SendAll(IDeltaContent content)
     {
-        var encoded = Encode(msg);
-        foreach ((_, System.Net.WebSockets.WebSocket socket) in _knownClients)
+        foreach ((var clientInfo, System.Net.WebSockets.WebSocket socket) in _knownClients)
         {
+            var encoded = Encode(_deltaSerializer.Serialize(UpdateSequenceNumber(content, clientInfo)));
             await socket.SendAsync(encoded, WebSocketMessageType.Text, true, CancellationToken.None);
         }
     }
+
+    private static IDeltaContent UpdateSequenceNumber(IDeltaContent content, IClientInfo clientInfo)
+    {
+        if (content is IDeltaEvent ev)
+        {
+            ev.SequenceNumber = clientInfo.GetAndIncrementSequenceNumber();
+        }
+
+        return content;
+    }
+
+    /// <inheritdoc />
+    public IDeltaContent Convert(IEvent internalEvent) =>
+        _mapper.Map(internalEvent);
 
     private static byte[] Encode(string msg) =>
         Encoding.UTF8.GetBytes(msg);
@@ -161,7 +167,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
 
     /// <inheritdoc />
     public async Task Send(IClientInfo clientInfo, IDeltaContent content) =>
-        await Send(clientInfo, _deltaSerializer.Serialize(content));
+        await Send(clientInfo, _deltaSerializer.Serialize(UpdateSequenceNumber(content, clientInfo)));
 
     private async Task Send(IClientInfo clientInfo, string msg)
     {
@@ -214,18 +220,5 @@ public class WebSocketServer : IDeltaRepositoryConnector
         {
             return "participation" + _nextParticipationId++;
         }
-    }
-}
-
-internal record DeltaMessageContext(IClientInfo ClientInfo, IDeltaContent Content) : IDeltaMessageContext;
-
-internal record ClientInfo : IClientInfo
-{
-    private readonly ParticipationId? _participationId;
-
-    public required ParticipationId ParticipationId
-    {
-        get => _participationId ?? throw new ArgumentException("ParticipationId not set");
-        init => _participationId = value;
     }
 }
