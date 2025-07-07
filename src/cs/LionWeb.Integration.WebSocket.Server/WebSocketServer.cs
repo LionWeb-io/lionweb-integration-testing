@@ -74,7 +74,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         Debug.WriteLine($"Server partition: <{serverPartition.GetClassifier().Name}>{serverPartition.PrintIdentity()}");
 
-        var lionWebServer = new LionWebServer(lionWebVersion, webSocketServer.Languages, "server",
+        var lionWebServer = new LionWebRepository(lionWebVersion, webSocketServer.Languages, "server",
             serverPartition,
             webSocketServer);
         Console.ReadLine();

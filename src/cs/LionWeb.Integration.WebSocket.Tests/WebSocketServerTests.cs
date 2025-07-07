@@ -38,7 +38,7 @@ public class WebSocketServerTests : WebSocketServerTestBase
         var serverPartition = new Geometry("a");
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         
-        var lionWebServer = new LionWebTestServer(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
+        var lionWebServer = new LionWebTestRepository(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
         
         StartClient("A", "SignOn");
         
@@ -54,7 +54,7 @@ public class WebSocketServerTests : WebSocketServerTestBase
         var serverPartition = new Geometry("a");
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         
-        var lionWebServer = new LionWebTestServer(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
+        var lionWebServer = new LionWebTestRepository(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
         
         StartClient("A", "SignOn");
         StartClient("B", "SignOn");
@@ -73,7 +73,7 @@ public class WebSocketServerTests : WebSocketServerTestBase
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         
-        var lionWebServer = new LionWebTestServer(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
+        var lionWebServer = new LionWebTestRepository(LionWebVersion, Languages, "server", serverPartition, webSocketServer);
         
         StartClient("A", "SignOn,Wait,SetDocsText");
         StartClient("B", "SignOn,AddDocs");
