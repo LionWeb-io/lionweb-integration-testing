@@ -22,6 +22,9 @@ namespace LionWeb.Integration.WebSocket.Tests.Client;
 [TestClass]
 public class ContainmentClientTests : LinkClientTestBase
 {
+    /// <summary>
+    /// Added child is a single node
+    /// </summary>
     [TestMethod]
     public void AddChild() => Timeout(() =>
     {
@@ -30,6 +33,47 @@ public class ContainmentClientTests : LinkClientTestBase
 
         AssertEquals(aPartition, bPartition);
     });
+    
+    /// <summary>
+    /// Added child is a (complex) subtree
+    /// </summary>
+    [TestMethod, Timeout(TestTimeout)]
+    public void AddChild_AsASubtree()
+    {
+        var subTree = new LinkTestConcept("subtree")
+        {
+            Name = "containment_0_1",
+            Containment_0_1 = new LinkTestConcept("containment-1"),
+            Containment_0_n = new List<LinkTestConcept> { new("child1"), new("child2") }
+        };
+        
+        aPartition.Containment_0_1 = subTree;
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+    }
+
+    
+    /// <summary>
+    /// Node in an added subtree has a reference to already existing node
+    /// </summary>
+    [TestMethod, Timeout(TestTimeout)]
+    public void AddChild_NodeInAddedSubtreeHasAReferenceToAlreadyExistingNodes()
+    {
+        aPartition.Containment_1 = new LinkTestConcept("referenced-child");
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1 = new LinkTestConcept("subtree")
+        {
+            Reference_1 = bPartition.Containment_1
+        };
+        
+        aClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+    }
 
     [TestMethod]
     public void DeleteChild() => Timeout(() =>
