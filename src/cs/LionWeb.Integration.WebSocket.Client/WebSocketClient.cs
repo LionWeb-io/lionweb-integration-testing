@@ -65,11 +65,9 @@ public class WebSocketClient(string name) : IDeltaClientConnector
             {
                 case "SignOn":
                     await webSocketClient.SignOn(lionWeb);
-                    // webSocketClient.WaitForReceived(lionWeb, 1);
                     break;
                 case "SignOff":
                     await webSocketClient.SignOff(lionWeb);
-                    lionWeb.WaitForReplies(1);
                     break;
                 case "AddDocs":
                     partition.Documentation = new Documentation("documentation");
@@ -84,23 +82,19 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     break;
             }
         }
+        
+        Console.ReadLine();
     }
 
     private readonly EventToDeltaCommandMapper _mapper =
         new(new PartitionEventToDeltaCommandMapper(new CommandIdProvider(), _lionWebVersion));
 
-    private async Task SignOn(LionWebTestClient lionWeb)
-    {
+    private async Task SignOn(LionWebTestClient lionWeb) => 
         await lionWeb.SignOn();
-        lionWeb.WaitForReplies(1);
-    }
 
 
-    private async Task SignOff(LionWebTestClient lionWeb)
-    {
+    private async Task SignOff(LionWebTestClient lionWeb) => 
         await lionWeb.SignOff();
-        lionWeb.WaitForReplies(1);
-    }
 
     private int nextQueryId = 0;
 
@@ -133,7 +127,11 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
                     string receivedMessage = Encoding.UTF8.GetString(receiveBuffer, 0, result.Count);
-                    Receive?.Invoke(this, _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage));
+                    // Debug.WriteLine($"XXClient: received message: {receivedMessage}");
+                    var deserialized = _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage);
+                    // do NOT await
+                    Task.Run(() => Receive?.Invoke(this, deserialized));
+                    // Debug.WriteLine($"XXClient: processed message: {receivedMessage}");
                 }
             }
         });

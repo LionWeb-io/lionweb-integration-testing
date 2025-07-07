@@ -15,6 +15,7 @@
 // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // SPDX-License-Identifier: Apache-2.0
 
+using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Core.Utilities;
@@ -42,7 +43,7 @@ public abstract class WebSocketTestBase
     public TestContext TestContext { get; set; }
 
     /// We cannot use <see cref="TimeoutAttribute"/>, as it doesn't execute <see cref="TestCleanupAttribute"/>.
-    protected void Timeout(Action action)
+    protected void Timeout(Action action, int timeout = TestTimeout)
     {
         try
         {
@@ -61,7 +62,7 @@ public abstract class WebSocketTestBase
             });
 
             // False means execution timed out.
-            if (!executionTask.Wait(TestTimeout))
+            if (!executionTask.Wait(timeout) && !Debugger.IsAttached)
             {
                 Assert.Fail("Method exceeded timeout");
             }
@@ -73,7 +74,8 @@ public abstract class WebSocketTestBase
         }
         catch (AggregateException ex) when (ex.InnerExceptions.Count == 1)
         {
-            throw ex.InnerExceptions[0];
+            var innerException = ex.InnerExceptions[0];
+            throw new ArgumentException(innerException.Message, innerException);
         }
         
     }

@@ -65,7 +65,7 @@ public class AnnotationClientTests : LinkClientTestBase
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost");
         aPartition.Containment_0_1.AddAnnotations([new TestAnnotation("annotation")]);
-        bClient.WaitForReplies(1);
+        bClient.WaitForReplies(2);
 
         AssertEquals(aPartition, bPartition);
 

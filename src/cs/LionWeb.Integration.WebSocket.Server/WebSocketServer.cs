@@ -143,6 +143,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
         foreach ((var clientInfo, System.Net.WebSockets.WebSocket socket) in _knownClients)
         {
             var encoded = Encode(_deltaSerializer.Serialize(UpdateSequenceNumber(content, clientInfo)));
+            // Debug.WriteLine($"XXServer: sending to {clientInfo} message: {content.GetType()}");
             await socket.SendAsync(encoded, WebSocketMessageType.Text, true, CancellationToken.None);
         }
     }
