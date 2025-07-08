@@ -43,7 +43,7 @@ public class ContainmentClientTests : LinkClientTestBase
         var subTree = new LinkTestConcept("subtree")
         {
             Name = "containment_0_1",
-            Containment_0_1 = new LinkTestConcept("containment-1"),
+            Containment_0_1 = new LinkTestConcept("containment_0_1"),
             Containment_0_n = new List<LinkTestConcept> { new("child1"), new("child2") }
         };
 
@@ -69,13 +69,44 @@ public class ContainmentClientTests : LinkClientTestBase
         {
             Reference_1 = bPartition.Containment_1
         };
-
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     });
 
+    /// <summary>
+    /// Already existing node has a reference to a node in an added subtree
+    /// </summary>
+    [TestMethod]
+    public void AddChild_AlreadyExistingNodeHasAReferenceToNodeInAddedSubtree() => Timeout(() =>
+    {
+        aPartition.Containment_0_1 = new LinkTestConcept("existing-subtree")
+        {
+            Containment_0_1 = new LinkTestConcept("containment")
+        };
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        aPartition.Containment_1 = new LinkTestConcept("added-node");
+        bClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+        
+        // This works, but reference link is established after the nodes are added.
+        // One would expect reference from a child is set to the node before the new node
+        // is added to partition!? 
+        aPartition.Containment_0_1.Reference_0_1 = aPartition.Containment_1;
+        bClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+
+    });
+
     
+    /// <summary>
+    /// Deletes an existing node
+    /// </summary>
     [TestMethod]
     public void DeleteChild() => Timeout(() =>
     {
@@ -89,7 +120,30 @@ public class ContainmentClientTests : LinkClientTestBase
 
         AssertEquals(aPartition, bPartition);
     });
+    
+    /// <summary>
+    /// Deletes a node from an existing subtree
+    /// </summary>
+    [TestMethod]
+    public void DeleteChild_FromASubtree() => Timeout(() =>
+    {
+        aPartition.Containment_1 = new LinkTestConcept("child")
+        {
+            Containment_0_1 = new LinkTestConcept("deleted-node")
+        };
+        bClient.WaitForReplies(1);
 
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1.Containment_0_1 = null;
+        aClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+    });
+
+    /// <summary>
+    /// Replaces an existing node with a new node
+    /// </summary>
     [TestMethod]
     public void ReplaceChild() => Timeout(() =>
     {
@@ -104,6 +158,31 @@ public class ContainmentClientTests : LinkClientTestBase
         AssertEquals(aPartition, bPartition);
     });
 
+    /// <summary>
+    /// Replaces an existing node a (complex) subtree
+    /// </summary>
+    [TestMethod]
+    public void ReplaceChild_WithASubtree() => Timeout(() =>
+    {
+        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_0_1 = new LinkTestConcept("subtree")
+        {
+            Name = "containment_0_1",
+            Containment_0_1 = new LinkTestConcept("containment_0_1"),
+            Containment_0_n = new List<LinkTestConcept> { new("child1"), new("child2") }
+        };
+        aClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+    });
+
+    /// <summary>
+    /// Moves a child from an old parent to a new parent
+    /// </summary>
     [TestMethod]
     public void MoveChildFromOtherContainment() => Timeout(() =>
     {
