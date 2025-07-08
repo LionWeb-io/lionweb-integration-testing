@@ -191,15 +191,38 @@ public class ContainmentClientTests : LinkClientTestBase
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = bPartition.Containment_0_1.Containment_0_1;
+        bPartition.Containment_1 = bPartition.Containment_0_1!.Containment_0_1!;
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     });
 
+    
+    /// <summary>
+    /// Moves a child to a new containment which has another parent; replaces the existing child.
+    /// </summary>
+    [TestMethod]
+    public void MoveChildFromOtherContainment_And_ReplaceExistingChild() => Timeout(() =>
+    {
+        aPartition.Containment_0_1 =  new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") };
+        bClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1 = new LinkTestConcept("replaced-subHost"){ Containment_0_1 = new LinkTestConcept("replaced-child")};
+        aClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1.Containment_0_1 = bPartition.Containment_0_1!.Containment_0_1!;
+        aClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+    });
+
 
     /// <summary>
-    /// Moves a child from one containment to another; both containments have a common parent.
+    /// Moves a child from one containment to another within the same parent. 
     /// </summary>
     [TestMethod]
     public void MoveChildFromOtherContainmentInSameParent() => Timeout(() =>
@@ -209,9 +232,31 @@ public class ContainmentClientTests : LinkClientTestBase
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = bPartition.Containment_0_1;
+        bPartition.Containment_1 = bPartition.Containment_0_1!;
         aClient.WaitForReplies(1);
 
+        AssertEquals(aPartition, bPartition);
+    });
+
+    /// <summary>
+    /// Moves a child from one containment to another within the same parent and replaces the existing child node, if any.
+    /// </summary>
+    [TestMethod]
+    public void MoveChildFromOtherContainmentInSameParent_And_ReplaceExistingChild() => Timeout(() =>
+    {
+        aPartition.Containment_0_1 = new LinkTestConcept("moved-child");
+        bClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1 = new LinkTestConcept("replaced-child");
+        aClient.WaitForReplies(1);
+        
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1 = bPartition.Containment_0_1!;
+        aClient.WaitForReplies(1);
+        
         AssertEquals(aPartition, bPartition);
     });
 
