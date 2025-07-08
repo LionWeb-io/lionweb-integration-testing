@@ -202,7 +202,7 @@ public class ContainmentClientTests : LinkClientTestBase
     /// Moves a child to a new containment which has another parent; replaces the existing child.
     /// </summary>
     [TestMethod]
-    public void MoveChildFromOtherContainment_And_ReplaceExistingChild() => Timeout(() =>
+    public void MoveAndReplaceChildFromOtherContainment() => Timeout(() =>
     {
         aPartition.Containment_0_1 =  new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") };
         bClient.WaitForReplies(1);
@@ -242,7 +242,7 @@ public class ContainmentClientTests : LinkClientTestBase
     /// Moves a child from one containment to another within the same parent and replaces the existing child node, if any.
     /// </summary>
     [TestMethod]
-    public void MoveChildFromOtherContainmentInSameParent_And_ReplaceExistingChild() => Timeout(() =>
+    public void MoveAndReplaceChildFromOtherContainmentInSameParent() => Timeout(() =>
     {
         aPartition.Containment_0_1 = new LinkTestConcept("moved-child");
         bClient.WaitForReplies(1);
