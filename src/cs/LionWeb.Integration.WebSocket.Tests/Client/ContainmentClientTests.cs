@@ -181,7 +181,7 @@ public class ContainmentClientTests : LinkClientTestBase
     });
 
     /// <summary>
-    /// Moves a child from an old parent to a new parent
+    /// Moves a child to a new containment which has another parent.
     /// </summary>
     [TestMethod]
     public void MoveChildFromOtherContainment() => Timeout(() =>
@@ -197,6 +197,10 @@ public class ContainmentClientTests : LinkClientTestBase
         AssertEquals(aPartition, bPartition);
     });
 
+
+    /// <summary>
+    /// Moves a child from one containment to another; both containments have a common parent.
+    /// </summary>
     [TestMethod]
     public void MoveChildFromOtherContainmentInSameParent() => Timeout(() =>
     {
@@ -211,6 +215,9 @@ public class ContainmentClientTests : LinkClientTestBase
         AssertEquals(aPartition, bPartition);
     });
 
+    /// <summary>
+    /// Moves child within the same containment to a new index
+    /// </summary>
     [TestMethod]
     public void MoveChildInSameContainment() => Timeout(() =>
     {
