@@ -570,21 +570,21 @@ public partial class DataTypeTestConcept : ConceptInstanceBase, IPartitionInstan
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_booleanValue_0_1 != default)
+		if (TryGetBooleanValue_0_1(out _))
 			result.Add(TestLanguageLanguage.Instance.DataTypeTestConcept_booleanValue_0_1);
-		if (_booleanValue_1 != default)
+		if (TryGetBooleanValue_1(out _))
 			result.Add(TestLanguageLanguage.Instance.DataTypeTestConcept_booleanValue_1);
-		if (_enumValue_0_1 != default)
+		if (TryGetEnumValue_0_1(out _))
 			result.Add(TestLanguageLanguage.Instance.DataTypeTestConcept_enumValue_0_1);
-		if (_enumValue_1 != default)
+		if (TryGetEnumValue_1(out _))
 			result.Add(TestLanguageLanguage.Instance.DataTypeTestConcept_enumValue_1);
-		if (_integerValue_0_1 != default)
+		if (TryGetIntegerValue_0_1(out _))
 			result.Add(TestLanguageLanguage.Instance.DataTypeTestConcept_integerValue_0_1);
-		if (_integerValue_1 != default)
+		if (TryGetIntegerValue_1(out _))
 			result.Add(TestLanguageLanguage.Instance.DataTypeTestConcept_integerValue_1);
-		if (_stringValue_0_1 != default)
+		if (TryGetStringValue_0_1(out _))
 			result.Add(TestLanguageLanguage.Instance.DataTypeTestConcept_stringValue_0_1);
-		if (_stringValue_1 != default)
+		if (TryGetStringValue_1(out _))
 			result.Add(TestLanguageLanguage.Instance.DataTypeTestConcept_stringValue_1);
 		return result;
 	}
@@ -1122,23 +1122,23 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable, IPar
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_name != default)
+		if (TryGetName(out _))
 			result.Add(_builtIns.INamed_name);
-		if (_containment_0_1 != default)
+		if (TryGetContainment_0_1(out _))
 			result.Add(TestLanguageLanguage.Instance.LinkTestConcept_containment_0_1);
-		if (_containment_0_n.Count != 0)
+		if (TryGetContainment_0_n(out _))
 			result.Add(TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n);
-		if (_containment_1 != default)
+		if (TryGetContainment_1(out _))
 			result.Add(TestLanguageLanguage.Instance.LinkTestConcept_containment_1);
-		if (_containment_1_n.Count != 0)
+		if (TryGetContainment_1_n(out _))
 			result.Add(TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n);
-		if (_reference_0_1 != default)
+		if (TryGetReference_0_1(out _))
 			result.Add(TestLanguageLanguage.Instance.LinkTestConcept_reference_0_1);
-		if (_reference_0_n.Count != 0)
+		if (TryGetReference_0_n(out _))
 			result.Add(TestLanguageLanguage.Instance.LinkTestConcept_reference_0_n);
-		if (_reference_1 != default)
+		if (TryGetReference_1(out _))
 			result.Add(TestLanguageLanguage.Instance.LinkTestConcept_reference_1);
-		if (_reference_1_n.Count != 0)
+		if (TryGetReference_1_n(out _))
 			result.Add(TestLanguageLanguage.Instance.LinkTestConcept_reference_1_n);
 		return result;
 	}

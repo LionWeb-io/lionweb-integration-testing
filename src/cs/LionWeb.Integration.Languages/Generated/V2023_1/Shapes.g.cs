@@ -596,13 +596,13 @@ public partial class BillOfMaterials : AnnotationInstanceBase
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_altGroups.Count != 0)
+		if (TryGetAltGroups(out _))
 			result.Add(ShapesLanguage.Instance.BillOfMaterials_altGroups);
-		if (_defaultGroup != default)
+		if (TryGetDefaultGroup(out _))
 			result.Add(ShapesLanguage.Instance.BillOfMaterials_defaultGroup);
-		if (_groups.Count != 0)
+		if (TryGetGroups(out _))
 			result.Add(ShapesLanguage.Instance.BillOfMaterials_groups);
-		if (_materials.Count != 0)
+		if (TryGetMaterials(out _))
 			result.Add(ShapesLanguage.Instance.BillOfMaterials_materials);
 		return result;
 	}
@@ -766,9 +766,9 @@ public partial class Circle : Shape
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_center != default)
+		if (TryGetCenter(out _))
 			result.Add(ShapesLanguage.Instance.Circle_center);
-		if (_r != default)
+		if (TryGetR(out _))
 			result.Add(ShapesLanguage.Instance.Circle_r);
 		return result;
 	}
@@ -1019,11 +1019,11 @@ public partial class CompositeShape : Shape
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_disabledParts.Count != 0)
+		if (TryGetDisabledParts(out _))
 			result.Add(ShapesLanguage.Instance.CompositeShape_disabledParts);
-		if (_evilPart != default)
+		if (TryGetEvilPart(out _))
 			result.Add(ShapesLanguage.Instance.CompositeShape_evilPart);
-		if (_parts.Count != 0)
+		if (TryGetParts(out _))
 			result.Add(ShapesLanguage.Instance.CompositeShape_parts);
 		return result;
 	}
@@ -1223,11 +1223,11 @@ public partial class Coord : ConceptInstanceBase
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_x != default)
+		if (TryGetX(out _))
 			result.Add(ShapesLanguage.Instance.Coord_x);
-		if (_y != default)
+		if (TryGetY(out _))
 			result.Add(ShapesLanguage.Instance.Coord_y);
-		if (_z != default)
+		if (TryGetZ(out _))
 			result.Add(ShapesLanguage.Instance.Coord_z);
 		return result;
 	}
@@ -1342,9 +1342,9 @@ public partial class Documentation : AnnotationInstanceBase
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_technical != default)
+		if (TryGetTechnical(out _))
 			result.Add(ShapesLanguage.Instance.Documentation_technical);
-		if (_text != default)
+		if (TryGetText(out _))
 			result.Add(ShapesLanguage.Instance.Documentation_text);
 		return result;
 	}
@@ -1490,9 +1490,9 @@ public partial class Geometry : ConceptInstanceBase, IPartitionInstance<INode>
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_documentation != default)
+		if (TryGetDocumentation(out _))
 			result.Add(ShapesLanguage.Instance.Geometry_documentation);
-		if (_shapes.Count != 0)
+		if (TryGetShapes(out _))
 			result.Add(ShapesLanguage.Instance.Geometry_shapes);
 		return result;
 	}
@@ -1676,9 +1676,9 @@ public partial class Line : Shape, INamedWritable
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_end != default)
+		if (TryGetEnd(out _))
 			result.Add(ShapesLanguage.Instance.Line_end);
-		if (_start != default)
+		if (TryGetStart(out _))
 			result.Add(ShapesLanguage.Instance.Line_start);
 		return result;
 	}
@@ -1903,11 +1903,11 @@ public partial class MaterialGroup : ConceptInstanceBase
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_defaultShape != default)
+		if (TryGetDefaultShape(out _))
 			result.Add(ShapesLanguage.Instance.MaterialGroup_defaultShape);
-		if (_materials.Count != 0)
+		if (TryGetMaterials(out _))
 			result.Add(ShapesLanguage.Instance.MaterialGroup_materials);
-		if (_matterState != default)
+		if (TryGetMatterState(out _))
 			result.Add(ShapesLanguage.Instance.MaterialGroup_matterState);
 		return result;
 	}
@@ -2182,15 +2182,15 @@ public partial class OffsetDuplicate : Shape
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_altSource != default)
+		if (TryGetAltSource(out _))
 			result.Add(ShapesLanguage.Instance.OffsetDuplicate_altSource);
-		if (_docs != default)
+		if (TryGetDocs(out _))
 			result.Add(ShapesLanguage.Instance.OffsetDuplicate_docs);
-		if (_offset != default)
+		if (TryGetOffset(out _))
 			result.Add(ShapesLanguage.Instance.OffsetDuplicate_offset);
-		if (_secretDocs != default)
+		if (TryGetSecretDocs(out _))
 			result.Add(ShapesLanguage.Instance.OffsetDuplicate_secretDocs);
-		if (_source != default)
+		if (TryGetSource(out _))
 			result.Add(ShapesLanguage.Instance.OffsetDuplicate_source);
 		return result;
 	}
@@ -2340,7 +2340,7 @@ public partial class ReferenceGeometry : ConceptInstanceBase, IPartitionInstance
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_shapes.Count != 0)
+		if (TryGetShapes(out _))
 			result.Add(ShapesLanguage.Instance.ReferenceGeometry_shapes);
 		return result;
 	}
@@ -2579,13 +2579,13 @@ public abstract partial class Shape : ConceptInstanceBase, INamedWritable, IShap
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
-		if (_name != default)
+		if (TryGetName(out _))
 			result.Add(_builtIns.INamed_name);
-		if (_fixpoints.Count != 0)
+		if (TryGetFixpoints(out _))
 			result.Add(ShapesLanguage.Instance.IShape_fixpoints);
-		if (_uuid != default)
+		if (TryGetUuid(out _))
 			result.Add(ShapesLanguage.Instance.IShape_uuid);
-		if (_shapeDocs != default)
+		if (TryGetShapeDocs(out _))
 			result.Add(ShapesLanguage.Instance.Shape_shapeDocs);
 		return result;
 	}

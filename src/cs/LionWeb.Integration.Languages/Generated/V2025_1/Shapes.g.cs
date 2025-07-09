@@ -4,14 +4,14 @@
 // ReSharper disable SuggestVarOrType_Elsewhere
 #pragma warning disable 1591
 #nullable enable
-namespace LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2;
+namespace LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2;
 using LionWeb.Core;
 using LionWeb.Core.M1.Event.Partition;
 using LionWeb.Core.M1.Event.Partition.Emitter;
 using LionWeb.Core.M2;
 using LionWeb.Core.M3;
 using LionWeb.Core.Utilities;
-using LionWeb.Core.VersionSpecific.V2024_1;
+using LionWeb.Core.VersionSpecific.V2025_1;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -21,7 +21,7 @@ using Time = string;
 public partial class ShapesLanguage : LanguageBase<IShapesFactory>
 {
 	public static readonly ShapesLanguage Instance = new Lazy<ShapesLanguage>(() => new("id-Shapes")).Value;
-	public ShapesLanguage(string id) : base(id, LionWebVersions.v2024_1)
+	public ShapesLanguage(string id) : base(id, LionWebVersions.v2025_1)
 	{
 		_billOfMaterials = new(() => new AnnotationBase<ShapesLanguage>("id-BillOfMaterials", this) { Key = "key-BillOfMaterials", Name = "BillOfMaterials", AnnotatesLazy = new(() => _builtIns.Node), FeaturesLazy = new(() => [BillOfMaterials_altGroups, BillOfMaterials_defaultGroup, BillOfMaterials_groups, BillOfMaterials_materials]) });
 		_billOfMaterials_altGroups = new(() => new ContainmentBase<ShapesLanguage>("id-alt-groups", BillOfMaterials, this) { Key = "key-alt-groups", Name = "altGroups", Optional = true, Multiple = true, Type = MaterialGroup });
@@ -545,7 +545,7 @@ public partial class BillOfMaterials : AnnotationInstanceBase
 			return true;
 		if (ShapesLanguage.Instance.BillOfMaterials_altGroups.EqualsIdentity(feature))
 		{
-			var safeNodes = ShapesLanguage.Instance.BillOfMaterials_altGroups.AsNodes<LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.MaterialGroup>(value).ToList();
+			var safeNodes = ShapesLanguage.Instance.BillOfMaterials_altGroups.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.MaterialGroup>(value).ToList();
 			ContainmentSetEventEmitter<MaterialGroup> evt = new(ShapesLanguage.Instance.BillOfMaterials_altGroups, this, safeNodes, _altGroups);
 			evt.CollectOldData();
 			RemoveSelfParent(_altGroups.ToList(), _altGroups, ShapesLanguage.Instance.BillOfMaterials_altGroups);
@@ -556,9 +556,9 @@ public partial class BillOfMaterials : AnnotationInstanceBase
 
 		if (ShapesLanguage.Instance.BillOfMaterials_defaultGroup.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.MaterialGroup)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.MaterialGroup)
 			{
-				DefaultGroup = (LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.MaterialGroup?)value;
+				DefaultGroup = (LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.MaterialGroup?)value;
 				return true;
 			}
 
@@ -567,7 +567,7 @@ public partial class BillOfMaterials : AnnotationInstanceBase
 
 		if (ShapesLanguage.Instance.BillOfMaterials_groups.EqualsIdentity(feature))
 		{
-			var safeNodes = ShapesLanguage.Instance.BillOfMaterials_groups.AsNodes<LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.MaterialGroup>(value).ToList();
+			var safeNodes = ShapesLanguage.Instance.BillOfMaterials_groups.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.MaterialGroup>(value).ToList();
 			ContainmentSetEventEmitter<MaterialGroup> evt = new(ShapesLanguage.Instance.BillOfMaterials_groups, this, safeNodes, _groups);
 			evt.CollectOldData();
 			RemoveSelfParent(_groups.ToList(), _groups, ShapesLanguage.Instance.BillOfMaterials_groups);
@@ -578,7 +578,7 @@ public partial class BillOfMaterials : AnnotationInstanceBase
 
 		if (ShapesLanguage.Instance.BillOfMaterials_materials.EqualsIdentity(feature))
 		{
-			var safeNodes = ShapesLanguage.Instance.BillOfMaterials_materials.AsNodes<LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.IShape>(value).ToList();
+			var safeNodes = ShapesLanguage.Instance.BillOfMaterials_materials.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.IShape>(value).ToList();
 			AssureNotNull(safeNodes, ShapesLanguage.Instance.BillOfMaterials_materials);
 			AssureNotNullMembers(safeNodes, ShapesLanguage.Instance.BillOfMaterials_materials);
 			ReferenceSetEventEmitter<IShape> evt = new(ShapesLanguage.Instance.BillOfMaterials_materials, this, safeNodes, _materials);
@@ -739,7 +739,7 @@ public partial class Circle : Shape
 			return true;
 		if (ShapesLanguage.Instance.Circle_center.EqualsIdentity(feature))
 		{
-			if (value is LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Coord v)
+			if (value is LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Coord v)
 			{
 				Center = v;
 				return true;
@@ -979,7 +979,7 @@ public partial class CompositeShape : Shape
 			return true;
 		if (ShapesLanguage.Instance.CompositeShape_disabledParts.EqualsIdentity(feature))
 		{
-			var safeNodes = ShapesLanguage.Instance.CompositeShape_disabledParts.AsNodes<LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.IShape>(value).ToList();
+			var safeNodes = ShapesLanguage.Instance.CompositeShape_disabledParts.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.IShape>(value).ToList();
 			AssureNonEmpty(safeNodes, ShapesLanguage.Instance.CompositeShape_disabledParts);
 			ContainmentSetEventEmitter<IShape> evt = new(ShapesLanguage.Instance.CompositeShape_disabledParts, this, safeNodes, _disabledParts);
 			evt.CollectOldData();
@@ -991,7 +991,7 @@ public partial class CompositeShape : Shape
 
 		if (ShapesLanguage.Instance.CompositeShape_evilPart.EqualsIdentity(feature))
 		{
-			if (value is LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.IShape v)
+			if (value is LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.IShape v)
 			{
 				EvilPart = v;
 				return true;
@@ -1002,7 +1002,7 @@ public partial class CompositeShape : Shape
 
 		if (ShapesLanguage.Instance.CompositeShape_parts.EqualsIdentity(feature))
 		{
-			var safeNodes = ShapesLanguage.Instance.CompositeShape_parts.AsNodes<LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.IShape>(value).ToList();
+			var safeNodes = ShapesLanguage.Instance.CompositeShape_parts.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.IShape>(value).ToList();
 			AssureNonEmpty(safeNodes, ShapesLanguage.Instance.CompositeShape_parts);
 			ContainmentSetEventEmitter<IShape> evt = new(ShapesLanguage.Instance.CompositeShape_parts, this, safeNodes, _parts);
 			evt.CollectOldData();
@@ -1463,9 +1463,9 @@ public partial class Geometry : ConceptInstanceBase, IPartitionInstance<INode>
 			return true;
 		if (ShapesLanguage.Instance.Geometry_documentation.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Documentation)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Documentation)
 			{
-				Documentation = (LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Documentation?)value;
+				Documentation = (LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Documentation?)value;
 				return true;
 			}
 
@@ -1474,7 +1474,7 @@ public partial class Geometry : ConceptInstanceBase, IPartitionInstance<INode>
 
 		if (ShapesLanguage.Instance.Geometry_shapes.EqualsIdentity(feature))
 		{
-			var safeNodes = ShapesLanguage.Instance.Geometry_shapes.AsNodes<LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.IShape>(value).ToList();
+			var safeNodes = ShapesLanguage.Instance.Geometry_shapes.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.IShape>(value).ToList();
 			ContainmentSetEventEmitter<IShape> evt = new(ShapesLanguage.Instance.Geometry_shapes, this, safeNodes, _shapes);
 			evt.CollectOldData();
 			RemoveSelfParent(_shapes.ToList(), _shapes, ShapesLanguage.Instance.Geometry_shapes);
@@ -1649,7 +1649,7 @@ public partial class Line : Shape, INamedWritable
 			return true;
 		if (ShapesLanguage.Instance.Line_end.EqualsIdentity(feature))
 		{
-			if (value is LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Coord v)
+			if (value is LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Coord v)
 			{
 				End = v;
 				return true;
@@ -1660,7 +1660,7 @@ public partial class Line : Shape, INamedWritable
 
 		if (ShapesLanguage.Instance.Line_start.EqualsIdentity(feature))
 		{
-			if (value is LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Coord v)
+			if (value is LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Coord v)
 			{
 				Start = v;
 				return true;
@@ -1864,9 +1864,9 @@ public partial class MaterialGroup : ConceptInstanceBase
 			return true;
 		if (ShapesLanguage.Instance.MaterialGroup_defaultShape.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.IShape)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.IShape)
 			{
-				DefaultShape = (LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.IShape?)value;
+				DefaultShape = (LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.IShape?)value;
 				return true;
 			}
 
@@ -1875,7 +1875,7 @@ public partial class MaterialGroup : ConceptInstanceBase
 
 		if (ShapesLanguage.Instance.MaterialGroup_materials.EqualsIdentity(feature))
 		{
-			var safeNodes = ShapesLanguage.Instance.MaterialGroup_materials.AsNodes<LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.IShape>(value).ToList();
+			var safeNodes = ShapesLanguage.Instance.MaterialGroup_materials.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.IShape>(value).ToList();
 			AssureNonEmpty(safeNodes, ShapesLanguage.Instance.MaterialGroup_materials);
 			ReferenceSetEventEmitter<IShape> evt = new(ShapesLanguage.Instance.MaterialGroup_materials, this, safeNodes, _materials);
 			evt.CollectOldData();
@@ -1887,9 +1887,9 @@ public partial class MaterialGroup : ConceptInstanceBase
 
 		if (ShapesLanguage.Instance.MaterialGroup_matterState.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.MatterState)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.MatterState)
 			{
-				MatterState = (LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.MatterState?)value;
+				MatterState = (LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.MatterState?)value;
 				return true;
 			}
 
@@ -2122,9 +2122,9 @@ public partial class OffsetDuplicate : Shape
 			return true;
 		if (ShapesLanguage.Instance.OffsetDuplicate_altSource.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Shape)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Shape)
 			{
-				AltSource = (LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Shape?)value;
+				AltSource = (LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Shape?)value;
 				return true;
 			}
 
@@ -2133,9 +2133,9 @@ public partial class OffsetDuplicate : Shape
 
 		if (ShapesLanguage.Instance.OffsetDuplicate_docs.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Documentation)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Documentation)
 			{
-				Docs = (LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Documentation?)value;
+				Docs = (LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Documentation?)value;
 				return true;
 			}
 
@@ -2144,7 +2144,7 @@ public partial class OffsetDuplicate : Shape
 
 		if (ShapesLanguage.Instance.OffsetDuplicate_offset.EqualsIdentity(feature))
 		{
-			if (value is LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Coord v)
+			if (value is LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Coord v)
 			{
 				Offset = v;
 				return true;
@@ -2155,9 +2155,9 @@ public partial class OffsetDuplicate : Shape
 
 		if (ShapesLanguage.Instance.OffsetDuplicate_secretDocs.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Documentation)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Documentation)
 			{
-				SecretDocs = (LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Documentation?)value;
+				SecretDocs = (LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Documentation?)value;
 				return true;
 			}
 
@@ -2166,7 +2166,7 @@ public partial class OffsetDuplicate : Shape
 
 		if (ShapesLanguage.Instance.OffsetDuplicate_source.EqualsIdentity(feature))
 		{
-			if (value is LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Shape v)
+			if (value is LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Shape v)
 			{
 				Source = v;
 				return true;
@@ -2322,7 +2322,7 @@ public partial class ReferenceGeometry : ConceptInstanceBase, IPartitionInstance
 			return true;
 		if (ShapesLanguage.Instance.ReferenceGeometry_shapes.EqualsIdentity(feature))
 		{
-			var safeNodes = ShapesLanguage.Instance.ReferenceGeometry_shapes.AsNodes<LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.IShape>(value).ToList();
+			var safeNodes = ShapesLanguage.Instance.ReferenceGeometry_shapes.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.IShape>(value).ToList();
 			AssureNotNull(safeNodes, ShapesLanguage.Instance.ReferenceGeometry_shapes);
 			AssureNotNullMembers(safeNodes, ShapesLanguage.Instance.ReferenceGeometry_shapes);
 			ReferenceSetEventEmitter<IShape> evt = new(ShapesLanguage.Instance.ReferenceGeometry_shapes, this, safeNodes, _shapes);
@@ -2353,7 +2353,7 @@ public abstract partial class Shape : ConceptInstanceBase, INamedWritable, IShap
 	/// <remarks>Required Property</remarks>
     	/// <exception cref = "UnsetFeatureException">If Name has not been set</exception>
     	/// <exception cref = "InvalidValueException">If set to null</exception>
-        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2024_1.BuiltInsLanguage_2024_1), Key = "LionCore-builtins-INamed-name")]
+        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2025_1.BuiltInsLanguage_2025_1), Key = "LionCore-builtins-INamed-name")]
 	[LionCoreFeature(Kind = LionCoreFeatureKind.Property, Optional = false, Multiple = false)]
 	public string Name { get => _name ?? throw new UnsetFeatureException(_builtIns.INamed_name); set => SetName(value); }
 
@@ -2541,7 +2541,7 @@ public abstract partial class Shape : ConceptInstanceBase, INamedWritable, IShap
 
 		if (ShapesLanguage.Instance.IShape_fixpoints.EqualsIdentity(feature))
 		{
-			var safeNodes = ShapesLanguage.Instance.IShape_fixpoints.AsNodes<LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Coord>(value).ToList();
+			var safeNodes = ShapesLanguage.Instance.IShape_fixpoints.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Coord>(value).ToList();
 			ContainmentSetEventEmitter<Coord> evt = new(ShapesLanguage.Instance.IShape_fixpoints, this, safeNodes, _fixpoints);
 			evt.CollectOldData();
 			RemoveSelfParent(_fixpoints.ToList(), _fixpoints, ShapesLanguage.Instance.IShape_fixpoints);
@@ -2563,9 +2563,9 @@ public abstract partial class Shape : ConceptInstanceBase, INamedWritable, IShap
 
 		if (ShapesLanguage.Instance.Shape_shapeDocs.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Documentation)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Documentation)
 			{
-				ShapeDocs = (LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2.Documentation?)value;
+				ShapeDocs = (LionWeb.Integration.Languages.Generated.V2025_1.Shapes.M2.Documentation?)value;
 				return true;
 			}
 
