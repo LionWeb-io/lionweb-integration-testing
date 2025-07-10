@@ -1,6 +1,7 @@
 {
   "messageKind": "SignOnRequest",
   "deltaProtocolVersion": "2025.1",
+  "clientId": "iAmTheClient",
   "queryId": "q1",
   "protocolMessages": [
     {
