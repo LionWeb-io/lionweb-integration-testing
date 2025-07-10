@@ -21,15 +21,17 @@ using LionWeb.Protocol.Delta.Client;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
-public abstract class LinkClientTestBase : WebSocketClientTestBase
+public abstract class LinkClientTestBase(ServerProcesses serverProcess)
+    : WebSocketClientTestBase(serverProcess, LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
 {
-    protected readonly LinkTestConcept aPartition;
-    protected readonly LionWebTestClient aClient;
+    protected LinkTestConcept aPartition;
+    protected LionWebTestClient aClient;
 
-    protected readonly LinkTestConcept bPartition;
-    protected readonly LionWebTestClient bClient;
+    protected LinkTestConcept bPartition;
+    protected LionWebTestClient bClient;
 
-    public LinkClientTestBase() : base(LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
+    [SetUp]
+    public void ConnectToServer()
     {
         aPartition = new("partition");
         aClient = ConnectWebSocket(aPartition, "A").Result;

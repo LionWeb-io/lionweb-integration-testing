@@ -21,16 +21,17 @@ using LionWeb.Protocol.Delta.Client;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
-[TestClass]
-public class PropertyClientTests : WebSocketClientTestBase
+public class PropertyClientTests(ServerProcesses serverProcess)
+    : WebSocketClientTestBase(serverProcess, LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
 {
-    private readonly DataTypeTestConcept aPartition;
-    private readonly LionWebTestClient aClient;
+    private DataTypeTestConcept aPartition;
+    private LionWebTestClient aClient;
 
-    private readonly DataTypeTestConcept bPartition;
-    private readonly LionWebTestClient bClient;
+    private DataTypeTestConcept bPartition;
+    private LionWebTestClient bClient;
 
-    public PropertyClientTests() : base(LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
+    [SetUp]
+    public void ConnectToServer()
     {
         aPartition = new("partition");
         aClient = ConnectWebSocket(aPartition, "A").Result;
@@ -43,17 +44,17 @@ public class PropertyClientTests : WebSocketClientTestBase
     protected override string AdditionalServerParameters() =>
         TestLanguageLanguage.Instance.DataTypeTestConcept.Key;
 
-    [TestMethod]
-    public void AddProperty() => Timeout(() =>
+    [Test]
+    public void AddProperty()
     {
         aPartition.StringValue_0_1 = "new property";
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
 
-    [TestMethod]
-    public void ChangeProperty() => Timeout(() =>
+    [Test]
+    public void ChangeProperty()
     {
         aPartition.StringValue_0_1 = "new property";
         bClient.WaitForReplies(1);
@@ -62,11 +63,11 @@ public class PropertyClientTests : WebSocketClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
     
-    [TestMethod]
+    [Test]
 
-    public void DeleteProperty() => Timeout(() =>
+    public void DeleteProperty()
     {
         aPartition.StringValue_0_1 = "new property";
         bClient.WaitForReplies(1);
@@ -77,5 +78,5 @@ public class PropertyClientTests : WebSocketClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
 }
