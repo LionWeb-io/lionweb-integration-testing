@@ -20,11 +20,12 @@ using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
+using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
-[TestClass]
-public abstract class WebSocketServerTestBase : WebSocketTestBase, IDisposable
+[TestFixture]
+public abstract class WebSocketServerTestBase : WebSocketTestBase
 {
     private readonly List<Process> _processes = [];
 
@@ -67,7 +68,7 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase, IDisposable
         };
         process.ErrorDataReceived += (sender, args) => Console.Error.WriteLine(args.Data);
 
-        Assert.IsTrue(process.Start());
+        Assert.That(process.Start());
         process.BeginErrorReadLine();
         process.BeginOutputReadLine();
 
@@ -76,15 +77,13 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase, IDisposable
             Thread.Sleep(100);
         }
 
-        Assert.IsFalse(process.HasExited);
+        ClassicAssert.IsFalse(process.HasExited);
 
         _processes.Add(process);
     }
 
-    /// <inheritdoc />
-    [TestCleanup]
-    [ClassCleanup]
-    public void Dispose()
+    [TearDown]
+    public void StopClients()
     {
         foreach (var process in _processes)
         {
