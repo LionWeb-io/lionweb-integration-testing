@@ -15,6 +15,7 @@
 // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // SPDX-License-Identifier: Apache-2.0
 
+using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
@@ -184,7 +185,7 @@ public class ContainmentClientTests : LinkClientTestBase
     /// Moves a child to a new containment which has another parent.
     /// </summary>
     [TestMethod]
-    public void MoveChildFromOtherContainment() => Timeout(() =>
+    public void MoveChildFromOtherContainment_Single() => Timeout(() =>
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
         bClient.WaitForReplies(1);
@@ -199,10 +200,10 @@ public class ContainmentClientTests : LinkClientTestBase
 
     
     /// <summary>
-    /// Moves a child to a new containment which has another parent; replaces the existing child.
+    /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
     [TestMethod]
-    public void MoveAndReplaceChildFromOtherContainment() => Timeout(() =>
+    public void MoveAndReplaceChildFromOtherContainment_Single() => Timeout(() =>
     {
         aPartition.Containment_0_1 =  new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") };
         bClient.WaitForReplies(1);
@@ -220,6 +221,27 @@ public class ContainmentClientTests : LinkClientTestBase
         AssertEquals(aPartition, bPartition);
     });
 
+    /// <summary>
+    /// Moves a child from a multiple containment to other multiple containment and replaces the existing child.
+    /// </summary>
+    [TestMethod]
+    public void MoveAndReplaceChildFromOtherContainment_Multiple() => Timeout(() =>
+    {
+        aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
+        bClient.WaitForReplies(2);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("replaced")]);
+        aClient.WaitForReplies(2);
+
+        AssertEquals(aPartition, bPartition);
+
+        aPartition.Containment_1_n[^1].ReplaceWith(aPartition.Containment_0_n[^1]);
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+    });
 
     /// <summary>
     /// Moves a child from one containment to another within the same parent. 
@@ -242,7 +264,7 @@ public class ContainmentClientTests : LinkClientTestBase
     /// Moves a child from one containment to another within the same parent and replaces the existing child node, if any.
     /// </summary>
     [TestMethod]
-    public void MoveAndReplaceChildFromOtherContainmentInSameParent() => Timeout(() =>
+    public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single() => Timeout(() =>
     {
         aPartition.Containment_0_1 = new LinkTestConcept("moved-child");
         bClient.WaitForReplies(1);
