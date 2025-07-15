@@ -19,11 +19,16 @@ using System.Diagnostics;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
+/// Sets defaults for all tests in this and nested namespaces, and enables test output.
+/// <remarks>Inspired by https://docs.nunit.org/articles/nunit/technical-notes/usage/Trace-and-Debug-Output.html</remarks>
 [SetUpFixture]
-[Timeout(WebSocketTestBase.TestTimeout)]
+// Timeout is deprecated, but the alternative CancelAfter doesn't work in our context. 
+[Timeout(TestTimeout)]
 [NonParallelizable]
 public class SetupTrace
 {
+    private const int TestTimeout = 6000;
+
     [OneTimeSetUp]
     public void StartTest()
     {

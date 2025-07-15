@@ -24,7 +24,6 @@ namespace LionWeb.Integration.WebSocket.Tests;
 
 public abstract class WebSocketTestBase
 {
-    public const int TestTimeout = 6000;
     protected const string IpAddress = "localhost";
     protected const int Port = 42424;
 
