@@ -50,6 +50,7 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
                                         -v q
                                         --property WarningLevel=0
                                         --property NoWarn=NU1507
+                                        {Port}
                                         {AdditionalServerParameters()}
                                         """.ReplaceLineEndings(" ");
         result.StartInfo.UseShellExecute = false;
