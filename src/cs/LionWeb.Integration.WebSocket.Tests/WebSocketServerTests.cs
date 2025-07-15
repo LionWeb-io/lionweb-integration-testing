@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
+using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
@@ -35,10 +36,14 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new LinkTestConcept("a");
+        var serverPartition = new Geometry("a");
+        var serverForest = new Forest();
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+
+        serverForest.AddPartitions([serverPartition]);
 
         StartClient("A", serverPartition.GetType().Name,"SignOn");
 
@@ -51,10 +56,14 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new LinkTestConcept("a");
+        var serverPartition = new Geometry("a");
+        var serverForest = new Forest();
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+
+        serverForest.AddPartitions([serverPartition]);
 
         StartClient("A", serverPartition.GetType().Name,"SignOn");
         StartClient("B", serverPartition.GetType().Name, "SignOn");
@@ -76,9 +85,44 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         var serverPartition = new Geometry("a");
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
+        var serverForest = new Forest();
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+
+        serverForest.AddPartitions([serverPartition]);
+
+        StartClient("A", "SignOn,Wait,SetDocsText");
+        StartClient("B", "SignOn,AddDocs");
+
+        lionWebServer.WaitForReceived(4);
+
+        AssertEquals(new Geometry("g")
+        {
+            Documentation = new Documentation("d")
+            {
+                Text = "hello there"
+            }
+        }, serverPartition);
+    }
+    
+    [Test]
+    public void Partition()
+    {
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
+
+        var serverPartition = new Geometry("a");
+        // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
+        // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
+        var serverForest = new Forest();
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+
+        serverForest.AddPartitions([serverPartition]);
 
         StartClient("A",  serverPartition.GetType().Name,"SignOn,Wait,SetDocsText");
         StartClient("B",  serverPartition.GetType().Name,"SignOn,AddDocs");

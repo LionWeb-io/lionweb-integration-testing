@@ -26,11 +26,16 @@ using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Client;
+using LionWeb.Protocol.Delta.Client.Forest;
+using LionWeb.Protocol.Delta.Client.Partition;
 using LionWeb.Protocol.Delta.Message;
+using LionWeb.Protocol.Delta.Message.Query;
+using LionWeb.Protocol.Delta.Repository;
+using LionWeb.Protocol.Delta.Repository.Forest;
 
 namespace LionWeb.Integration.WebSocket.Client;
 
-public class WebSocketClient(string name) : IDeltaClientConnector
+public class WebSocketClient : IDeltaClientConnector
 {
     public const int BUFFER_SIZE = 0x10000;
 
@@ -183,37 +188,37 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     break;
             }
         }
-        
+
         Console.ReadLine();
     }
 
-    private IPartitionInstance GetPartition(string partitionType)
-    {
-        return partitionType switch
-        {
-            "LinkTestConcept" => new LinkTestConcept("a"),
-            "DataTypeTestConcept" => new DataTypeTestConcept("a"),
-            "Geometry" => new Geometry("a"),
-            _ =>  throw new ArgumentException("Invalid partition type specified.")
-        };
-    }
-    private readonly EventToDeltaCommandMapper _mapper =
-        new(new PartitionEventToDeltaCommandMapper(new CommandIdProvider(), _lionWebVersion));
+    private readonly EventToDeltaCommandMapper _mapper;
 
-    private async Task SignOn(LionWebTestClient lionWeb) => 
+    public WebSocketClient(string name)
+    {
+        _name = name;
+        var commandIdProvider = new CommandIdProvider();
+        _mapper = new(
+            new PartitionEventToDeltaCommandMapper(commandIdProvider, _lionWebVersion),
+            new ForestEventToDeltaCommandMapper(commandIdProvider, _lionWebVersion)
+        );
+    }
+
+    private async Task SignOn(LionWebTestClient lionWeb) =>
         await lionWeb.SignOn();
 
 
-    private async Task SignOff(LionWebTestClient lionWeb) => 
+    private async Task SignOff(LionWebTestClient lionWeb) =>
         await lionWeb.SignOff();
 
     private int nextQueryId = 0;
 
     private string QueryId() =>
-        $"{name}-{nextQueryId++}";
+        $"{_name}-{nextQueryId++}";
 
     private readonly DeltaSerializer _deltaSerializer = new();
     private readonly ClientWebSocket _clientWebSocket = new ClientWebSocket();
+    private readonly string _name;
 
     /// <inheritdoc />
     public event EventHandler<IDeltaContent>? ReceiveFromRepository;
