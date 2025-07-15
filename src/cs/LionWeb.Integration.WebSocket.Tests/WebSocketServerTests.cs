@@ -23,11 +23,10 @@ using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
-[TestClass]
 public class WebSocketServerTests : WebSocketServerTestBase
 {
-    [TestMethod]
-    public void SignIn_1() => Timeout(() =>
+    [Test]
+    public void SignIn_1()
     {
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
@@ -41,10 +40,10 @@ public class WebSocketServerTests : WebSocketServerTestBase
         StartClient("A", "SignOn");
 
         lionWebServer.WaitForReceived(1);
-    });
+    }
 
-    [TestMethod]
-    public void SignIn_2() => Timeout(() =>
+    [Test]
+    public void SignIn_2()
     {
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
@@ -59,10 +58,10 @@ public class WebSocketServerTests : WebSocketServerTestBase
         StartClient("B", "SignOn");
 
         lionWebServer.WaitForReceived(2);
-    });
+    }
 
-    [TestMethod]
-    public void Model() => Timeout(() =>
+    [Test]
+    public void Model()
     {
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
@@ -87,5 +86,5 @@ public class WebSocketServerTests : WebSocketServerTestBase
                 Text = "hello there"
             }
         }, serverPartition);
-    });
+    }
 }

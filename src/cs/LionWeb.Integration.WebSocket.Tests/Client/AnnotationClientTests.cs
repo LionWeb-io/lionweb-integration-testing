@@ -19,20 +19,19 @@ using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
-[TestClass]
-public class AnnotationClientTests : LinkClientTestBase
+public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTestBase(serverProcess)
 {
-    [TestMethod]
-    public void AddAnnotation() => Timeout(() =>
+    [Test]
+    public void AddAnnotation()
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
 
-    [TestMethod]
-    public void DeleteAnnotation() => Timeout(() =>
+    [Test]
+    public void DeleteAnnotation()
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
         bClient.WaitForReplies(1);
@@ -43,10 +42,10 @@ public class AnnotationClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
 
-    [TestMethod]
-    public void ReplaceAnnotation() => Timeout(() =>
+    [Test]
+    public void ReplaceAnnotation()
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
         bClient.WaitForReplies(1);
@@ -58,10 +57,10 @@ public class AnnotationClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
 
-    [TestMethod]
-    public void MoveAnnotationFromOtherParent() => Timeout(() =>
+    [Test]
+    public void MoveAnnotationFromOtherParent()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost");
         aPartition.Containment_0_1.AddAnnotations([new TestAnnotation("annotation")]);
@@ -73,10 +72,10 @@ public class AnnotationClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
 
-    [TestMethod]
-    public void MoveAnnotationInSameParent() => Timeout( () =>
+    [Test]
+    public void MoveAnnotationInSameParent()
 
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation0"), new TestAnnotation("annotation1")]);
@@ -88,5 +87,5 @@ public class AnnotationClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
 }

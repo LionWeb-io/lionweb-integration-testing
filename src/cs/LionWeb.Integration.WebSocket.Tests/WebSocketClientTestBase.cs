@@ -18,39 +18,66 @@
 using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M3;
-using LionWeb.Core.Utilities;
 using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Client;
-using LionWeb.Protocol.Delta.Message.Query;
+using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
-[TestClass]
-public abstract class WebSocketClientTestBase : WebSocketTestBase, IDisposable
+public enum ServerProcesses
 {
+    CSharp,
+    OtherCSharp
+}
+
+[TestFixture(ServerProcesses.CSharp)]
+// [TestFixture(ServerProcesses.OtherCSharp)]
+public abstract class WebSocketClientTestBase : WebSocketTestBase
+{
+    private readonly ServerProcesses _serverProcess;
     private Process _process;
 
-    protected WebSocketClientTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null) : base(lionWebVersion, languages)
+    private Process CSharpServer()
     {
-        Debug.WriteLine(Directory.GetCurrentDirectory());
-        StartServer();
-    }
-
-    private void StartServer()
-    {
-        _process = new Process();
-        _process.StartInfo.FileName = "dotnet";
-        _process.StartInfo.WorkingDirectory =
+        TestContext.WriteLine($"AdditionalServerParameters: {AdditionalServerParameters()}");
+        var result = new Process();
+        result.StartInfo.FileName = "dotnet";
+        result.StartInfo.WorkingDirectory =
             $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Server";
-        _process.StartInfo.Arguments = $"""
+        result.StartInfo.Arguments = $"""
                                         run
                                         -v q
                                         --property WarningLevel=0
                                         --property NoWarn=NU1507
                                         {AdditionalServerParameters()}
                                         """.ReplaceLineEndings(" ");
-        _process.StartInfo.UseShellExecute = false;
+        result.StartInfo.UseShellExecute = false;
+        return result;
+    }
+
+    protected WebSocketClientTestBase(ServerProcesses serverProcess, LionWebVersions? lionWebVersion = null, List<Language>? languages = null) : base(lionWebVersion, languages)
+    {
+        _serverProcess = serverProcess;
+        Debug.WriteLine(Directory.GetCurrentDirectory());
+    }
+
+    [SetUp]
+    public void StartServer()
+    {
+        Console.WriteLine("StartServer()");
+        // cleans out leftovers
+        StopServer();
+        
+        _process = _serverProcess switch
+        {
+            ServerProcesses.CSharp => CSharpServer(),
+            ServerProcesses.OtherCSharp => CSharpServer(),
+            _ => throw new ArgumentOutOfRangeException(nameof(_serverProcess), _serverProcess, null)
+        };
+        
+        _allServers.Add(_process);
+        
         _process.StartInfo.RedirectStandardError = true;
         _process.StartInfo.RedirectStandardInput = true;
         _process.StartInfo.RedirectStandardOutput = true;
@@ -65,7 +92,7 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase, IDisposable
         };
         _process.ErrorDataReceived += (sender, args) => Console.Error.WriteLine(args.Data);
 
-        Assert.IsTrue(_process.Start());
+        Assert.That(_process.Start());
         _process.BeginErrorReadLine();
         _process.BeginOutputReadLine();
 
@@ -74,29 +101,35 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase, IDisposable
             Thread.Sleep(100);
         }
 
-        Assert.IsFalse(_process.HasExited);
+        ClassicAssert.IsFalse(_process.HasExited);
     }
 
     protected virtual string AdditionalServerParameters() =>
         "";
 
-    /// <inheritdoc />
-    [TestCleanup()]
-    [ClassCleanup(InheritanceBehavior.BeforeEachDerivedClass, ClassCleanupBehavior.EndOfClass)]
-    public void Dispose()
+    private static readonly List<Process> _allServers = []; 
+    
+    [TearDown]
+    [OneTimeTearDown]
+    public void StopServer()
     {
-        if (_process == null || _process.HasExited)
-            return;
-
-        try
+        // We loop over _allServers, as [TearDown] will not be executed after a [Timeout].
+        // Then, we at least kill all previous servers in the next run.
+        foreach (var server in _allServers)
         {
-            TestContext.WriteLine($"Killing WebSocket Server {_process.ProcessName}");
-            _process.Kill();
+            if (server.HasExited) continue;
+            try
+            {
+                TestContext.WriteLine($"Killing WebSocket Server {server.ProcessName}");
+                server.Kill();
+            }
+            catch (Exception e)
+            {
+                TestContext.WriteLine("StopServer:" + e);
+            }
         }
-        catch (Exception e)
-        {
-            TestContext.WriteLine("Dispose:" + e);
-        }
+        
+        _allServers.Clear();
     }
 
     protected async Task<LionWebTestClient> ConnectWebSocket(IPartitionInstance partition, string name)
