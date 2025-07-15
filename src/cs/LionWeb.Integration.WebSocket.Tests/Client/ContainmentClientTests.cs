@@ -20,26 +20,25 @@ using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
-[TestClass]
-public class ContainmentClientTests : LinkClientTestBase
+public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientTestBase(serverProcess)
 {
     /// <summary>
     /// Added child is a single node
     /// </summary>
-    [TestMethod]
-    public void AddChild() => Timeout(() =>
+    [Test]
+    public void AddChild()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
     
     /// <summary>
     /// Added child is a (complex) subtree
     /// </summary>
-    [TestMethod]
-    public void AddChild_AsASubtree() => Timeout(() =>
+    [Test]
+    public void AddChild_AsASubtree()
     {
         var subTree = new LinkTestConcept("subtree")
         {
@@ -52,14 +51,13 @@ public class ContainmentClientTests : LinkClientTestBase
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
-
+    }
 
     /// <summary>
     /// Node in an added subtree has a reference to already existing node
     /// </summary>
-    [TestMethod]
-    public void AddChild_NodeInAddedSubtreeHasAReferenceToAlreadyExistingNodes() => Timeout(() =>
+    [Test]
+    public void AddChild_NodeInAddedSubtreeHasAReferenceToAlreadyExistingNodes()
     {
         aPartition.Containment_1 = new LinkTestConcept("referenced-child");
         bClient.WaitForReplies(1);
@@ -73,13 +71,13 @@ public class ContainmentClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
-
+    }
+    
     /// <summary>
     /// Already existing node has a reference to a node in an added subtree
     /// </summary>
-    [TestMethod]
-    public void AddChild_AlreadyExistingNodeHasAReferenceToNodeInAddedSubtree() => Timeout(() =>
+    [Test]
+    public void AddChild_AlreadyExistingNodeHasAReferenceToNodeInAddedSubtree()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("existing-subtree")
         {
@@ -101,15 +99,14 @@ public class ContainmentClientTests : LinkClientTestBase
         bClient.WaitForReplies(1);
         
         AssertEquals(aPartition, bPartition);
-
-    });
+    }
 
     
     /// <summary>
     /// Deletes an existing node
     /// </summary>
-    [TestMethod]
-    public void DeleteChild() => Timeout(() =>
+    [Test]
+    public void DeleteChild()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         bClient.WaitForReplies(1);
@@ -120,13 +117,13 @@ public class ContainmentClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
     
     /// <summary>
     /// Deletes a node from an existing subtree
     /// </summary>
-    [TestMethod]
-    public void DeleteChild_FromASubtree() => Timeout(() =>
+    [Test]
+    public void DeleteChild_FromASubtree()
     {
         aPartition.Containment_1 = new LinkTestConcept("child")
         {
@@ -140,13 +137,14 @@ public class ContainmentClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
+
 
     /// <summary>
     /// Replaces an existing node with a new node
     /// </summary>
-    [TestMethod]
-    public void ReplaceChild() => Timeout(() =>
+    [Test]
+    public void ReplaceChild()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         bClient.WaitForReplies(1);
@@ -157,13 +155,13 @@ public class ContainmentClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
-
+    }
+    
     /// <summary>
     /// Replaces an existing node a (complex) subtree
     /// </summary>
-    [TestMethod]
-    public void ReplaceChild_WithASubtree() => Timeout(() =>
+    [Test]
+    public void ReplaceChild_WithASubtree()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         bClient.WaitForReplies(1);
@@ -179,13 +177,10 @@ public class ContainmentClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
 
-    /// <summary>
-    /// Moves a child to a new containment which has another parent.
-    /// </summary>
-    [TestMethod]
-    public void MoveChildFromOtherContainment_Single() => Timeout(() =>
+    [Test]
+    public void MoveChildFromOtherContainment_Single()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
         bClient.WaitForReplies(1);
@@ -196,14 +191,14 @@ public class ContainmentClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
-
+    }
     
+        
     /// <summary>
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
-    [TestMethod]
-    public void MoveAndReplaceChildFromOtherContainment_Single() => Timeout(() =>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainment_Single()
     {
         aPartition.Containment_0_1 =  new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") };
         bClient.WaitForReplies(1);
@@ -219,13 +214,13 @@ public class ContainmentClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
         
         AssertEquals(aPartition, bPartition);
-    });
+    }
 
     /// <summary>
     /// Moves a child from a multiple containment to other multiple containment and replaces the existing child.
     /// </summary>
-    [TestMethod]
-    public void MoveAndReplaceChildFromOtherContainment_Multiple() => Timeout(() =>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainment_Multiple()
     {
         aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
         bClient.WaitForReplies(2);
@@ -241,13 +236,13 @@ public class ContainmentClientTests : LinkClientTestBase
         bClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
 
     /// <summary>
     /// Moves a child from one containment to another within the same parent. 
     /// </summary>
-    [TestMethod]
-    public void MoveChildFromOtherContainmentInSameParent() => Timeout(() =>
+    [Test]
+    public void MoveChildFromOtherContainmentInSameParent()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         bClient.WaitForReplies(1);
@@ -258,13 +253,13 @@ public class ContainmentClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
-
+    }
+    
     /// <summary>
     /// Moves a child from one containment to another within the same parent and replaces the existing child node, if any.
     /// </summary>
-    [TestMethod]
-    public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single() => Timeout(() =>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("moved-child");
         bClient.WaitForReplies(1);
@@ -280,13 +275,13 @@ public class ContainmentClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
         
         AssertEquals(aPartition, bPartition);
-    });
+    }
 
     /// <summary>
     /// Moves child within the same containment to a new index
     /// </summary>
-    [TestMethod]
-    public void MoveChildInSameContainment() => Timeout(() =>
+    [Test]
+    public void MoveChildInSameContainment()
     {
         aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("child1")]);
         bClient.WaitForReplies(2);
@@ -297,5 +292,5 @@ public class ContainmentClientTests : LinkClientTestBase
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
-    });
+    }
 }

@@ -15,7 +15,6 @@
 // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // SPDX-License-Identifier: Apache-2.0
 
-using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Core.Utilities;
@@ -25,7 +24,6 @@ namespace LionWeb.Integration.WebSocket.Tests;
 
 public abstract class WebSocketTestBase
 {
-    private const int TestTimeout = 6000;
     protected const string IpAddress = "localhost";
     protected const int Port = 42424;
 
@@ -40,53 +38,13 @@ public abstract class WebSocketTestBase
         _languages.AddRange([_lionWebVersion.BuiltIns, _lionWebVersion.LionCore]);
     }
 
-    public TestContext TestContext { get; set; }
-
-    /// We cannot use <see cref="TimeoutAttribute"/>, as it doesn't execute <see cref="TestCleanupAttribute"/>.
-    protected void Timeout(Action action, int timeout = TestTimeout)
-    {
-        try
-        {
-            Exception? innerException = null;
-            var executionTask = Task.Run(() =>
-            {
-                try
-                {
-                    action();
-                }
-                catch (Exception ex)
-                {
-                    innerException = ex;
-                    throw;
-                }
-            });
-
-            // False means execution timed out.
-            if (!executionTask.Wait(timeout) && !Debugger.IsAttached)
-            {
-                Assert.Fail("Method exceeded timeout");
-            }
-
-            if (innerException != null)
-            {
-                throw innerException;
-            }
-        }
-        catch (AggregateException ex) when (ex.InnerExceptions.Count == 1)
-        {
-            var innerException = ex.InnerExceptions[0];
-            throw new ArgumentException(innerException.Message, innerException);
-        }
-        
-    }
-
     protected void AssertEquals(INode? a, INode? b) =>
         AssertEquals([a], [b]);
 
     protected void AssertEquals(IEnumerable<INode?> a, IEnumerable<INode?> b)
     {
         List<IDifference> differences = new Comparer(a.ToList(), b.ToList()).Compare().ToList();
-        Assert.IsTrue(differences.Count == 0,
+        Assert.That(differences.Count == 0,
             differences.DescribeAll(new() { LeftDescription = "a", RightDescription = "b" }));
     }
 }
