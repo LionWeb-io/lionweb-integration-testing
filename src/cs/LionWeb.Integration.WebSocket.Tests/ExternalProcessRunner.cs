@@ -43,6 +43,12 @@ public class ExternalProcessRunner
         process.StartInfo.WorkingDirectory = workingDirectory;
         process.StartInfo.Arguments = arguments.ReplaceLineEndings(" ");
         process.StartInfo.UseShellExecute = false;
+
+        StartProcess(process, trigger);
+    }
+
+    public void StartProcess(Process process, string trigger)
+    {
         process.StartInfo.RedirectStandardInput = true;
         process.StartInfo.RedirectStandardOutput = true;
         process.StartInfo.RedirectStandardError = true;
@@ -55,6 +61,7 @@ public class ExternalProcessRunner
             {
                 processStarted = true;
             }
+
             Console.WriteLine(args.Data);
         };
         process.ErrorDataReceived += (_, args) => Console.Error.WriteLine(args.Data);
@@ -88,4 +95,3 @@ public class ExternalProcessRunner
         }
     }
 }
-

@@ -19,17 +19,9 @@ using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Integration.WebSocket.Client;
-using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Client;
-using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
-
-public enum ServerProcesses
-{
-    CSharp,
-    OtherCSharp
-}
 
 [TestFixture(ServerProcesses.CSharp)]
 // [TestFixture(ServerProcesses.OtherCSharp)]
@@ -37,25 +29,6 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
 {
     private readonly ServerProcesses _serverProcess;
     private Process _process;
-
-    private Process CSharpServer()
-    {
-        TestContext.WriteLine($"AdditionalServerParameters: {AdditionalServerParameters()}");
-        var result = new Process();
-        result.StartInfo.FileName = "dotnet";
-        result.StartInfo.WorkingDirectory =
-            $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Server";
-        result.StartInfo.Arguments = $"""
-                                        run
-                                        -v q
-                                        --property WarningLevel=0
-                                        --property NoWarn=NU1507
-                                        {Port}
-                                        {AdditionalServerParameters()}
-                                        """.ReplaceLineEndings(" ");
-        result.StartInfo.UseShellExecute = false;
-        return result;
-    }
 
     protected WebSocketClientTestBase(ServerProcesses serverProcess, LionWebVersions? lionWebVersion = null, List<Language>? languages = null) : base(lionWebVersion, languages)
     {
@@ -67,71 +40,13 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     public void StartServer()
     {
         Console.WriteLine("StartServer()");
-        // cleans out leftovers
-        StopServer();
         
-        _process = _serverProcess switch
-        {
-            ServerProcesses.CSharp => CSharpServer(),
-            ServerProcesses.OtherCSharp => CSharpServer(),
-            _ => throw new ArgumentOutOfRangeException(nameof(_serverProcess), _serverProcess, null)
-        };
-        
-        _allServers.Add(_process);
-        
-        _process.StartInfo.RedirectStandardError = true;
-        _process.StartInfo.RedirectStandardInput = true;
-        _process.StartInfo.RedirectStandardOutput = true;
-
-        var serverStarted = false;
-
-        _process.OutputDataReceived += (sender, args) =>
-        {
-            if (args.Data?.Contains(WebSocketServer.ServerStartedMessage) ?? false)
-                serverStarted = true;
-            Console.WriteLine(args.Data);
-        };
-        _process.ErrorDataReceived += (sender, args) => Console.Error.WriteLine(args.Data);
-
-        Assert.That(_process.Start());
-        _process.BeginErrorReadLine();
-        _process.BeginOutputReadLine();
-
-        while (!serverStarted)
-        {
-            Thread.Sleep(100);
-        }
-
-        ClassicAssert.IsFalse(_process.HasExited);
+        var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var trigger);
+        _externalProcessRunner.StartProcess(process, trigger);
     }
 
     protected virtual string AdditionalServerParameters() =>
         "";
-
-    private static readonly List<Process> _allServers = []; 
-    
-    [TearDown]
-    [OneTimeTearDown]
-    public void StopServer()
-    {
-        // We loop over _allServers, as [TearDown] will not be executed after a [Timeout].
-        // Then, we at least kill all previous servers in the next run.
-        foreach (var server in _allServers)
-        {
-            if (server.HasExited) continue;
-            try
-            {
-                TestContext.WriteLine($"Killing WebSocket Server {server.ProcessName}");
-                server.Kill();
-            }
-            catch (Exception e)
-            {
-                TestContext.WriteLine("StopServer:" + e);
-            }
-        }
-        
-        _allServers.Clear();
-    }
 
     protected async Task<LionWebTestClient> ConnectWebSocket(IPartitionInstance partition, string name)
     {

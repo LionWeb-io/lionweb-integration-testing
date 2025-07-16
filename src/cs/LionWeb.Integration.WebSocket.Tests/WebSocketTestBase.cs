@@ -24,12 +24,12 @@ namespace LionWeb.Integration.WebSocket.Tests;
 
 public abstract class WebSocketTestBase
 {
-    protected const string IpAddress = "localhost";
+    public const string IpAddress = "localhost";
     protected int Port => NextPort;
     private static int NextPort = 40000;
+    protected static readonly ExternalProcessRunner _externalProcessRunner = new ();
 
     protected readonly LionWebVersions _lionWebVersion;
-
     protected readonly List<Language> _languages;
 
     protected WebSocketTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null)
@@ -43,6 +43,19 @@ public abstract class WebSocketTestBase
     public void SetPort()
     {
         NextPort++;
+    }
+
+    [SetUp]
+    public void CleanOutLeftoverProcesses()
+    {
+        _externalProcessRunner.StopAllProcesses();
+    }
+
+    [TearDown]
+    [OneTimeTearDown]
+    public void StopProcesses()
+    {
+        _externalProcessRunner.StopAllProcesses();
     }
 
     protected void AssertEquals(INode? a, INode? b) =>

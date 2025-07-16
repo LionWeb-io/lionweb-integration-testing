@@ -16,49 +16,44 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
-using LionWeb.Core;
-using LionWeb.Core.M3;
-using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
+using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
-[TestFixture]
 public abstract class WebSocketServerTestBase : WebSocketTestBase
 {
+    private readonly ClientProcesses[] _clientProcesses;
+    private int nextClientProcess;
     protected WebSocketServer _webSocketServer;
 
-    protected WebSocketServerTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null) : base(lionWebVersion, languages)
+    protected WebSocketServerTestBase(params ClientProcesses[] clientProcesses) :base(null, null)
     {
+        _clientProcesses = clientProcesses;
         Debug.WriteLine(Directory.GetCurrentDirectory());
     }
 
-    private readonly ExternalProcessRunner _externalProcessRunner = new ();
+    [SetUp]
+    public void ResetClientProcessCount()
+    {
+        nextClientProcess = 0;
+    }
+
+    private Process NextProcess(string name, string[] tasks, out string trigger) =>
+        _clientProcesses[nextClientProcess++ % _clientProcesses.Length].Create(name, Port, tasks, out trigger);
 
     protected void StartClient(string name, params string[] tasks)
     {
-        _externalProcessRunner.StartProcess(
-            "dotnet",
-            $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Client",
-            $"""
-             run
-             -v q
-             --property WarningLevel=0
-             --property NoWarn=NU1507
-             --
-             {name}
-             {IpAddress}
-             {Port}
-             {string.Join(",", tasks)}
-             """,
-            WebSocketClient.ClientStartedMessage
-        );
+        var process = NextProcess(name, tasks, out var trigger);
+        _externalProcessRunner.StartProcess(process, trigger);
+
+        ClassicAssert.IsFalse(process.HasExited);
     }
 
     [TearDown]
-    public void StopClients()
+    [OneTimeTearDown]
+    public void StopServer()
     {
-        _externalProcessRunner.StopAllProcesses();
         _webSocketServer.Stop();
     }
 }
