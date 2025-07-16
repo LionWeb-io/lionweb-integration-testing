@@ -16,9 +16,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
+using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
+using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 
@@ -113,19 +115,14 @@ public class WebSocketServerTests : WebSocketServerTestBase
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        serverForest.AddPartitions([serverPartition]);
-
-        StartClient("A", "SignOn,Wait,SetDocsText");
-        StartClient("B", "SignOn,AddDocs");
+        StartClient("A", "SignOn,Partition");
+        StartClient("B", "SignOn");
 
         lionWebServer.WaitForReceived(4);
 
-        AssertEquals(new Geometry("g")
-        {
-            Documentation = new Documentation("d")
-            {
-                Text = "hello there"
-            }
-        }, serverPartition);
+        AssertEquals(
+            (INode)new LinkTestConcept("partition"),
+            (INode)serverForest.Partitions.Except([serverPartition]).First()
+        );
     }
 }

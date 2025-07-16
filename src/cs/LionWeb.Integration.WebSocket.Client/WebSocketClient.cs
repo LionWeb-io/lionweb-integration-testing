@@ -19,17 +19,16 @@ using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
+using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
+using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Client.Forest;
 using LionWeb.Protocol.Delta.Client.Partition;
 using LionWeb.Protocol.Delta.Message;
-using LionWeb.Protocol.Delta.Message.Query;
-using LionWeb.Protocol.Delta.Repository;
-using LionWeb.Protocol.Delta.Repository.Forest;
 
 namespace LionWeb.Integration.WebSocket.Client;
 
@@ -59,8 +58,11 @@ public class WebSocketClient : IDeltaClientConnector
 
         var webSocketClient = new WebSocketClient(name);
         var partition = new Geometry("a");
-        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocketClient);
+        var forest = new Forest();
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocketClient);
 
+        // forest.AddPartitions([partition]);
+        
         await webSocketClient.ConnectToServer(serverIp, serverPort);
 
         foreach (var task in tasks)
@@ -82,6 +84,10 @@ public class WebSocketClient : IDeltaClientConnector
                     break;
                 case "SetDocsText":
                     partition.Documentation.Text = "hello there";
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "Partition":
+                    forest.AddPartitions([new LinkTestConcept("partition")]);
                     lionWeb.WaitForReplies(1);
                     break;
             }
