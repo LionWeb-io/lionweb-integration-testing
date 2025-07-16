@@ -20,15 +20,12 @@ using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
-using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
 [TestFixture]
 public abstract class WebSocketServerTestBase : WebSocketTestBase
 {
-    private readonly List<Process> _processes = [];
-
     protected WebSocketServer _webSocketServer;
 
     protected WebSocketServerTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null) : base(lionWebVersion, languages)
@@ -36,67 +33,32 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
         Debug.WriteLine(Directory.GetCurrentDirectory());
     }
 
+    private readonly ExternalProcessRunner _externalProcessRunner = new ();
+
     protected void StartClient(string name, params string[] tasks)
     {
-        var process = new Process();
-        process.StartInfo.FileName = "dotnet";
-        process.StartInfo.WorkingDirectory =
-            $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Client";
-        process.StartInfo.Arguments = $"""
-                                       run
-                                       -v q
-                                       --property WarningLevel=0
-                                       --property NoWarn=NU1507
-                                       --
-                                       {name}
-                                       {IpAddress}
-                                       {Port}
-                                       {string.Join(",", tasks)}
-                                       """.ReplaceLineEndings(" ");
-        process.StartInfo.UseShellExecute = false;
-        process.StartInfo.RedirectStandardError = true;
-        process.StartInfo.RedirectStandardInput = true;
-        process.StartInfo.RedirectStandardOutput = true;
-
-        var clientStarted = false;
-
-        process.OutputDataReceived += (sender, args) =>
-        {
-            if (args.Data?.Contains(WebSocketClient.ClientStartedMessage) ?? false)
-                clientStarted = true;
-            Console.WriteLine(args.Data);
-        };
-        process.ErrorDataReceived += (sender, args) => Console.Error.WriteLine(args.Data);
-
-        Assert.That(process.Start());
-        process.BeginErrorReadLine();
-        process.BeginOutputReadLine();
-
-        while (!clientStarted)
-        {
-            Thread.Sleep(100);
-        }
-
-        ClassicAssert.IsFalse(process.HasExited);
-
-        _processes.Add(process);
+        _externalProcessRunner.StartProcess(
+            "dotnet",
+            $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Client",
+            $"""
+             run
+             -v q
+             --property WarningLevel=0
+             --property NoWarn=NU1507
+             --
+             {name}
+             {IpAddress}
+             {Port}
+             {string.Join(",", tasks)}
+             """,
+            WebSocketClient.ClientStartedMessage
+        );
     }
 
     [TearDown]
     public void StopClients()
     {
-        foreach (var process in _processes)
-        {
-            if (process.HasExited)
-                continue;
-
-            TestContext.WriteLine($"Killing WebSocket Client {process.ProcessName}");
-            process.Kill();
-        }
-
-        if (_webSocketServer != null)
-        {
-            _webSocketServer.Stop();
-        }
+        _externalProcessRunner.StopAllProcesses();
+        _webSocketServer.Stop();
     }
 }
