@@ -29,9 +29,6 @@ using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Client.Forest;
 using LionWeb.Protocol.Delta.Client.Partition;
 using LionWeb.Protocol.Delta.Message;
-using LionWeb.Protocol.Delta.Message.Query;
-using LionWeb.Protocol.Delta.Repository;
-using LionWeb.Protocol.Delta.Repository.Forest;
 
 namespace LionWeb.Integration.WebSocket.Client;
 
@@ -60,9 +57,12 @@ public class WebSocketClient : IDeltaClientConnector
         Log($"{name}: tasks: {string.Join(",", tasks)}");
 
         var webSocketClient = new WebSocketClient(name);
-        var partition = webSocketClient.GetPartition(partitionType);
-        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocketClient);
+        var partition = new Geometry("a");
+        var forest = new Forest();
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocketClient);
 
+        // forest.AddPartitions([partition]);
+        
         await webSocketClient.ConnectToServer(serverIp, serverPort);
 
         foreach (var task in tasks)
@@ -184,6 +184,10 @@ public class WebSocketClient : IDeltaClientConnector
                     break;
                 case "MoveChildFromOtherContainmentInSameParent":
                     ((LinkTestConcept)partition).Containment_1 = ((LinkTestConcept)partition).Containment_0_1!;
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "Partition":
+                    forest.AddPartitions([new LinkTestConcept("partition")]);
                     lionWeb.WaitForReplies(1);
                     break;
             }

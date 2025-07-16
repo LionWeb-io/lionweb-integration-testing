@@ -17,6 +17,7 @@
 
 using System.Diagnostics;
 using LionWeb.Core;
+using LionWeb.Core.M1;
 using LionWeb.Core.M3;
 using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Protocol.Delta.Client;
@@ -50,8 +51,12 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
 
     protected async Task<LionWebTestClient> ConnectWebSocket(IPartitionInstance partition, string name)
     {
+        var forest = new Forest();
         var webSocket = new WebSocketClient(name);
-        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocket);
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket);
+        
+        forest.AddPartitions([partition]);
+        
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn();
         return lionWeb;
