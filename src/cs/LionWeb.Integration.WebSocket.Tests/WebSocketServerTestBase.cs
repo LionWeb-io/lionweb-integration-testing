@@ -16,87 +16,44 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
-using LionWeb.Core;
-using LionWeb.Core.M3;
-using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
 using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
-[TestFixture]
 public abstract class WebSocketServerTestBase : WebSocketTestBase
 {
-    private readonly List<Process> _processes = [];
-
+    private readonly ClientProcesses[] _clientProcesses;
+    private int nextClientProcess;
     protected WebSocketServer _webSocketServer;
 
-    protected WebSocketServerTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null) : base(lionWebVersion, languages)
+    protected WebSocketServerTestBase(params ClientProcesses[] clientProcesses) :base(null, null)
     {
+        _clientProcesses = clientProcesses;
         Debug.WriteLine(Directory.GetCurrentDirectory());
     }
 
+    [SetUp]
+    public void ResetClientProcessCount()
+    {
+        nextClientProcess = 0;
+    }
+
+    private Process NextProcess(string name, string[] tasks, out string trigger) =>
+        _clientProcesses[nextClientProcess++ % _clientProcesses.Length].Create(name, Port, tasks, out trigger);
+
     protected void StartClient(string name, params string[] tasks)
     {
-        var process = new Process();
-        process.StartInfo.FileName = "dotnet";
-        process.StartInfo.WorkingDirectory =
-            $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Client";
-        process.StartInfo.Arguments = $"""
-                                       run
-                                       -v q
-                                       --property WarningLevel=0
-                                       --property NoWarn=NU1507
-                                       --
-                                       {name}
-                                       {IpAddress}
-                                       {Port}
-                                       {string.Join(",", tasks)}
-                                       """.ReplaceLineEndings(" ");
-        process.StartInfo.UseShellExecute = false;
-        process.StartInfo.RedirectStandardError = true;
-        process.StartInfo.RedirectStandardInput = true;
-        process.StartInfo.RedirectStandardOutput = true;
-
-        var clientStarted = false;
-
-        process.OutputDataReceived += (sender, args) =>
-        {
-            if (args.Data?.Contains(WebSocketClient.ClientStartedMessage) ?? false)
-                clientStarted = true;
-            Console.WriteLine(args.Data);
-        };
-        process.ErrorDataReceived += (sender, args) => Console.Error.WriteLine(args.Data);
-
-        Assert.That(process.Start());
-        process.BeginErrorReadLine();
-        process.BeginOutputReadLine();
-
-        while (!clientStarted)
-        {
-            Thread.Sleep(100);
-        }
+        var process = NextProcess(name, tasks, out var trigger);
+        _externalProcessRunner.StartProcess(process, trigger);
 
         ClassicAssert.IsFalse(process.HasExited);
-
-        _processes.Add(process);
     }
 
     [TearDown]
-    public void StopClients()
+    [OneTimeTearDown]
+    public void StopServer()
     {
-        foreach (var process in _processes)
-        {
-            if (process.HasExited)
-                continue;
-
-            TestContext.WriteLine($"Killing WebSocket Client {process.ProcessName}");
-            process.Kill();
-        }
-
-        if (_webSocketServer != null)
-        {
-            _webSocketServer.Stop();
-        }
+        _webSocketServer.Stop();
     }
 }

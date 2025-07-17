@@ -89,9 +89,8 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         clientB.Receive += (sender, msg) => Console.WriteLine($"client B received: {msg}");
 
         var ipAddress = "localhost";
-        var port = 42424;
-        await clientA.ConnectToServer(ipAddress, port);
-        await clientB.ConnectToServer(ipAddress, port);
+        await clientA.ConnectToServer(ipAddress, Port);
+        await clientB.ConnectToServer(ipAddress, Port);
         await clientA.Send("hello from client A");
         Thread.Sleep(100);
     }

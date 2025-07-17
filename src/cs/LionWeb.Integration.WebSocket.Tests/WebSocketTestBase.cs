@@ -24,11 +24,12 @@ namespace LionWeb.Integration.WebSocket.Tests;
 
 public abstract class WebSocketTestBase
 {
-    protected const string IpAddress = "localhost";
-    protected const int Port = 42424;
+    public const string IpAddress = "localhost";
+    protected int Port => NextPort;
+    private static int NextPort = 40000;
+    protected static readonly ExternalProcessRunner _externalProcessRunner = new ();
 
     protected readonly LionWebVersions _lionWebVersion;
-
     protected readonly List<Language> _languages;
 
     protected WebSocketTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null)
@@ -36,6 +37,25 @@ public abstract class WebSocketTestBase
         _lionWebVersion = lionWebVersion ?? LionWebVersions.v2023_1;
         _languages = languages ?? [ShapesLanguage.Instance];
         _languages.AddRange([_lionWebVersion.BuiltIns, _lionWebVersion.LionCore]);
+    }
+
+    [SetUp]
+    public void SetPort()
+    {
+        NextPort++;
+    }
+
+    [SetUp]
+    public void CleanOutLeftoverProcesses()
+    {
+        _externalProcessRunner.StopAllProcesses();
+    }
+
+    [TearDown]
+    [OneTimeTearDown]
+    public void StopProcesses()
+    {
+        _externalProcessRunner.StopAllProcesses();
     }
 
     protected void AssertEquals(INode? a, INode? b) =>
