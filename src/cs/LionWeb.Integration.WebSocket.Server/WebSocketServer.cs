@@ -47,6 +47,10 @@ public class WebSocketServer : IDeltaRepositoryConnector
 
         Debug.WriteLine($"server args: {string.Join(", ", args)}");
 
+        var port = args.Length > 0
+            ? int.Parse(args[0])
+            : 40000;
+        
         Concept? optionalTestPartition = args.Length > 1
             ? TestLanguageLanguage.Instance
                 .Entities
@@ -64,7 +68,8 @@ public class WebSocketServer : IDeltaRepositoryConnector
         {
             Languages = languages
         };
-        webSocketServer.StartServer(IpAddress, int.Parse(args[0]));
+        
+        webSocketServer.StartServer(IpAddress, port);
 
         IPartitionInstance serverPartition = optionalTestPartition is not null
             ? (IPartitionInstance)optionalTestPartition.GetLanguage().GetFactory()
