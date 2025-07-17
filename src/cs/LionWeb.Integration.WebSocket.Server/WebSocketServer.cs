@@ -19,6 +19,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using System.Net.WebSockets;
+using System.Runtime.CompilerServices;
 using System.Text;
 using LionWeb.Core;
 using LionWeb.Core.M1.Event;
@@ -39,7 +40,6 @@ public class WebSocketServer : IDeltaRepositoryConnector
     public const string ServerStartedMessage = "Server started.";
 
     private static string IpAddress { get; set; } = "localhost";
-    private static int Port { get; set; } = 42424;
 
     public static void Main(string[] args)
     {
@@ -47,12 +47,16 @@ public class WebSocketServer : IDeltaRepositoryConnector
 
         Debug.WriteLine($"server args: {string.Join(", ", args)}");
 
-        Concept? optionalTestPartition = args.Length > 0
+        var port = args.Length > 0
+            ? int.Parse(args[0])
+            : 40000;
+        
+        Concept? optionalTestPartition = args.Length > 1
             ? TestLanguageLanguage.Instance
                 .Entities
                 .OfType<Concept>()
                 .Where(c => c.Partition)
-                .FirstOrDefault(p => p.Key == args[0])
+                .FirstOrDefault(p => p.Key == args[1])
             : null;
 
         LionWebVersions lionWebVersion = LionWebVersions.v2023_1;
@@ -64,7 +68,8 @@ public class WebSocketServer : IDeltaRepositoryConnector
         {
             Languages = languages
         };
-        webSocketServer.StartServer(IpAddress, Port);
+        
+        webSocketServer.StartServer(IpAddress, port);
 
         IPartitionInstance serverPartition = optionalTestPartition is not null
             ? (IPartitionInstance)optionalTestPartition.GetLanguage().GetFactory()

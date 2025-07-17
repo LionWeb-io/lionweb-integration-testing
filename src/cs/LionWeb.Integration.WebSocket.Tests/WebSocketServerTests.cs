@@ -23,7 +23,10 @@ using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
-public class WebSocketServerTests : WebSocketServerTestBase
+[TestFixture(ClientProcesses.CSharp)]
+[TestFixture(ClientProcesses.Ts)]
+[TestFixture(ClientProcesses.Ts, ClientProcesses.CSharp)]
+public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : WebSocketServerTestBase(clientProcesses)
 {
     [Test]
     public void SignIn_1()
