@@ -18,6 +18,7 @@
 using System.Diagnostics;
 using LionWeb.Core.M1.Event;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
+using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 
@@ -34,7 +35,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new Geometry("a");
+        var serverPartition = new LinkTestConcept("a");
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer =
@@ -51,7 +52,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new Geometry("a");
+        var serverPartition = new LinkTestConcept("a");
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer =

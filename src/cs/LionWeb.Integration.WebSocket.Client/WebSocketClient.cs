@@ -22,10 +22,10 @@ using LionWeb.Core;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
+using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Message;
-using LionWeb.Protocol.Delta.Message.Query;
 
 namespace LionWeb.Integration.WebSocket.Client;
 
@@ -38,7 +38,7 @@ public class WebSocketClient(string name) : IDeltaClientConnector
     private static readonly IVersion2023_1 _lionWebVersion = LionWebVersions.v2023_1;
 
     private static readonly List<Language> _languages =
-        [ShapesLanguage.Instance, _lionWebVersion.BuiltIns, _lionWebVersion.LionCore];
+        [TestLanguageLanguage.Instance, ShapesLanguage.Instance, _lionWebVersion.BuiltIns, _lionWebVersion.LionCore];
 
     public static async Task Main(string[] args)
     {
@@ -54,7 +54,7 @@ public class WebSocketClient(string name) : IDeltaClientConnector
         Debug.WriteLine($"{name}: tasks: {string.Join(",", tasks)}");
 
         var webSocketClient = new WebSocketClient(name);
-        var partition = new Geometry("a");
+        var partition = new LinkTestConcept("a");
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocketClient);
 
         await webSocketClient.ConnectToServer(serverIp, serverPort);
@@ -69,15 +69,23 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                 case "SignOff":
                     await webSocketClient.SignOff(lionWeb);
                     break;
-                case "AddDocs":
+                /*case "AddDocs":
                     partition.Documentation = new Documentation("documentation");
                     lionWeb.WaitForReplies(1);
-                    break;
+                    break;*/
                 case "Wait":
                     lionWeb.WaitForReplies(1);
                     break;
-                case "SetDocsText":
+                /*case "SetDocsText":
                     partition.Documentation.Text = "hello there";
+                    lionWeb.WaitForReplies(1);
+                    break;*/
+                /*case "AddStringValue_0_1":
+                    partition.StringValue_0_1 = "new property";
+                    lionWeb.WaitForReplies(1);
+                    break;*/
+                case "AddChild":
+                    partition.Containment_0_1 = new LinkTestConcept("child");
                     lionWeb.WaitForReplies(1);
                     break;
             }
