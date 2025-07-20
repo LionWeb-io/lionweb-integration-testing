@@ -88,6 +88,10 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     partition.Containment_0_1 = new LinkTestConcept("child");
                     lionWeb.WaitForReplies(1);
                     break;
+                case "DeleteChild":
+                    partition.Containment_0_1 = null;
+                    lionWeb.WaitForReplies(1);
+                    break;
             }
         }
         
