@@ -47,14 +47,14 @@ public class WebSocketClient(string name) : IDeltaClientConnector
         string name = args[0];
         string serverIp = args[1];
         int serverPort = int.Parse(args[2]);
-
-        var tasks = args[3].Split(",");
+        string partitionType = args[3];
+        var tasks = args[4].Split(",");
 
         Debug.WriteLine($"Starting client {name} to connect to {serverIp}:{serverPort}");
         Debug.WriteLine($"{name}: tasks: {string.Join(",", tasks)}");
 
         var webSocketClient = new WebSocketClient(name);
-        var partition = new LinkTestConcept("a");
+        var partition = webSocketClient.GetPartition(partitionType);
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocketClient);
 
         await webSocketClient.ConnectToServer(serverIp, serverPort);
@@ -72,45 +72,49 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                 case "Wait":
                     lionWeb.WaitForReplies(1);
                     break;
-                /*case "AddDocs":
-                    partition.Documentation = new Documentation("documentation");
+                case "AddDocs":
+                    ((Geometry)partition).Documentation = new Documentation("documentation");
                     lionWeb.WaitForReplies(1);
-                    break;*/
-                /*case "SetDocsText":
-                    partition.Documentation.Text = "hello there";
+                    break;
+                case "SetDocsText":
+                    ((Geometry)partition).Documentation!.Text = "hello there";
                     lionWeb.WaitForReplies(1);
-                    break;*/
-                /*case "AddStringValue_0_1":
-                    partition.StringValue_0_1 = "new property";
+                    break;
+                case "AddStringValue_0_1":
+                    ((DataTypeTestConcept)partition).StringValue_0_1 = "new property";
                     lionWeb.WaitForReplies(1);
-                    break;*/
+                    break;
                 case "AddContainment_0_1":
-                    partition.Containment_0_1 = new LinkTestConcept("containment_0_1");
+                    ((LinkTestConcept)partition).Containment_0_1 = new LinkTestConcept("containment_0_1");
                     lionWeb.WaitForReplies(1);
                     break;
                 case "AddContainment_1":
-                    partition.Containment_1 = new LinkTestConcept("containment_1");
+                    ((LinkTestConcept)partition).Containment_1 = new LinkTestConcept("containment_1");
                     lionWeb.WaitForReplies(1);
                     break;
                 case "ReplaceContainment_0_1":
-                    partition.Containment_0_1 = new LinkTestConcept("substitute");
+                    ((LinkTestConcept)partition).Containment_0_1 = new LinkTestConcept("substitute");
                     lionWeb.WaitForReplies(1);
                     break;
                 case "DeleteContainment_0_1":
-                    partition.Containment_0_1 = null;
+                    ((LinkTestConcept)partition).Containment_0_1 = null;
                     lionWeb.WaitForReplies(1);
                     break;
                 case "AddContainment_0_1_Containment_0_1":
-                    partition.Containment_0_1!.Containment_0_1 = new LinkTestConcept("containment_0_1_containment_0_1");
+                    ((LinkTestConcept)partition).Containment_0_1!.Containment_0_1 = new LinkTestConcept("containment_0_1_containment_0_1");
                     lionWeb.WaitForReplies(1);
                     break;
                 case "AddContainment_1_Containment_0_1":
-                    partition.Containment_1.Containment_0_1 = new LinkTestConcept("containment_1_containment_0_1");
+                    ((LinkTestConcept)partition).Containment_1.Containment_0_1 = new LinkTestConcept("containment_1_containment_0_1");
                     lionWeb.WaitForReplies(1);
                     break;
                 case "MoveAndReplaceChildFromOtherContainment_Single":
-                    partition.Containment_1.Containment_0_1 = partition.Containment_0_1!.Containment_0_1!;
+                    ((LinkTestConcept)partition).Containment_1.Containment_0_1 = ((LinkTestConcept)partition).Containment_0_1!.Containment_0_1!;
                     lionWeb.WaitForReplies(1);
+                    break;
+                case "AddContainment_0_n":
+                    ((LinkTestConcept)partition).AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
+                    lionWeb.WaitForReplies(2);
                     break;
             }
         }
@@ -118,6 +122,16 @@ public class WebSocketClient(string name) : IDeltaClientConnector
         Console.ReadLine();
     }
 
+    private IPartitionInstance GetPartition(string partitionType)
+    {
+        return partitionType switch
+        {
+            "LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2.LinkTestConcept" => new LinkTestConcept("a"),
+            "LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2.DataTypeTestConcept" => new DataTypeTestConcept("a"),
+            "LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2.Geometry" => new Geometry("a"),
+            _ =>  throw new ArgumentException("Invalid partition type specified.")
+        };
+    }
     private readonly EventToDeltaCommandMapper _mapper =
         new(new PartitionEventToDeltaCommandMapper(new CommandIdProvider(), _lionWebVersion));
 

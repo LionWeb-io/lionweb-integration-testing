@@ -25,7 +25,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", "SignOn", "AddContainment_0_1");
+        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1");
 
         lionWebServer.WaitForReceived(2);
 
@@ -53,7 +53,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
         
-        StartClient("A", "SignOn", "AddContainment_0_1", "DeleteContainment_0_1");
+        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "DeleteContainment_0_1");
         
         lionWebServer.WaitForReceived(3);
         
@@ -82,7 +82,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
         
-        StartClient("A", "SignOn", "AddContainment_0_1", "ReplaceContainment_0_1");
+        StartClient("A", serverPartition.GetType().ToString(),"SignOn", "AddContainment_0_1", "ReplaceContainment_0_1");
         
         lionWebServer.WaitForReceived(3);
         
@@ -110,7 +110,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
         
-        StartClient("A", "SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1", 
+        StartClient("A", serverPartition.GetType().ToString(),"SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1", 
             "AddContainment_1", "AddContainment_1_Containment_0_1", "MoveAndReplaceChildFromOtherContainment_Single");
         
         lionWebServer.WaitForReceived(6);
@@ -125,7 +125,5 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         };
         
         AssertEquals(expected, serverPartition);
-        
     }
-    
 }

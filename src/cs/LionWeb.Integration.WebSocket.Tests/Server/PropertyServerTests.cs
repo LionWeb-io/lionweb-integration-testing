@@ -10,7 +10,7 @@ namespace LionWeb.Integration.WebSocket.Tests.Server;
 public class PropertyServerTests(params ClientProcesses[] clientProcesses) : WebSocketServerTestBase(clientProcesses)
 {
     /// <summary>
-    /// Adds a property
+    /// Adds a new property to a server partition.
     /// </summary>
     [Test]
     public void AddProperty()
@@ -24,7 +24,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", "SignOn", "AddStringValue_0_1");
+        StartClient("A", serverPartition.GetType().ToString(),"SignOn", "AddStringValue_0_1");
 
         lionWebServer.WaitForReceived(2);  
 

@@ -28,15 +28,15 @@ public enum ClientProcesses
 
 public static class ClientProcessesExtensions
 {
-    public static Process Create(this ClientProcesses process, string name, int port, string[] tasks,
+    public static Process Create(this ClientProcesses process, string name, string partitionType, int port, string[] tasks,
         out string trigger) => process switch
     {
-        ClientProcesses.CSharp => CSharpClient(name, port, tasks, out trigger),
+        ClientProcesses.CSharp => CSharpClient(name, partitionType, port, tasks, out trigger),
         ClientProcesses.Ts => TsClient(name, port, tasks, out trigger),
         _ => throw new ArgumentOutOfRangeException(nameof(process), process, null)
     };
 
-    private static Process CSharpClient(string name, int port, string[] tasks, out string trigger)
+    private static Process CSharpClient(string name, string partitionType, int port, string[] tasks, out string trigger)
     {
         var result = new Process();
         result.StartInfo.FileName = "dotnet";
@@ -49,6 +49,7 @@ public static class ClientProcessesExtensions
                                       {name}
                                       {WebSocketTestBase.IpAddress}
                                       {port}
+                                      {partitionType}
                                       {string.Join(",", tasks)}
                                       """.ReplaceLineEndings(" ");
         result.StartInfo.UseShellExecute = false;
