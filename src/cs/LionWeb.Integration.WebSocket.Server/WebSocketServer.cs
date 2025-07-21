@@ -48,7 +48,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     {
         Trace.Listeners.Add(new ConsoleTraceListener());
 
-        Debug.WriteLine($"server args: {string.Join(", ", args)}");
+        Log($"server args: {string.Join(", ", args)}");
 
         Concept? optionalTestPartition = args.Length > 0
             ? TestLanguageLanguage.Instance
@@ -76,7 +76,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
         var serverForest = new Forest();
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
-        Debug.WriteLine($"Server partition: <{serverPartition.GetClassifier().Name}>{serverPartition.PrintIdentity()}");
+        Log($"Server partition: <{serverPartition.GetClassifier().Name}>{serverPartition.PrintIdentity()}");
 
         var lionWebServer = new LionWebRepository(lionWebVersion, webSocketServer.Languages, "server",
             serverForest,
@@ -118,7 +118,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
         _listener.Prefixes.Add($"http://{ipAddress}:{port}/");
         _listener.Start();
 
-        Console.WriteLine(ServerStartedMessage + " Waiting for connections...");
+        Log(ServerStartedMessage + " Waiting for connections...");
 
         // do NOT await!
         Task.Run(async () =>
@@ -154,7 +154,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
         foreach ((var clientInfo, System.Net.WebSockets.WebSocket socket) in _knownClients)
         {
             var encoded = Encode(_deltaSerializer.Serialize(UpdateSequenceNumber(content, clientInfo)));
-            // Debug.WriteLine($"XXServer: sending to {clientInfo} message: {content.GetType()}");
+            // Log($"XXServer: sending to {clientInfo} message: {content.GetType()}");
             await socket.SendAsync(encoded, WebSocketMessageType.Text, true, CancellationToken.None);
         }
     }
@@ -197,7 +197,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
         var clientInfo = new ClientInfo() { ParticipationId = GetNextParticipationId() };
         _knownClients.TryAdd(clientInfo, socket);
 
-        Debug.WriteLine($"WebSocket connection accepted: {context.Request.RemoteEndPoint}");
+        Log($"WebSocket connection accepted: {context.Request.RemoteEndPoint}");
 
         // Handle incoming messages
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -233,4 +233,9 @@ public class WebSocketServer : IDeltaRepositoryConnector
             return "participation" + _nextParticipationId++;
         }
     }
+    
+    private static void Log(string message, bool header = false) =>
+        Console.WriteLine(header
+            ? $"{ILionWebRepository.HeaderColor_Start}{message}{ILionWebRepository.HeaderColor_End}"
+            : message);
 }

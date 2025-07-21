@@ -53,8 +53,8 @@ public class WebSocketClient : IDeltaClientConnector
 
         var tasks = args[3].Split(",");
 
-        Debug.WriteLine($"Starting client {name} to connect to {serverIp}:{serverPort}");
-        Debug.WriteLine($"{name}: tasks: {string.Join(",", tasks)}");
+        Log($"Starting client {name} to connect to {serverIp}:{serverPort}");
+        Log($"{name}: tasks: {string.Join(",", tasks)}");
 
         var webSocketClient = new WebSocketClient(name);
         var partition = new Geometry("a");
@@ -134,7 +134,7 @@ public class WebSocketClient : IDeltaClientConnector
     {
         await _clientWebSocket.ConnectAsync(new Uri(serverUri), CancellationToken.None);
 
-        Console.WriteLine($"{_name}: {ClientStartedMessage} Connected to the server: {serverUri}");
+        Log($"{_name}: {ClientStartedMessage} Connected to the server: {serverUri}");
 
         Task.Run(async () =>
         {
@@ -147,7 +147,7 @@ public class WebSocketClient : IDeltaClientConnector
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
                     string receivedMessage = Encoding.UTF8.GetString(receiveBuffer, 0, result.Count);
-                    // Debug.WriteLine($"XXClient: received message: {receivedMessage}");
+                    // Log($"XXClient: received message: {receivedMessage}");
                     var deserialized = _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage);
                     // do NOT await
                     Task.Run(() => Receive?.Invoke(this, deserialized));
@@ -168,4 +168,9 @@ public class WebSocketClient : IDeltaClientConnector
     /// <inheritdoc />
     public IDeltaContent Convert(IEvent internalEvent)
         => _mapper.Map(internalEvent);
+
+    private static void Log(string message, bool header = false) =>
+        Console.WriteLine(header
+            ? $"{ILionWebClient.HeaderColor_Start}{message}{ILionWebClient.HeaderColor_End}"
+            : message);
 }
