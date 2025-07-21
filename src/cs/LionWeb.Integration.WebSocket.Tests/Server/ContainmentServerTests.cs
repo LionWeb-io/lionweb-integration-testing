@@ -11,7 +11,7 @@ namespace LionWeb.Integration.WebSocket.Tests.Server;
 public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : WebSocketServerTestBase(clientProcesses)
 {
     /// <summary>
-    /// Adds a new child node
+    /// Adds a child node to the partition.
     /// </summary>
     [Test]
     public void AddChild()
@@ -25,7 +25,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", "SignOn", "AddChild");
+        StartClient("A", "SignOn", "AddContainment_0_1");
 
         lionWebServer.WaitForReceived(2);
 
@@ -36,9 +36,9 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         AssertEquals(expected, serverPartition);
     }
-      
+
     /// <summary>
-    /// First adds and then deletes child node
+    /// Deletes a child node from the partition.
     /// </summary>
     [Test]
     public void DeleteChild()
@@ -53,7 +53,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
         
-        StartClient("A", "SignOn", "AddChild", "DeleteChild");
+        StartClient("A", "SignOn", "AddContainment_0_1", "DeleteContainment_0_1");
         
         lionWebServer.WaitForReceived(3);
         
@@ -67,7 +67,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     }
 
     /// <summary>
-    /// First adds and then replaces child node
+    /// Replaces the child node with a new one in the partition.
     /// </summary>
     [Test]
     public void ReplaceChild()
@@ -82,7 +82,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
         
-        StartClient("A", "SignOn", "AddChild", "ReplaceChild");
+        StartClient("A", "SignOn", "AddContainment_0_1", "ReplaceContainment_0_1");
         
         lionWebServer.WaitForReceived(3);
         
@@ -93,4 +93,39 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         
         AssertEquals(expected, serverPartition);
     }
+
+    /// <summary>
+    /// Moves and replaces a child node from one containment to another in a single operation.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainment_Single()
+    {
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
+
+        var serverPartition = new LinkTestConcept("a");
+        
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+        
+        StartClient("A", "SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1", 
+            "AddContainment_1", "AddContainment_1_Containment_0_1", "MoveAndReplaceChildFromOtherContainment_Single");
+        
+        lionWebServer.WaitForReceived(6);
+        
+        var expected = new LinkTestConcept("a")
+        {
+            Containment_0_1 = new LinkTestConcept("containment_0_1"),
+            Containment_1 = new LinkTestConcept("containment_1")
+            {
+                Containment_0_1 = new LinkTestConcept("containment_0_1_containment_0_1") 
+            }
+        };
+        
+        AssertEquals(expected, serverPartition);
+        
+    }
+    
 }

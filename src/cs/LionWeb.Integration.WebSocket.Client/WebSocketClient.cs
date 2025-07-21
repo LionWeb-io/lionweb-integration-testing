@@ -84,16 +84,32 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     partition.StringValue_0_1 = "new property";
                     lionWeb.WaitForReplies(1);
                     break;*/
-                case "AddChild":
-                    partition.Containment_0_1 = new LinkTestConcept("child");
+                case "AddContainment_0_1":
+                    partition.Containment_0_1 = new LinkTestConcept("containment_0_1");
                     lionWeb.WaitForReplies(1);
                     break;
-                case "ReplaceChild":
+                case "AddContainment_1":
+                    partition.Containment_1 = new LinkTestConcept("containment_1");
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "ReplaceContainment_0_1":
                     partition.Containment_0_1 = new LinkTestConcept("substitute");
                     lionWeb.WaitForReplies(1);
                     break;
-                case "DeleteChild":
+                case "DeleteContainment_0_1":
                     partition.Containment_0_1 = null;
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "AddContainment_0_1_Containment_0_1":
+                    partition.Containment_0_1!.Containment_0_1 = new LinkTestConcept("containment_0_1_containment_0_1");
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "AddContainment_1_Containment_0_1":
+                    partition.Containment_1.Containment_0_1 = new LinkTestConcept("containment_1_containment_0_1");
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "MoveAndReplaceChildFromOtherContainment_Single":
+                    partition.Containment_1.Containment_0_1 = partition.Containment_0_1!.Containment_0_1!;
                     lionWeb.WaitForReplies(1);
                     break;
             }
