@@ -110,7 +110,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     }
 
     /// <inheritdoc />
-    public event EventHandler<IMessageContext<IDeltaContent>> Receive;
+    public event EventHandler<IMessageContext<IDeltaContent>> ReceiveFromClient;
 
     public void StartServer(string ipAddress, int port)
     {
@@ -149,7 +149,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     }
 
     /// <inheritdoc />
-    public async Task SendAll(IDeltaContent content)
+    public async Task SendToAllClients(IDeltaContent content)
     {
         foreach ((var clientInfo, System.Net.WebSockets.WebSocket socket) in _knownClients)
         {
@@ -178,7 +178,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
 
 
     /// <inheritdoc />
-    public async Task Send(IClientInfo clientInfo, IDeltaContent content) =>
+    public async Task SendToClient(IClientInfo clientInfo, IDeltaContent content) =>
         await Send(clientInfo, _deltaSerializer.Serialize(UpdateSequenceNumber(content, clientInfo)));
 
     private async Task Send(IClientInfo clientInfo, string msg)
@@ -210,7 +210,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
                 case WebSocketMessageType.Text:
                 {
                     string receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Receive?.Invoke(this,
+                    ReceiveFromClient?.Invoke(this,
                         new DeltaMessageContext(clientInfo,
                             _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage)));
                     break;

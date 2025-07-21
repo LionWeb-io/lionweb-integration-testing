@@ -62,7 +62,7 @@ public class WebSocketClient : IDeltaClientConnector
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocketClient);
 
         // forest.AddPartitions([partition]);
-        
+
         await webSocketClient.ConnectToServer(serverIp, serverPort);
 
         foreach (var task in tasks)
@@ -125,7 +125,7 @@ public class WebSocketClient : IDeltaClientConnector
     private readonly string _name;
 
     /// <inheritdoc />
-    public event EventHandler<IDeltaContent>? Receive;
+    public event EventHandler<IDeltaContent>? ReceiveFromRepository;
 
     public async Task ConnectToServer(string ipAddress, int port) =>
         await ConnectToServer($"ws://{ipAddress}:{port}");
@@ -150,15 +150,15 @@ public class WebSocketClient : IDeltaClientConnector
                     // Log($"XXClient: received message: {receivedMessage}");
                     var deserialized = _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage);
                     // do NOT await
-                    Task.Run(() => Receive?.Invoke(this, deserialized));
-                    // Debug.WriteLine($"XXClient: processed message: {receivedMessage}");
+                    Task.Run(() => ReceiveFromRepository?.Invoke(this, deserialized));
+                    // Log($"XXClient: processed message: {receivedMessage}");
                 }
             }
         });
     }
 
     /// <inheritdoc />
-    public async Task Send(IDeltaContent content) =>
+    public async Task SendToRepository(IDeltaContent content) =>
         await Send(_deltaSerializer.Serialize(content));
 
     public async Task Send(string msg) =>
