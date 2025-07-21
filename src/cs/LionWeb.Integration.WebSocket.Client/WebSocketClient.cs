@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
+using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
@@ -123,6 +124,14 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                 case "AddContainment_0_n":
                     ((LinkTestConcept)partition).AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
                     lionWeb.WaitForReplies(2);
+                    break;
+                case "AddContainment_1_n":
+                    ((LinkTestConcept)partition).AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("replaced")]);
+                    lionWeb.WaitForReplies(2);
+                    break;
+                case "MoveAndReplaceChildFromOtherContainment_Multiple":
+                    ((LinkTestConcept)partition).Containment_1_n[^1].ReplaceWith(((LinkTestConcept)partition).Containment_0_n[^1]);
+                    lionWeb.WaitForReplies(1);
                     break;
             }
         }

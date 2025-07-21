@@ -222,6 +222,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void MoveAndReplaceChildFromOtherContainment_Multiple()
     {
+        // TODO: emits MoveChildFromOtherContainmentInSameParent command instead of MoveAndReplaceChildFromOtherContainment
         aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
         bClient.WaitForReplies(2);
 
