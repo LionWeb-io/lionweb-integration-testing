@@ -83,10 +83,10 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
     public async Task Communication()
     {
         var clientA = new WebSocketClient("A");
-        clientA.Receive += (sender, msg) => Console.WriteLine($"client A received: {msg}");
+        clientA.ReceiveFromRepository += (sender, msg) => Console.WriteLine($"client A received: {msg}");
 
         var clientB = new WebSocketClient("B");
-        clientB.Receive += (sender, msg) => Console.WriteLine($"client B received: {msg}");
+        clientB.ReceiveFromRepository += (sender, msg) => Console.WriteLine($"client B received: {msg}");
 
         var ipAddress = "localhost";
         await clientA.ConnectToServer(ipAddress, Port);
