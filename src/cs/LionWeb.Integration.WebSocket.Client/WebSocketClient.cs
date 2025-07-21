@@ -69,13 +69,13 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                 case "SignOff":
                     await webSocketClient.SignOff(lionWeb);
                     break;
+                case "Wait":
+                    lionWeb.WaitForReplies(1);
+                    break;
                 /*case "AddDocs":
                     partition.Documentation = new Documentation("documentation");
                     lionWeb.WaitForReplies(1);
                     break;*/
-                case "Wait":
-                    lionWeb.WaitForReplies(1);
-                    break;
                 /*case "SetDocsText":
                     partition.Documentation.Text = "hello there";
                     lionWeb.WaitForReplies(1);
@@ -86,6 +86,10 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     break;*/
                 case "AddChild":
                     partition.Containment_0_1 = new LinkTestConcept("child");
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "ReplaceChild":
+                    partition.Containment_0_1 = new LinkTestConcept("substitute");
                     lionWeb.WaitForReplies(1);
                     break;
                 case "DeleteChild":
