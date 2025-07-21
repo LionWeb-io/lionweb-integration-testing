@@ -64,7 +64,7 @@ public class WebSocketClient : IDeltaClientConnector
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocketClient);
 
         // forest.AddPartitions([partition]);
-        
+
         await webSocketClient.ConnectToServer(serverIp, serverPort);
 
         foreach (var task in tasks)
