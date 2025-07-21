@@ -48,9 +48,7 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
             $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Server";
         result.StartInfo.Arguments = $"""
                                         run
-                                        -v q
-                                        --property WarningLevel=0
-                                        --property NoWarn=NU1507
+                                        --no-build
                                         {AdditionalServerParameters()}
                                         """.ReplaceLineEndings(" ");
         result.StartInfo.UseShellExecute = false;
@@ -140,6 +138,16 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket);
         
         forest.AddPartitions([partition]);
+        
+        await webSocket.ConnectToServer(IpAddress, Port);
+        await lionWeb.SignOn();
+        return lionWeb;
+    }
+    
+    protected async Task<LionWebTestClient> ConnectWebSocket(IForest forest, string name)
+    {
+        var webSocket = new WebSocketClient(name);
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket);
         
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn();
