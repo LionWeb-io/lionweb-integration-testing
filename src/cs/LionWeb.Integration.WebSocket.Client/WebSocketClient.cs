@@ -84,6 +84,14 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     ((DataTypeTestConcept)partition).StringValue_0_1 = "new property";
                     lionWeb.WaitForReplies(1);
                     break;
+                case "SetStringValue_0_1":
+                    ((DataTypeTestConcept)partition).StringValue_0_1 = "changed property";
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "DeleteStringValue_0_1":
+                    ((DataTypeTestConcept)partition).StringValue_0_1 = null;
+                    lionWeb.WaitForReplies(1);
+                    break;
                 case "AddContainment_0_1":
                     ((LinkTestConcept)partition).Containment_0_1 = new LinkTestConcept("containment_0_1");
                     lionWeb.WaitForReplies(1);
