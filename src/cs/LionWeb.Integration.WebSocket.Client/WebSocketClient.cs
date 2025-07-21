@@ -50,8 +50,8 @@ public class WebSocketClient(string name) : IDeltaClientConnector
 
         var tasks = args[3].Split(",");
 
-        Debug.WriteLine($"Starting client {name} to connect to {serverIp}:{serverPort}");
-        Debug.WriteLine($"{name}: tasks: {string.Join(",", tasks)}");
+        Log($"Starting client {name} to connect to {serverIp}:{serverPort}");
+        Log($"{name}: tasks: {string.Join(",", tasks)}");
 
         var webSocketClient = new WebSocketClient(name);
         var partition = new Geometry("a");
@@ -105,7 +105,7 @@ public class WebSocketClient(string name) : IDeltaClientConnector
     private readonly ClientWebSocket _clientWebSocket = new ClientWebSocket();
 
     /// <inheritdoc />
-    public event EventHandler<IDeltaContent>? Receive;
+    public event EventHandler<IDeltaContent>? ReceiveFromRepository;
 
     public async Task ConnectToServer(string ipAddress, int port) =>
         await ConnectToServer($"ws://{ipAddress}:{port}");
@@ -114,7 +114,7 @@ public class WebSocketClient(string name) : IDeltaClientConnector
     {
         await _clientWebSocket.ConnectAsync(new Uri(serverUri), CancellationToken.None);
 
-        Console.WriteLine($"{name}: {ClientStartedMessage} Connected to the server: {serverUri}");
+        Log($"{name}: {ClientStartedMessage} Connected to the server: {serverUri}");
 
         Task.Run(async () =>
         {
@@ -127,18 +127,18 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
                     string receivedMessage = Encoding.UTF8.GetString(receiveBuffer, 0, result.Count);
-                    // Debug.WriteLine($"XXClient: received message: {receivedMessage}");
+                    // Log($"XXClient: received message: {receivedMessage}");
                     var deserialized = _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage);
                     // do NOT await
-                    Task.Run(() => Receive?.Invoke(this, deserialized));
-                    // Debug.WriteLine($"XXClient: processed message: {receivedMessage}");
+                    Task.Run(() => ReceiveFromRepository?.Invoke(this, deserialized));
+                    // Log($"XXClient: processed message: {receivedMessage}");
                 }
             }
         });
     }
 
     /// <inheritdoc />
-    public async Task Send(IDeltaContent content) =>
+    public async Task SendToRepository(IDeltaContent content) =>
         await Send(_deltaSerializer.Serialize(content));
 
     public async Task Send(string msg) =>
@@ -148,4 +148,9 @@ public class WebSocketClient(string name) : IDeltaClientConnector
     /// <inheritdoc />
     public IDeltaContent Convert(IEvent internalEvent)
         => _mapper.Map(internalEvent);
+
+    private static void Log(string message, bool header = false) =>
+        Console.WriteLine(header
+            ? $"{ILionWebClient.HeaderColor_Start}{message}{ILionWebClient.HeaderColor_End}"
+            : message);
 }

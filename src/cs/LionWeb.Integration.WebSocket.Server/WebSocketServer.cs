@@ -77,7 +77,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
             : new Geometry("a");
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
-        Debug.WriteLine($"Server partition: <{serverPartition.GetClassifier().Name}>{serverPartition.PrintIdentity()}");
+        Log($"Server partition: <{serverPartition.GetClassifier().Name}>{serverPartition.PrintIdentity()}");
 
         var lionWebServer = new LionWebRepository(lionWebVersion, webSocketServer.Languages, "server",
             serverPartition,
@@ -104,7 +104,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     }
 
     /// <inheritdoc />
-    public event EventHandler<IMessageContext<IDeltaContent>> Receive;
+    public event EventHandler<IMessageContext<IDeltaContent>> ReceiveFromClient;
 
     public void StartServer(string ipAddress, int port)
     {
@@ -112,7 +112,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
         _listener.Prefixes.Add($"http://{ipAddress}:{port}/");
         _listener.Start();
 
-        Console.WriteLine(ServerStartedMessage + " Waiting for connections...");
+        Log(ServerStartedMessage + " Waiting for connections...");
 
         // do NOT await!
         Task.Run(async () =>
@@ -143,12 +143,12 @@ public class WebSocketServer : IDeltaRepositoryConnector
     }
 
     /// <inheritdoc />
-    public async Task SendAll(IDeltaContent content)
+    public async Task SendToAllClients(IDeltaContent content)
     {
         foreach ((var clientInfo, System.Net.WebSockets.WebSocket socket) in _knownClients)
         {
             var encoded = Encode(_deltaSerializer.Serialize(UpdateSequenceNumber(content, clientInfo)));
-            // Debug.WriteLine($"XXServer: sending to {clientInfo} message: {content.GetType()}");
+            // Log($"XXServer: sending to {clientInfo} message: {content.GetType()}");
             await socket.SendAsync(encoded, WebSocketMessageType.Text, true, CancellationToken.None);
         }
     }
@@ -172,7 +172,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
 
 
     /// <inheritdoc />
-    public async Task Send(IClientInfo clientInfo, IDeltaContent content) =>
+    public async Task SendToClient(IClientInfo clientInfo, IDeltaContent content) =>
         await Send(clientInfo, _deltaSerializer.Serialize(UpdateSequenceNumber(content, clientInfo)));
 
     private async Task Send(IClientInfo clientInfo, string msg)
@@ -191,7 +191,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
         var clientInfo = new ClientInfo() { ParticipationId = GetNextParticipationId() };
         _knownClients.TryAdd(clientInfo, socket);
 
-        Debug.WriteLine($"WebSocket connection accepted: {context.Request.RemoteEndPoint}");
+        Log($"WebSocket connection accepted: {context.Request.RemoteEndPoint}");
 
         // Handle incoming messages
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -204,7 +204,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
                 case WebSocketMessageType.Text:
                 {
                     string receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Receive?.Invoke(this,
+                    ReceiveFromClient?.Invoke(this,
                         new DeltaMessageContext(clientInfo,
                             _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage)));
                     break;
@@ -227,4 +227,9 @@ public class WebSocketServer : IDeltaRepositoryConnector
             return "participation" + _nextParticipationId++;
         }
     }
+    
+    private static void Log(string message, bool header = false) =>
+        Console.WriteLine(header
+            ? $"{ILionWebRepository.HeaderColor_Start}{message}{ILionWebRepository.HeaderColor_End}"
+            : message);
 }
