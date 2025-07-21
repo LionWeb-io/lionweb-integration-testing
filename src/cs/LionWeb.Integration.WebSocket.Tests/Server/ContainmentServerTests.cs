@@ -151,8 +151,37 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         var expected = new LinkTestConcept("a")
         {
-            Containment_0_n = [new LinkTestConcept("child0")],
-            Containment_1_n = [new LinkTestConcept("child1"), new LinkTestConcept("moved")]
+            Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
+            Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_child1")]
+        };
+
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
+    /// Moves a child node within the same containment.
+    /// </summary>
+    [Test]
+    public void MoveChildInSameContainment()
+    {
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
+
+        var serverPartition = new LinkTestConcept("a");
+
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+
+        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_n",
+            "MoveChildInSameContainment");
+
+        lionWebServer.WaitForReceived(4);
+
+        var expected = new LinkTestConcept("a")
+        {
+            Containment_0_n = [new LinkTestConcept("containment_0_n_child1"), new LinkTestConcept("containment_0_n_child0")],
         };
 
         AssertEquals(expected, serverPartition);

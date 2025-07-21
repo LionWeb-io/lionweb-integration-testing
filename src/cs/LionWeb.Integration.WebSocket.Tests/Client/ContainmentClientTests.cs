@@ -289,7 +289,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.InsertContainment_0_n(0, [bPartition.Containment_0_n.Last()]);
+        bPartition.InsertContainment_0_n(0, [bPartition.Containment_0_n[^1]]);
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);

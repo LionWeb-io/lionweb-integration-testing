@@ -122,15 +122,19 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     lionWeb.WaitForReplies(1);
                     break;
                 case "AddContainment_0_n":
-                    ((LinkTestConcept)partition).AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
+                    ((LinkTestConcept)partition).AddContainment_0_n([new LinkTestConcept("containment_0_n_child0"), new LinkTestConcept("containment_0_n_child1")]);
                     lionWeb.WaitForReplies(2);
                     break;
                 case "AddContainment_1_n":
-                    ((LinkTestConcept)partition).AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("replaced")]);
+                    ((LinkTestConcept)partition).AddContainment_1_n([new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_1_n_child1")]);
                     lionWeb.WaitForReplies(2);
                     break;
                 case "MoveAndReplaceChildFromOtherContainment_Multiple":
                     ((LinkTestConcept)partition).Containment_1_n[^1].ReplaceWith(((LinkTestConcept)partition).Containment_0_n[^1]);
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "MoveChildInSameContainment":
+                    ((LinkTestConcept)partition).InsertContainment_0_n(0, [((LinkTestConcept)partition).Containment_0_n[^1]]);
                     lionWeb.WaitForReplies(1);
                     break;
             }
