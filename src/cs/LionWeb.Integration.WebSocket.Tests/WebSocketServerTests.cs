@@ -126,7 +126,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         StartClient("A", "SignOn,Partition");
         StartClient("B", "SignOn");
 
-        lionWebServer.WaitForReceived(4);
+        lionWebServer.WaitForReceived(3);
 
         AssertEquals(
             (INode)new LinkTestConcept("partition"),

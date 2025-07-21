@@ -190,7 +190,7 @@ public class WebSocketClient : IDeltaClientConnector
                     break;
                 case "Partition":
                     forest.AddPartitions([new LinkTestConcept("partition")]);
-                    lionWeb.WaitForReplies(1);
+                    lionWeb.WaitForReceived(1);
                     break;
             }
         }

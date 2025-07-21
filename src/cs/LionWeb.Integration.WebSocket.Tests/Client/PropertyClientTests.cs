@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using LionWeb.Core;
+using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta.Client;
 
@@ -24,20 +25,27 @@ namespace LionWeb.Integration.WebSocket.Tests.Client;
 public class PropertyClientTests(ServerProcesses serverProcess)
     : WebSocketClientTestBase(serverProcess, LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
 {
+    private IForest aForest;
     private DataTypeTestConcept aPartition;
     private LionWebTestClient aClient;
 
+    private IForest bForest;
     private DataTypeTestConcept bPartition;
     private LionWebTestClient bClient;
 
     [SetUp]
     public void ConnectToServer()
     {
-        aPartition = new("partition");
-        aClient = ConnectWebSocket(aPartition, "A").Result;
+        aForest = new Forest();
+        aClient = ConnectWebSocket(aForest, "A").Result;
 
-        bPartition = new("partition");
-        bClient = ConnectWebSocket(bPartition, "B").Result;
+        bForest = new Forest();
+        bClient = ConnectWebSocket(bForest, "B").Result;
+
+        aPartition = new("partition");
+        aForest.AddPartitions([aPartition]);
+        bClient.WaitForReceived(1);
+        bPartition = (DataTypeTestConcept)aForest.Partitions.First();
     }
 
     /// <inheritdoc />
@@ -48,7 +56,7 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     public void AddProperty()
     {
         aPartition.StringValue_0_1 = "new property";
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }
@@ -57,25 +65,24 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     public void ChangeProperty()
     {
         aPartition.StringValue_0_1 = "new property";
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
 
         bPartition.StringValue_0_1 = "changed property";
-        aClient.WaitForReplies(1);
+        aClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }
-    
-    [Test]
 
+    [Test]
     public void DeleteProperty()
     {
         aPartition.StringValue_0_1 = "new property";
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
         bPartition.StringValue_0_1 = null;
-        aClient.WaitForReplies(1);
+        aClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }

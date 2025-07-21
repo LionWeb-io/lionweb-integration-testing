@@ -29,7 +29,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     public void AddChild()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }
@@ -106,12 +106,12 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     public void DeleteChild()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
         bPartition.Containment_0_1 = null;
-        aClient.WaitForReplies(1);
+        aClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }
@@ -144,7 +144,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     public void ReplaceChild()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
@@ -183,7 +183,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     public void MoveChildFromOtherContainment_Single()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
@@ -246,12 +246,12 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     public void MoveChildFromOtherContainmentInSameParent()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = bPartition.Containment_0_1!;
-        aClient.WaitForReplies(1);
+        bPartition.Containment_1 = bPartition.Containment_0_1;
+        aClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }
@@ -286,12 +286,12 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     public void MoveChildInSameContainment()
     {
         aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("child1")]);
-        bClient.WaitForReplies(2);
+        bClient.WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.InsertContainment_0_n(0, [bPartition.Containment_0_n[^1]]);
-        aClient.WaitForReplies(1);
+        bPartition.InsertContainment_0_n(0, [bPartition.Containment_0_n.Last()]);
+        aClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }

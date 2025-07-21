@@ -113,18 +113,18 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         bPartition.Documentation = new Documentation("documentation");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
-        aClient.WaitForReplies(1);
+        aClient.WaitForReceived(1);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         aPartition.Documentation.Text = "hello there";
 
-        bClient.WaitForReplies(2);
+        bClient.WaitForReceived(2);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
         bPartition.Documentation.Text = "bye there";
-        aClient.WaitForReplies(2);
+        aClient.WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
     }
@@ -141,7 +141,7 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         var aPartition = new Geometry("a");
         aForest.AddPartitions([aPartition]);
 
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
         
         var bPartition = bForest.Partitions.First() as Geometry;
         
@@ -150,18 +150,18 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         bPartition.Documentation = new Documentation("documentation");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
-        aClient.WaitForReplies(1);
+        aClient.WaitForReceived(1);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         aPartition.Documentation.Text = "hello there";
 
-        bClient.WaitForReplies(2);
+        bClient.WaitForReceived(2);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
         bPartition.Documentation.Text = "bye there";
-        aClient.WaitForReplies(2);
+        aClient.WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
     }

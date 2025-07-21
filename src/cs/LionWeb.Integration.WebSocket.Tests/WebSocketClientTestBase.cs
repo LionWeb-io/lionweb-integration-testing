@@ -55,10 +55,12 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
         var webSocket = new WebSocketClient(name);
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket);
         
-        forest.AddPartitions([partition]);
-        
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn();
+        lionWeb.WaitForReceived(1);
+
+        lionWeb.WaitForReceived(1);
+        
         return lionWeb;
     }
     
@@ -69,6 +71,8 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
         
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn();
+        
+        lionWeb.WaitForReceived(1);
         return lionWeb;
     }
 }

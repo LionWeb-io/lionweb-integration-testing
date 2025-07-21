@@ -26,7 +26,7 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         aPartition.Reference_0_1 = aPartition.Containment_0_1;
-        bClient.WaitForReplies(2);
+        bClient.WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
     }
@@ -36,12 +36,12 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         aPartition.Reference_0_1 = aPartition.Containment_0_1;
-        bClient.WaitForReplies(2);
+        bClient.WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
 
         bPartition.Reference_0_1 = null;
-        aClient.WaitForReplies(1);
+        aClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }
@@ -52,7 +52,7 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
         aPartition.Containment_0_1 = new LinkTestConcept("childA");
         aPartition.Containment_1 = new LinkTestConcept("childB");
         aPartition.Reference_0_1 = aPartition.Containment_0_1;
-        bClient.WaitForReplies(3);
+        bClient.WaitForReceived(3);
 
         AssertEquals(aPartition, bPartition);
 
@@ -66,12 +66,12 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     public void MoveEntryFromOtherReference()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
         Assert.Fail("no way to move reference");
-        aClient.WaitForReplies(1);
+        aClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }
@@ -80,12 +80,12 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     public void MoveEntryFromOtherReferenceInSameParent()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
-        bClient.WaitForReplies(1);
+        bClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
         Assert.Fail("no way to move reference");
-        aClient.WaitForReplies(1);
+        aClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }
@@ -94,12 +94,12 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     public void MoveEntryInSameReference()
     {
         aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("child1")]);
-        bClient.WaitForReplies(2);
+        bClient.WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
 
         Assert.Fail("no way to move reference");
-        aClient.WaitForReplies(1);
+        aClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }
