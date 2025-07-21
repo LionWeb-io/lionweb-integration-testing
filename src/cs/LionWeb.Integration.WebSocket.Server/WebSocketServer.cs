@@ -48,7 +48,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     {
         Trace.Listeners.Add(new ConsoleTraceListener());
 
-        Debug.WriteLine($"server args: {string.Join(", ", args)}");
+        Log($"server args: {string.Join(", ", args)}");
 
         var port = args.Length > 0
             ? int.Parse(args[0])

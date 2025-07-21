@@ -53,6 +53,8 @@ public class WebSocketClient : IDeltaClientConnector
         string partitionType = args[3];
         var tasks = args[4].Split(",");
 
+        var tasks = args[3].Split(",");
+
         Log($"Starting client {name} to connect to {serverIp}:{serverPort}");
         Log($"{name}: tasks: {string.Join(",", tasks)}");
 
@@ -234,7 +236,7 @@ public class WebSocketClient : IDeltaClientConnector
     {
         await _clientWebSocket.ConnectAsync(new Uri(serverUri), CancellationToken.None);
 
-        Log($"{name}: {ClientStartedMessage} Connected to the server: {serverUri}");
+        Log($"{_name}: {ClientStartedMessage} Connected to the server: {serverUri}");
 
         Task.Run(async () =>
         {
