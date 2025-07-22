@@ -18,6 +18,7 @@
 using System.Diagnostics;
 using LionWeb.Core.M1.Event;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
+using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 
@@ -34,13 +35,12 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new Geometry("a");
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+        var serverPartition = new LinkTestConcept("a");
 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", "SignOn");
+        StartClient("A", serverPartition.GetType().Name,"SignOn");
 
         lionWebServer.WaitForReceived(1);
     }
@@ -51,17 +51,17 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new Geometry("a");
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+        var serverPartition = new LinkTestConcept("a");
 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", "SignOn");
-        StartClient("B", "SignOn");
+        StartClient("A", serverPartition.GetType().Name,"SignOn");
+        StartClient("B", serverPartition.GetType().Name, "SignOn");
 
         lionWebServer.WaitForReceived(2);
     }
+
 
     [Test]
     public void Model()
@@ -69,16 +69,19 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
+        // TODO:
+        // Add a new concept to TestLanguage and replace Geometry language with TestLanguage language
+        // We miss the following concept in TestLanguage: a concept with a containment which has a property 
+        
         var serverPartition = new Geometry("a");
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", "SignOn,Wait,SetDocsText");
-        StartClient("B", "SignOn,AddDocs");
+        StartClient("A",  serverPartition.GetType().Name,"SignOn,Wait,SetDocsText");
+        StartClient("B",  serverPartition.GetType().Name,"SignOn,AddDocs");
 
         lionWebServer.WaitForReceived(4);
 

@@ -56,7 +56,7 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Reference_0_1 = bPartition.Containment_0_1;
+        bPartition.Reference_0_1 = bPartition.Containment_1;
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);

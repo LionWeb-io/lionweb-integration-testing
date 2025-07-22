@@ -39,12 +39,12 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
         nextClientProcess = 0;
     }
 
-    private Process NextProcess(string name, string[] tasks, out string trigger) =>
-        _clientProcesses[nextClientProcess++ % _clientProcesses.Length].Create(name, Port, tasks, out trigger);
+    private Process NextProcess(string name, string partitionType, string[] tasks, out string trigger) =>
+        _clientProcesses[nextClientProcess++ % _clientProcesses.Length].Create(name, partitionType, Port, tasks, out trigger);
 
-    protected void StartClient(string name, params string[] tasks)
+    protected void StartClient(string name, string partitionType, params string[] tasks)
     {
-        var process = NextProcess(name, tasks, out var trigger);
+        var process = NextProcess(name, partitionType, tasks, out var trigger);
         _externalProcessRunner.StartProcess(process, trigger);
 
         ClassicAssert.IsFalse(process.HasExited);
