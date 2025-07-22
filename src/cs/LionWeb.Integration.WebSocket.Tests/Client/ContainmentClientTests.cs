@@ -92,9 +92,6 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         
         AssertEquals(aPartition, bPartition);
         
-        // This works, but reference link is established after the nodes are added.
-        // One would expect reference from a child is set to the node before the new node
-        // is added to partition!? 
         aPartition.Containment_0_1.Reference_0_1 = aPartition.Containment_1;
         bClient.WaitForReplies(1);
         
