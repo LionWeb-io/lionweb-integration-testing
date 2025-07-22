@@ -71,7 +71,10 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        // TODO:add a new concept to TestLanguage and replace Geometry concept with TestLanguage concept
+        // TODO:
+        // Add a new concept to TestLanguage and replace Geometry language with TestLanguage language
+        // We miss the following concept in TestLanguage: a concept with a containment which has a property 
+        
         var serverPartition = new Geometry("a");
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
