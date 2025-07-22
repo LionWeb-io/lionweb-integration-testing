@@ -117,6 +117,18 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     ((LinkTestConcept)partition).AddAnnotations(((LinkTestConcept)partition).Containment_0_1!.GetAnnotations());
                     lionWeb.WaitForReplies(1);
                     break;
+                case "AddReference_0_1_to_Containment_0_1":
+                    ((LinkTestConcept)partition).Reference_0_1 = ((LinkTestConcept)partition).Containment_0_1;
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "AddReference_0_1_to_Containment_1":
+                    ((LinkTestConcept)partition).Reference_0_1 = ((LinkTestConcept)partition).Containment_1;
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "DeleteReference_0_1":
+                    ((LinkTestConcept)partition).Reference_0_1 = null;
+                    lionWeb.WaitForReplies(1);
+                    break;
                 case "AddContainment_0_1":
                     ((LinkTestConcept)partition).Containment_0_1 = new LinkTestConcept("containment_0_1");
                     lionWeb.WaitForReplies(1);
