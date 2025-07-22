@@ -141,6 +141,10 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     ((LinkTestConcept)partition).Containment_1 = ((LinkTestConcept)partition).Containment_0_1!.Containment_0_1!;
                     lionWeb.WaitForReplies(1);
                     break;
+                case "MoveChildFromOtherContainmentInSameParent":
+                    ((LinkTestConcept)partition).Containment_1 = ((LinkTestConcept)partition).Containment_0_1!;
+                    lionWeb.WaitForReplies(1);
+                    break;
             }
         }
         

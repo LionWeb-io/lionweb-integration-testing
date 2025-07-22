@@ -158,6 +158,34 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     }
 
     /// <summary>
+    /// Moves a child node from one containment to another within the same parent node.
+    /// </summary>
+    [Test]
+    public void MoveChildFromOtherContainmentInSameParent()
+    {
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
+
+        var serverPartition = new LinkTestConcept("a");
+
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+
+        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "MoveChildFromOtherContainmentInSameParent");
+
+        lionWebServer.WaitForReceived(3);
+
+        var expected = new LinkTestConcept("a")
+        {
+            Containment_1 =  new LinkTestConcept("containment_0_1")
+        };
+
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
     /// Moves and replaces child nodes from other containment in the server partition.
     /// </summary>
     [Test]
