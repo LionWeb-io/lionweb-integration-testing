@@ -28,11 +28,11 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         StartClient("A", serverPartition.GetType().ToString(),"SignOn", "AddAnnotation");
 
         lionWebServer.WaitForReceived(2);
-
-        var annotations = serverPartition.GetAnnotations();
-
-        ClassicAssert.AreEqual(1, annotations.Count);
-        ClassicAssert.AreEqual("annotation", annotations[0].GetId());
+        
+        var expected = new LinkTestConcept("a");
+        expected.AddAnnotations([new TestAnnotation("annotation")]);
+        
+        AssertEquals(expected, serverPartition);
     }
 
     /// <summary>
@@ -54,9 +54,8 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         lionWebServer.WaitForReceived(3);
 
-        var annotations = serverPartition.GetAnnotations();
-
-        ClassicAssert.AreEqual(0, annotations.Count);
+        var expected = new LinkTestConcept("a");
+        AssertEquals(expected, serverPartition);
     }
 
     /// <summary>
@@ -79,11 +78,13 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         lionWebServer.WaitForReceived(4);
 
-        var annotations = serverPartition.GetAnnotations();
-
-        ClassicAssert.AreEqual(1, annotations.Count);
-        ClassicAssert.AreEqual("annotation", annotations[0].GetId());
-        ClassicAssert.AreEqual(serverPartition, annotations[0].GetParent());
+        var expected = new LinkTestConcept("a")
+        {
+            Containment_0_1 = new LinkTestConcept("containment_0_1")
+        };
+        expected.AddAnnotations([new TestAnnotation("annotation")]);
+        
+        AssertEquals(expected, serverPartition);
     }
 
     /// <summary>
@@ -105,9 +106,9 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         lionWebServer.WaitForReceived(4);
 
-        var annotations = serverPartition.GetAnnotations();
-
-        ClassicAssert.AreEqual(2, annotations.Count);
-        ClassicAssert.AreEqual("annotation1", annotations[0].GetId());
+        var expected = new LinkTestConcept("a");
+        expected.AddAnnotations([new TestAnnotation("annotation1"), new TestAnnotation("annotation0")]);
+        
+        AssertEquals(expected, serverPartition);
     }
 }
