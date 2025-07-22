@@ -93,6 +93,30 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     ((DataTypeTestConcept)partition).StringValue_0_1 = null;
                     lionWeb.WaitForReplies(1);
                     break;
+                case "AddAnnotation":
+                    ((LinkTestConcept)partition).AddAnnotations([new TestAnnotation("annotation")]);
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "AddAnnotations":
+                    ((LinkTestConcept)partition).AddAnnotations([new TestAnnotation("annotation0"), new TestAnnotation("annotation1")]);
+                    lionWeb.WaitForReplies(2);
+                    break;
+                case "AddAnnotation_to_Containment_0_1":
+                    ((LinkTestConcept)partition).Containment_0_1!.AddAnnotations([new TestAnnotation("annotation")]);
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "DeleteAnnotation":
+                    ((LinkTestConcept)partition).RemoveAnnotations(((LinkTestConcept)partition).GetAnnotations());
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "MoveAnnotationInSameParent":
+                    ((LinkTestConcept)partition).InsertAnnotations(0, [((LinkTestConcept)partition).GetAnnotations()[^1]]);
+                    lionWeb.WaitForReplies(1);
+                    break;
+                case "MoveAnnotationFromOtherParent":
+                    ((LinkTestConcept)partition).AddAnnotations(((LinkTestConcept)partition).Containment_0_1!.GetAnnotations());
+                    lionWeb.WaitForReplies(1);
+                    break;
                 case "AddContainment_0_1":
                     ((LinkTestConcept)partition).Containment_0_1 = new LinkTestConcept("containment_0_1");
                     lionWeb.WaitForReplies(1);
