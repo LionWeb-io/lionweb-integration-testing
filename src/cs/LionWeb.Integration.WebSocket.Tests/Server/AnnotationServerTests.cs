@@ -19,7 +19,6 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
@@ -44,7 +43,6 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
@@ -67,7 +65,6 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
@@ -96,7 +93,6 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
