@@ -24,7 +24,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "AddReference_0_1_to_Containment_0_1");
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddReference_0_1_to_Containment_0_1");
 
         lionWebServer.WaitForReceived(3);
 
@@ -52,7 +52,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "AddReference_0_1_to_Containment_0_1", "DeleteReference_0_1");
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddReference_0_1_to_Containment_0_1", "DeleteReference_0_1");
 
         lionWebServer.WaitForReceived(4);
 
@@ -79,7 +79,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "AddContainment_1", 
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_1", 
             "AddReference_0_1_to_Containment_0_1", "AddReference_0_1_to_Containment_1");
 
         lionWebServer.WaitForReceived(5);

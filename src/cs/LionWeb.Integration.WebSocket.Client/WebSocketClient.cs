@@ -191,9 +191,9 @@ public class WebSocketClient(string name) : IDeltaClientConnector
     {
         return partitionType switch
         {
-            "LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2.LinkTestConcept" => new LinkTestConcept("a"),
-            "LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2.DataTypeTestConcept" => new DataTypeTestConcept("a"),
-            "LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2.Geometry" => new Geometry("a"),
+            "LinkTestConcept" => new LinkTestConcept("a"),
+            "DataTypeTestConcept" => new DataTypeTestConcept("a"),
+            "Geometry" => new Geometry("a"),
             _ =>  throw new ArgumentException("Invalid partition type specified.")
         };
     }

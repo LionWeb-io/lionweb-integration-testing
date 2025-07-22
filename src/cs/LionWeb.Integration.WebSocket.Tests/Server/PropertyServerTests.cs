@@ -24,7 +24,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(),"SignOn", "AddStringValue_0_1");
+        StartClient("A", serverPartition.GetType().Name,"SignOn", "AddStringValue_0_1");
 
         lionWebServer.WaitForReceived(2);  
 
@@ -51,7 +51,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(),"SignOn", "AddStringValue_0_1", "SetStringValue_0_1");
+        StartClient("A", serverPartition.GetType().Name,"SignOn", "AddStringValue_0_1", "SetStringValue_0_1");
 
         lionWebServer.WaitForReceived(3);  
 
@@ -78,7 +78,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(),"SignOn", "AddStringValue_0_1", "DeleteStringValue_0_1");
+        StartClient("A", serverPartition.GetType().Name,"SignOn", "AddStringValue_0_1", "DeleteStringValue_0_1");
 
         lionWebServer.WaitForReceived(3);  
 

@@ -25,13 +25,13 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1");
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1");
 
         lionWebServer.WaitForReceived(2);
 
         var expected = new LinkTestConcept("a")
         {
-            Containment_0_1 = new LinkTestConcept("child")
+            Containment_0_1 = new LinkTestConcept("containment_0_1")
         };
 
         AssertEquals(expected, serverPartition);
@@ -53,7 +53,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "DeleteContainment_0_1");
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "DeleteContainment_0_1");
 
         lionWebServer.WaitForReceived(3);
 
@@ -82,7 +82,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "ReplaceContainment_0_1");
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "ReplaceContainment_0_1");
 
         lionWebServer.WaitForReceived(3);
 
@@ -110,7 +110,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1", 
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1",
             "MoveChildFromOtherContainment_Single");
 
         lionWebServer.WaitForReceived(4);
@@ -140,7 +140,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1",
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1",
             "AddContainment_1", "AddContainment_1_Containment_0_1", "MoveAndReplaceChildFromOtherContainment_Single");
 
         lionWebServer.WaitForReceived(6);
@@ -173,13 +173,13 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "MoveChildFromOtherContainmentInSameParent");
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "MoveChildFromOtherContainmentInSameParent");
 
         lionWebServer.WaitForReceived(3);
 
         var expected = new LinkTestConcept("a")
         {
-            Containment_1 =  new LinkTestConcept("containment_0_1")
+            Containment_1 = new LinkTestConcept("containment_0_1")
         };
 
         AssertEquals(expected, serverPartition);
@@ -202,14 +202,14 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "AddContainment_1", 
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_1",
             "MoveChildFromOtherContainmentInSameParent");
 
         lionWebServer.WaitForReceived(4);
 
         var expected = new LinkTestConcept("a")
         {
-            Containment_1 =  new LinkTestConcept("containment_0_1")
+            Containment_1 = new LinkTestConcept("containment_0_1")
         };
 
         AssertEquals(expected, serverPartition);
@@ -232,7 +232,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_n", "AddContainment_1_n",
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_n", "AddContainment_1_n",
             "MoveAndReplaceChildFromOtherContainment_Multiple");
 
         lionWebServer.WaitForReceived(6);
@@ -262,7 +262,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_n",
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_n",
             "MoveChildInSameContainment");
 
         lionWebServer.WaitForReceived(4);
