@@ -186,6 +186,36 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     }
 
     /// <summary>
+    /// Moves and replaces a child node within the same parent containment.
+    /// </summary>
+    [Test]
+    [Ignore("Misses implementation for ChildMovedAndReplacedFromOtherContainmentInSameParentEvent")]
+    public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
+    {
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
+
+        var serverPartition = new LinkTestConcept("a");
+
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+
+        StartClient("A", serverPartition.GetType().ToString(), "SignOn", "AddContainment_0_1", "AddContainment_1", 
+            "MoveChildFromOtherContainmentInSameParent");
+
+        lionWebServer.WaitForReceived(4);
+
+        var expected = new LinkTestConcept("a")
+        {
+            Containment_1 =  new LinkTestConcept("containment_0_1")
+        };
+
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
     /// Moves and replaces child nodes from other containment in the server partition.
     /// </summary>
     [Test]

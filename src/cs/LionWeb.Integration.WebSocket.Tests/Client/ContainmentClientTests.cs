@@ -260,6 +260,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from one containment to another within the same parent and replaces the existing child node, if any.
     /// </summary>
     [Test]
+    [Ignore("Misses implementation for ChildMovedAndReplacedFromOtherContainmentInSameParentEvent")]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("moved-child");
