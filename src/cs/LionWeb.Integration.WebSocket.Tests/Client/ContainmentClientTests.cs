@@ -176,6 +176,9 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         AssertEquals(aPartition, bPartition);
     }
 
+    /// <summary>
+    /// Move a single child node from one containment to another.
+    /// </summary>
     [Test]
     public void MoveChildFromOtherContainment_Single()
     {
