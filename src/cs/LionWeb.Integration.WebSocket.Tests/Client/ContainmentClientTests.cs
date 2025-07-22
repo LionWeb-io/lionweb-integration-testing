@@ -257,7 +257,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     }
     
     /// <summary>
-    /// Moves a child from one containment to another within the same parent and replaces the existing child node, if any.
+    /// Moves a child from one containment to another within the same parent and replaces the existing child node.
     /// </summary>
     [Test]
     [Ignore("Misses implementation for ChildMovedAndReplacedFromOtherContainmentInSameParentEvent")]
