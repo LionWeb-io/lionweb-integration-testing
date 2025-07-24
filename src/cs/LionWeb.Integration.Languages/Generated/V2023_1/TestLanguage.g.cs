@@ -2,6 +2,9 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable SuggestVarOrType_SimpleTypes
 // ReSharper disable SuggestVarOrType_Elsewhere
+
+using LionWeb.Core.M1.Event;
+
 #pragma warning disable 1591
 #nullable enable
 namespace LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
@@ -471,9 +474,9 @@ public partial class DataTypeTestConcept : ConceptInstanceBase, IPartitionInstan
 	}
 
 	/// <inheritdoc/>
-        protected override bool SetInternal(Feature? feature, Object? value)
+	public override bool SetInternal(Feature? feature, object? value, IEventId? eventId)
 	{
-		if (base.SetInternal(feature, value))
+		if (base.SetInternal(feature, value, null))
 			return true;
 		if (TestLanguageLanguage.Instance.DataTypeTestConcept_booleanValue_0_1.EqualsIdentity(feature))
 		{
@@ -639,7 +642,7 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable, IPar
 	/// <remarks>Optional Single Containment</remarks>
         public LinkTestConcept SetContainment_0_1(LinkTestConcept? value)
 	{
-		ContainmentSingleEventEmitter<LinkTestConcept> evt = new(TestLanguageLanguage.Instance.LinkTestConcept_containment_0_1, this, value, _containment_0_1);
+		ContainmentSingleEventEmitter<LinkTestConcept> evt = new(TestLanguageLanguage.Instance.LinkTestConcept_containment_0_1, this, value, _containment_0_1); //additional parameter: event id,
 		evt.CollectOldData();
 		SetParentNull(_containment_0_1);
 		AttachChild(value);
@@ -1008,9 +1011,9 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable, IPar
 	}
 
 	/// <inheritdoc/>
-        protected override bool SetInternal(Feature? feature, Object? value)
+	public override bool SetInternal(Feature? feature, object? value, IEventId? eventId)
 	{
-		if (base.SetInternal(feature, value))
+		if (base.SetInternal(feature, value, null))
 			return true;
 		if (_builtIns.INamed_name.EqualsIdentity(feature))
 		{
