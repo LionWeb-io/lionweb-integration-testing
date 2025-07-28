@@ -217,12 +217,11 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     }
 
     /// <summary>
-    /// Moves a child from a multiple containment to other multiple containment and replaces the existing child.
+    /// Moves a child from a multiple containment to other multiple containment within the same parent and replaces the existing child.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildFromOtherContainment_Multiple()
+    public void MoveChildFromOtherContainmentInSameParent_Multiple()
     {
-        // TODO: emits MoveChildFromOtherContainmentInSameParent command instead of MoveAndReplaceChildFromOtherContainment
         aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
         bClient.WaitForReplies(2);
 
@@ -243,7 +242,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from one containment to another within the same parent. 
     /// </summary>
     [Test]
-    public void MoveChildFromOtherContainmentInSameParent()
+    public void MoveChildFromOtherContainmentInSameParent_Single()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
         bClient.WaitForReplies(1);
@@ -260,7 +259,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from one containment to another within the same parent and replaces the existing child node.
     /// </summary>
     [Test]
-    [Ignore("Misses implementation for ChildMovedAndReplacedFromOtherContainmentInSameParentEvent")]
+    [Ignore("Fails to correlate internal event id to ParticipationEventId")]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("moved-child");
