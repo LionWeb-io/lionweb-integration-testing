@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using LionWeb.Core.M1.Event;
-using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+﻿using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 using NUnit.Framework.Legacy;
@@ -89,33 +87,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         AssertEquals(expected, serverPartition);
     }
 
-    /// <summary>
-    /// Moves a child node from one containment to another.
-    /// </summary>
-    [Test]
-    public void MoveChildFromOtherContainment_Single()
-    {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
-
-        var serverPartition = new LinkTestConcept("a");
-
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
-
-        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1",
-            "MoveChildFromOtherContainment_Single");
-
-        lionWebServer.WaitForReceived(4);
-
-        var expected = new LinkTestConcept("a")
-        {
-            Containment_0_1 = new LinkTestConcept("containment_0_1"),
-            Containment_1 = new LinkTestConcept("containment_0_1_containment_0_1")
-        };
-
-        AssertEquals(expected, serverPartition);
-    }
+    #region move and replace
 
     /// <summary>
     /// Moves and replaces a child node from one containment to another in a single operation.
@@ -149,36 +121,10 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     }
 
     /// <summary>
-    /// Moves a child node from one containment to another within the same parent node.
-    /// </summary>
-    [Test]
-    public void MoveChildFromOtherContainmentInSameParent()
-    {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
-
-        var serverPartition = new LinkTestConcept("a");
-
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
-
-        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "MoveChildFromOtherContainmentInSameParent");
-
-        lionWebServer.WaitForReceived(3);
-
-        var expected = new LinkTestConcept("a")
-        {
-            Containment_1 = new LinkTestConcept("containment_0_1")
-        };
-
-        AssertEquals(expected, serverPartition);
-    }
-
-    /// <summary>
     /// Moves and replaces a child node within the same parent containment.
     /// </summary>
     [Test]
-    [Ignore("Misses implementation for ChildMovedAndReplacedFromOtherContainmentInSameParentEvent")]
+    [Ignore("Fails to correlate internal event id to ParticipationEventId")]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
@@ -203,12 +149,12 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     }
 
     /// <summary>
-    /// Moves and replaces child nodes from other containment in the server partition.
+    /// Moves and replaces child nodes from other containment in the same parent.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildFromOtherContainment_Multiple()
+    public void MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple()
     {
-        // TODO: emits MoveChildFromOtherContainmentInSameParent command instead of MoveAndReplaceChildFromOtherContainment
+        //TODO: emits MoveChildFromOtherContainmentInSameParent instead of MoveAndReplaceChildFromOtherContainmentInSameParent
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
@@ -226,6 +172,64 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         {
             Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
             Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_child1")]
+        };
+
+        AssertEquals(expected, serverPartition);
+    }
+
+    #endregion
+    
+    #region move
+
+    /// <summary>
+    /// Moves a single child node from one containment to another.
+    /// </summary>
+    [Test]
+    public void MoveChildFromOtherContainment_Single()
+    {
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
+
+        var serverPartition = new LinkTestConcept("a");
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1",
+            "MoveChildFromOtherContainment");
+
+        lionWebServer.WaitForReceived(4);
+
+        var expected = new LinkTestConcept("a")
+        {
+            Containment_0_1 = new LinkTestConcept("containment_0_1"),
+            Containment_1 = new LinkTestConcept("containment_0_1_containment_0_1")
+        };
+
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
+    /// Moves a child node from one containment to another within the same parent node.
+    /// </summary>
+    [Test]
+    public void MoveChildFromOtherContainmentInSameParent()
+    {
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
+
+        var serverPartition = new LinkTestConcept("a");
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "MoveChildFromOtherContainmentInSameParent");
+
+        lionWebServer.WaitForReceived(3);
+
+        var expected = new LinkTestConcept("a")
+        {
+            Containment_1 = new LinkTestConcept("containment_0_1")
         };
 
         AssertEquals(expected, serverPartition);
@@ -257,4 +261,6 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         AssertEquals(expected, serverPartition);
     }
+
+    #endregion
 }
