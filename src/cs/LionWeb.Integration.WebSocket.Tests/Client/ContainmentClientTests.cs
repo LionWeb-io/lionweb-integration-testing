@@ -22,6 +22,8 @@ namespace LionWeb.Integration.WebSocket.Tests.Client;
 
 public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientTestBase(serverProcess)
 {
+    #region add
+
     /// <summary>
     /// Added child is a single node
     /// </summary>
@@ -98,7 +100,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         AssertEquals(aPartition, bPartition);
     }
 
-    
+    #endregion
+
+    #region delete
+
     /// <summary>
     /// Deletes an existing node
     /// </summary>
@@ -136,6 +141,9 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         AssertEquals(aPartition, bPartition);
     }
 
+    #endregion
+
+    #region replace
 
     /// <summary>
     /// Replaces an existing node with a new node
@@ -176,24 +184,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         AssertEquals(aPartition, bPartition);
     }
 
-    /// <summary>
-    /// Move a single child node from one containment to another.
-    /// </summary>
-    [Test]
-    public void MoveChildFromOtherContainment_Single()
-    {
-        aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
-        bClient.WaitForReplies(1);
+    #endregion
 
-        AssertEquals(aPartition, bPartition);
+    #region move and replace
 
-        bPartition.Containment_1 = bPartition.Containment_0_1!.Containment_0_1!;
-        aClient.WaitForReplies(1);
-
-        AssertEquals(aPartition, bPartition);
-    }
-    
-        
     /// <summary>
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
@@ -209,51 +203,13 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         aClient.WaitForReplies(1);
         
         AssertEquals(aPartition, bPartition);
-
-        bPartition.Containment_1.Containment_0_1 = bPartition.Containment_0_1!.Containment_0_1!;
-        aClient.WaitForReplies(1);
         
-        AssertEquals(aPartition, bPartition);
-    }
-
-    /// <summary>
-    /// Moves a child from a multiple containment to other multiple containment within the same parent and replaces the existing child.
-    /// </summary>
-    [Test]
-    public void MoveChildFromOtherContainmentInSameParent_Multiple()
-    {
-        aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
-        bClient.WaitForReplies(2);
-
-        AssertEquals(aPartition, bPartition);
-
-        bPartition.AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("replaced")]);
-        aClient.WaitForReplies(2);
-
-        AssertEquals(aPartition, bPartition);
-
-        aPartition.Containment_1_n[^1].ReplaceWith(aPartition.Containment_0_n[^1]);
-        bClient.WaitForReplies(1);
-
-        AssertEquals(aPartition, bPartition);
-    }
-
-    /// <summary>
-    /// Moves a child from one containment to another within the same parent. 
-    /// </summary>
-    [Test]
-    public void MoveChildFromOtherContainmentInSameParent_Single()
-    {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
-        bClient.WaitForReplies(1);
-
-        AssertEquals(aPartition, bPartition);
-
-        bPartition.Containment_1 = bPartition.Containment_0_1!;
+        bPartition.Containment_1.Containment_0_1.ReplaceWith(bPartition.Containment_0_1!.Containment_0_1!);
         aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     }
+    
     
     /// <summary>
     /// Moves a child from one containment to another within the same parent and replaces the existing child node.
@@ -272,9 +228,69 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = bPartition.Containment_0_1!;
+        bPartition.Containment_1.ReplaceWith(bPartition.Containment_0_1!);
         aClient.WaitForReplies(1);
         
+        AssertEquals(aPartition, bPartition);
+    }
+
+    /// <summary>
+    /// Moves a child from a multiple containment to other multiple containment within the same parent and replaces the existing child.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple()
+    {
+        aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
+        bClient.WaitForReplies(2);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("replaced")]);
+        aClient.WaitForReplies(2);
+
+        AssertEquals(aPartition, bPartition);
+
+        aPartition.Containment_1_n[^1].ReplaceWith(aPartition.Containment_0_n[^1]);
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+    }
+
+    #endregion
+
+    #region move
+
+    /// <summary>
+    /// Move a single child node from one containment to another.
+    /// </summary>
+    [Test]
+    public void MoveChildFromOtherContainment_Single()
+    {
+        aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1 = bPartition.Containment_0_1!.Containment_0_1!;
+        aClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+    }
+    
+    /// <summary>
+    /// Moves a child from one containment to another within the same parent. 
+    /// </summary>
+    [Test]
+    public void MoveChildFromOtherContainmentInSameParent_Single()
+    {
+        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1 = bPartition.Containment_0_1!;
+        aClient.WaitForReplies(1);
+
         AssertEquals(aPartition, bPartition);
     }
 
@@ -294,4 +310,6 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
 
         AssertEquals(aPartition, bPartition);
     }
+
+    #endregion
 }
