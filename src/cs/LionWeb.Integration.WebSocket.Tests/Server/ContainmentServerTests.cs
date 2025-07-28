@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using LionWeb.Core.M1;
 using LionWeb.Core.M1.Event;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Server;
@@ -20,9 +21,11 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1");
 
@@ -46,9 +49,11 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "DeleteContainment_0_1");
 
@@ -73,9 +78,11 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "ReplaceContainment_0_1");
 
@@ -99,9 +106,11 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1",
             "MoveChildFromOtherContainment_Single");
@@ -127,9 +136,11 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_0_1_Containment_0_1",
             "AddContainment_1", "AddContainment_1_Containment_0_1", "MoveAndReplaceChildFromOtherContainment_Single");
@@ -158,9 +169,11 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "MoveChildFromOtherContainmentInSameParent");
 
@@ -185,9 +198,11 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_1",
             "MoveChildFromOtherContainmentInSameParent");
@@ -213,9 +228,11 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_n", "AddContainment_1_n",
             "MoveAndReplaceChildFromOtherContainment_Multiple");
@@ -241,9 +258,11 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
         var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_n",
             "MoveChildInSameContainment");
