@@ -1,5 +1,5 @@
 {
-  "messageKind": "MoveEntryFromOtherReference",
+  "messageKind": "MoveEntryFromOtherReferenceCommand",
   "newParent": "nodeId",
   "newReference": {
     "language": "MyLang",

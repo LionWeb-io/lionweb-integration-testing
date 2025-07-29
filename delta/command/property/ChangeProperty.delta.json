@@ -1,5 +1,5 @@
 {
-  "messageKind": "ChangeProperty",
+  "messageKind": "ChangePropertyCommand",
   "node": "nodeId",
   "property": {
     "language": "MyLang",

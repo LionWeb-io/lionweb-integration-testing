@@ -1,5 +1,5 @@
 {
-  "messageKind": "ChildDeleted",
+  "messageKind": "ChildDeletedEvent",
   "parent": "nodeId",
   "deletedChild": "a",
   "deletedDescendants": [

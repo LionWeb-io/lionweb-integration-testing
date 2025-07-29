@@ -1,5 +1,5 @@
 {
-  "messageKind": "AddChild",
+  "messageKind": "AddChildCommand",
   "parent": "nodeId",
   "newChild": {
     "nodes": [

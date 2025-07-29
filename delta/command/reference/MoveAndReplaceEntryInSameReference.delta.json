@@ -1,5 +1,5 @@
 {
-  "messageKind": "MoveAndReplaceEntryInSameReference",
+  "messageKind": "MoveAndReplaceEntryInSameReferenceCommand",
   "parent": "nodeId",
   "reference": {
     "language": "MyLang",

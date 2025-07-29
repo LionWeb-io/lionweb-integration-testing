@@ -1,5 +1,5 @@
 {
-  "messageKind": "ReferenceDeleted",
+  "messageKind": "ReferenceDeletedEvent",
   "parent": "nodeId",
   "reference": {
     "language": "MyLang",

@@ -1,5 +1,5 @@
 {
-  "messageKind": "AnnotationMovedAndReplacedInSameParent",
+  "messageKind": "AnnotationMovedAndReplacedInSameParentEvent",
   "newIndex": 3,
   "movedAnnotation": "movedNodeId",
   "parent": "nodeId",

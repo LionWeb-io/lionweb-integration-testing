@@ -1,5 +1,5 @@
 {
-  "messageKind": "DeleteAnnotation",
+  "messageKind": "DeleteAnnotationCommand",
   "parent": "nodeId",
   "index": 3,
   "deletedAnnotation": "deletedNodeId",

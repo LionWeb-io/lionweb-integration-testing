@@ -1,5 +1,5 @@
 {
-  "messageKind": "MoveAnnotationFromOtherParent",
+  "messageKind": "MoveAnnotationFromOtherParentCommand",
   "newParent": "nodeId",
   "newIndex": 3,
   "movedAnnotation": "otherNodeId",

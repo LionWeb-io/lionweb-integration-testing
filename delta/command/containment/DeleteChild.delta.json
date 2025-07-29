@@ -1,5 +1,5 @@
 {
-  "messageKind": "DeleteChild",
+  "messageKind": "DeleteChildCommand",
   "parent": "nodeId",
   "containment": {
     "language": "MyLang",

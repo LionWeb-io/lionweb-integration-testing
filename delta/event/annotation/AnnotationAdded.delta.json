@@ -1,5 +1,5 @@
 {
-  "messageKind": "AnnotationAdded",
+  "messageKind": "AnnotationAddedEvent",
   "parent": "nodeId",
   "newAnnotation": {
     "nodes": [

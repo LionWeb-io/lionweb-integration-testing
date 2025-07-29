@@ -1,5 +1,5 @@
 {
-  "messageKind": "DeleteReferenceResolveInfo",
+  "messageKind": "DeleteReferenceResolveInfoCommand",
   "parent": "nodeId",
   "reference": {
     "language": "MyLang",

@@ -1,5 +1,5 @@
 {
-  "messageKind": "ReferenceResolveInfoDeleted",
+  "messageKind": "ReferenceResolveInfoDeletedEvent",
   "parent": "nodeId",
   "reference": {
     "language": "MyLang",

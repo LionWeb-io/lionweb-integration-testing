@@ -1,5 +1,5 @@
 {
-  "messageKind": "ReplaceAnnotation",
+  "messageKind": "ReplaceAnnotationCommand",
   "parent": "nodeId",
   "newAnnotation": {
     "nodes": [

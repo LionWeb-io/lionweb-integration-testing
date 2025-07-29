@@ -2,7 +2,7 @@
   "messageKind": "CompositeCommand",
   "parts": [
     {
-      "messageKind": "AddProperty",
+      "messageKind": "AddPropertyCommand",
       "node": "nodeId",
       "property": {
         "language": "MyLang",
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "messageKind": "ChangeClassifier",
+      "messageKind": "ChangeClassifierCommand",
       "node": "nodeId",
       "newClassifier": {
         "language": "MyLang",
@@ -50,7 +50,7 @@
       "messageKind": "CompositeCommand",
       "parts": [
         {
-          "messageKind": "DeleteChild",
+          "messageKind": "DeleteChildCommand",
           "parent": "nodeId",
           "containment": {
             "language": "MyLang",
