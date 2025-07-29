@@ -37,7 +37,7 @@ foreach (LionWebVersions lionWebVersion in LionWebVersions.AllPureVersions)
         new(testLanguage, $"{prefix}.TestLanguage.M2")
     ];
 
-    var generationPath = $"../../../../LionWeb.Integration.Languages/Generated/{lionWebVersionDirectory}";
+    var generationPath = $"../LionWeb.Integration.Languages/Generated/{lionWebVersionDirectory}";
     Directory.CreateDirectory(generationPath);
 
     foreach (var name in names)
@@ -56,7 +56,7 @@ return;
 
 DynamicLanguage[] DeserializeExternalLanguage(LionWebVersions lionWebVersion, string name, params Language[] dependentLanguages)
 {
-    SerializationChunk serializationChunk = JsonUtils.ReadJsonFromString<SerializationChunk>(File.ReadAllText($"../../../../../languages/{name}.{lionWebVersion.VersionString}.json"));
+    SerializationChunk serializationChunk = JsonUtils.ReadJsonFromString<SerializationChunk>(File.ReadAllText($"../../languages/{name}.{lionWebVersion.VersionString}.json"));
     return new LanguageDeserializerBuilder()
         .WithLionWebVersion(lionWebVersion)
         .WithCompressedIds(new(KeepOriginal: true))
