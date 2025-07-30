@@ -1,5 +1,5 @@
 {
-  "messageKind": "ChangeReferenceResolveInfo",
+  "messageKind": "ChangeReferenceResolveInfoCommand",
   "parent": "nodeId",
   "reference": {
     "language": "MyLang",

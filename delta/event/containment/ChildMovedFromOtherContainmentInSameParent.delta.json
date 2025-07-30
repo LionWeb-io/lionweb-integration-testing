@@ -1,5 +1,5 @@
 {
-  "messageKind": "ChildMovedFromOtherContainmentInSameParent",
+  "messageKind": "ChildMovedFromOtherContainmentInSameParentEvent",
   "newContainment": {
     "language": "MyLang",
     "version": "4",

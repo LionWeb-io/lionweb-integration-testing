@@ -1,5 +1,5 @@
 {
-  "messageKind": "ChildMovedFromOtherContainment",
+  "messageKind": "ChildMovedFromOtherContainmentEvent",
   "newParent": "nodeId",
   "newContainment": {
     "language": "MyLang",

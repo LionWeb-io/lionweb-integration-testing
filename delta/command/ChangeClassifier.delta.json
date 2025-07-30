@@ -1,5 +1,5 @@
 {
-  "messageKind": "ChangeClassifier",
+  "messageKind": "ChangeClassifierCommand",
   "node": "nodeId",
   "newClassifier": {
     "language": "MyLang",

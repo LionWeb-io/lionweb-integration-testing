@@ -1,5 +1,5 @@
 {
-  "messageKind": "PropertyDeleted",
+  "messageKind": "PropertyDeletedEvent",
   "node": "nodeId",
   "property": {
     "language": "MyLang",

@@ -1,5 +1,5 @@
 {
-  "messageKind": "ChildReplaced",
+  "messageKind": "ChildReplacedEvent",
   "parent": "nodeId",
   "newChild": {
     "nodes": [

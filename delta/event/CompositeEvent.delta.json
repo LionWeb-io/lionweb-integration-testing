@@ -2,7 +2,7 @@
   "messageKind": "CompositeEvent",
   "parts": [
     {
-      "messageKind": "ChildAdded",
+      "messageKind": "ChildAddedEvent",
       "parent": "nodeId",
       "newChild": {
         "nodes": [
@@ -65,7 +65,7 @@
       ]
     },
     {
-      "messageKind": "PartitionDeleted",
+      "messageKind": "PartitionDeletedEvent",
       "deletedPartition": "a",
       "deletedDescendants": [
         "b"
@@ -95,7 +95,7 @@
       ]
     },
     {
-      "messageKind": "ChildDeleted",
+      "messageKind": "ChildDeletedEvent",
       "parent": "nodeId",
       "deletedChild": "a",
       "deletedDescendants": [],
@@ -114,7 +114,7 @@
       "sequenceNumber": 124
     },
     {
-      "messageKind": "Error",
+      "messageKind": "ErrorEvent",
       "errorCode": "myErrorCode",
       "message": "something is not right",
       "originCommands": [

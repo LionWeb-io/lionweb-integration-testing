@@ -1,5 +1,5 @@
 {
-  "messageKind": "ReferenceResolveInfoAdded",
+  "messageKind": "ReferenceResolveInfoAddedEvent",
   "parent": "nodeId",
   "reference": {
     "language": "MyLang",

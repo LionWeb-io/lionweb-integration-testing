@@ -1,5 +1,5 @@
 {
-  "messageKind": "AddAnnotation",
+  "messageKind": "AddAnnotationCommand",
   "parent": "nodeId",
   "newAnnotation": {
     "nodes": [

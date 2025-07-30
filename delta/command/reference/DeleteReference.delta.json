@@ -1,5 +1,5 @@
 {
-  "messageKind": "DeleteReference",
+  "messageKind": "DeleteReferenceCommand",
   "parent": "nodeId",
   "reference": {
     "language": "MyLang",
