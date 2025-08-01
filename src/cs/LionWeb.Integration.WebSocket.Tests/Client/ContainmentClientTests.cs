@@ -177,7 +177,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     }
 
     /// <summary>
-    /// Move a single child node from one containment to another.
+    /// Move a child node from a single containment to another.
     /// </summary>
     [Test]
     public void MoveChildFromOtherContainment_Single()
@@ -193,12 +193,34 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         AssertEquals(aPartition, bPartition);
     }
     
-        
+    /// <summary>
+    /// Move a child node from a multiple containment to another.
+    /// </summary>
+    [Test]
+    public void MoveChildFromOtherContainment_Multiple()
+    {
+        aPartition.AddContainment_0_n([new LinkTestConcept("child0") { Containment_0_n = [new LinkTestConcept("moved")] }]);
+
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        aPartition.AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("child2")]);
+        bClient.WaitForReplies(2);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.InsertContainment_1_n(0, [bPartition.Containment_0_n[^1].Containment_0_n[0]]);
+        aClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+    }
+    
     /// <summary>
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildFromOtherContainment_Single()
+    public void MoveAndReplaceChildFromOtherContainment_Single_WithAssignment()
     {
         aPartition.Containment_0_1 =  new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") };
         bClient.WaitForReplies(1);
@@ -215,12 +237,35 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         
         AssertEquals(aPartition, bPartition);
     }
+    
+    /// <summary>
+    /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainment_Single_WithReplaceWith()
+    {
+        aPartition.Containment_0_1 = new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") };
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1 = new LinkTestConcept("replaced-subHost") { Containment_0_1 = new LinkTestConcept("replaced-child") };
+        aClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1.Containment_0_1.ReplaceWith(bPartition.Containment_0_1!.Containment_0_1!);
+        aClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+    }
+
 
     /// <summary>
     /// Moves a child from a multiple containment to other multiple containment within the same parent and replaces the existing child.
     /// </summary>
     [Test]
-    public void MoveChildFromOtherContainmentInSameParent_Multiple()
+    public void MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple()
     {
         aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
         bClient.WaitForReplies(2);
