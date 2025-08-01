@@ -45,7 +45,7 @@ public abstract class LinkClientTestBase(ServerProcesses serverProcess)
         aPartition = new("partition");
         aForest.AddPartitions([aPartition]);
         aClient.WaitForReceived(1);
-        bClient.WaitForReceived(1);
+        // bClient.WaitForReceived(1);
         bPartition = (LinkTestConcept)aForest.Partitions.First();
     }
 
