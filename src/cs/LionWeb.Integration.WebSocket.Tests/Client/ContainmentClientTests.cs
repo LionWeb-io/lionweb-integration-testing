@@ -177,7 +177,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     }
 
     /// <summary>
-    /// Move a child node from a single containment to another.
+    /// Move a child node from a single containment to another. Both containments have different parents.
     /// </summary>
     [Test]
     public void MoveChildFromOtherContainment_Single()
@@ -194,7 +194,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     }
     
     /// <summary>
-    /// Move a child node from a multiple containment to another.
+    /// Move a child node from a multiple containment to another.  Both containments have different parents.
     /// </summary>
     [Test]
     public void MoveChildFromOtherContainment_Multiple()
