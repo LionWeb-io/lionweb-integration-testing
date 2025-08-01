@@ -117,13 +117,13 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         aPartition.Documentation.Text = "hello there";
 
-        bClient.WaitForReplies(2);
+        bClient.WaitForReplies(1);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
         bPartition.Documentation.Text = "bye there";
-        aClient.WaitForReplies(2);
+        aClient.WaitForReplies(1);
 
         AssertEquals(aPartition, bPartition);
     }
