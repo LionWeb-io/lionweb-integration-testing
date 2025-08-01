@@ -153,10 +153,6 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     ((LinkTestConcept)partition).Containment_1.Containment_0_1 = new LinkTestConcept("containment_1_containment_0_1");
                     lionWeb.WaitForReplies(1);
                     break;
-                case "MoveAndReplaceChildFromOtherContainment_Single":
-                    ((LinkTestConcept)partition).Containment_1.Containment_0_1 = ((LinkTestConcept)partition).Containment_0_1!.Containment_0_1!;
-                    lionWeb.WaitForReplies(1);
-                    break;
                 case "AddContainment_0_n":
                     ((LinkTestConcept)partition).AddContainment_0_n([new LinkTestConcept("containment_0_n_child0"), new LinkTestConcept("containment_0_n_child1")]);
                     lionWeb.WaitForReplies(2);
@@ -164,6 +160,10 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                 case "AddContainment_1_n":
                     ((LinkTestConcept)partition).AddContainment_1_n([new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_1_n_child1")]);
                     lionWeb.WaitForReplies(2);
+                    break;
+                case "MoveAndReplaceChildFromOtherContainment_Single":
+                    ((LinkTestConcept)partition).Containment_1.Containment_0_1!.ReplaceWith(((LinkTestConcept)partition).Containment_0_1!.Containment_0_1!);
+                    lionWeb.WaitForReplies(1);
                     break;
                 case "MoveAndReplaceChildFromOtherContainment_Multiple":
                     ((LinkTestConcept)partition).Containment_1_n[^1].ReplaceWith(((LinkTestConcept)partition).Containment_0_n[^1]);
@@ -173,7 +173,7 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     ((LinkTestConcept)partition).InsertContainment_0_n(0, [((LinkTestConcept)partition).Containment_0_n[^1]]);
                     lionWeb.WaitForReplies(1);
                     break;
-                case "MoveChildFromOtherContainment_Single":
+                case "MoveChildFromOtherContainment":
                     ((LinkTestConcept)partition).Containment_1 = ((LinkTestConcept)partition).Containment_0_1!.Containment_0_1!;
                     lionWeb.WaitForReplies(1);
                     break;
