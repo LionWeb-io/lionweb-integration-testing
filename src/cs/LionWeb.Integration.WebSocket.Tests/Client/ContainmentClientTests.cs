@@ -284,6 +284,34 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     }
 
     /// <summary>
+    /// Moves a child from a multiple containment to other multiple containment and replaces the existing child. Both containments have different parents.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainment_Multiple()
+    {
+        //todo: MoveChildFromOtherContainment and DeleteChild commands are triggered
+        aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
+        bClient.WaitForReplies(2);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("child2")]);
+        aClient.WaitForReplies(2);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Containment_1_n[^1].AddContainment_0_n([new LinkTestConcept("child3"), new LinkTestConcept("replaced")]);
+        aClient.WaitForReplies(2);
+        
+        AssertEquals(aPartition, bPartition);
+
+        aPartition.Containment_1_n[^1].Containment_0_n[^1].ReplaceWith(aPartition.Containment_0_n[^1]);
+        bClient.WaitForReplies(1);
+
+        AssertEquals(aPartition, bPartition);
+    }
+
+    /// <summary>
     /// Moves a child from one containment to another within the same parent. 
     /// </summary>
     [Test]
