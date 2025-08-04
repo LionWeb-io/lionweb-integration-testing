@@ -169,8 +169,12 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     ((LinkTestConcept)partition).Containment_1.Containment_0_1!.ReplaceWith(((LinkTestConcept)partition).Containment_0_1!.Containment_0_1!);
                     lionWeb.WaitForReplies(1);
                     break;
+                case "MoveAndReplaceChildFromOtherContainmentInSameParent_Single":
+                    ((LinkTestConcept)partition).Containment_1.ReplaceWith(((LinkTestConcept)partition).Containment_0_1!);
+                    lionWeb.WaitForReplies(1);
+                    break;
                 case "MoveAndReplaceChildFromOtherContainment_Multiple":
-                    ((LinkTestConcept)partition).Containment_1_n[^1].ReplaceWith(((LinkTestConcept)partition).Containment_0_n[^1]);
+                    ((LinkTestConcept)partition).Containment_1_n[^1].ReplaceWith(((LinkTestConcept)partition).Containment_0_n[^1].Containment_0_n[^1]);
                     lionWeb.WaitForReplies(1);
                     break;
                 case "MoveChildInSameContainment":

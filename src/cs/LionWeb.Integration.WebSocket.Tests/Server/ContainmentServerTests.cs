@@ -146,7 +146,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     }
 
     /// <summary>
-    /// Moves and replaces a child node from a single containment to another.
+    /// Moves and replaces a child node from a single containment to another. Both containments have different parents.
     /// </summary>
     [Test]
     public void MoveAndReplaceChildFromOtherContainment_Single()
@@ -171,6 +171,35 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
             {
                 Containment_0_1 = new LinkTestConcept("containment_0_1_containment_0_1")
             }
+        };
+
+        AssertEquals(expected, serverPartition);
+    }
+    
+    /// <summary>
+    /// Moves and replaces a child node from a multiple containment to another. Both containments have different parents.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainment_Multiple()
+    {
+        //Todo: MoveChildFromOtherContainment and DeleteChild commands are triggered
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
+
+        var serverPartition = new LinkTestConcept("a");
+
+        var lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+
+        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_1_n", "AddContainment_0_n_Containment_0_n",
+            "MoveAndReplaceChildFromOtherContainment_Multiple");
+
+        lionWebServer.WaitForReceived(5);
+
+        var expected = new LinkTestConcept("a")
+        {
+            Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
+            Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0")]
         };
 
         AssertEquals(expected, serverPartition);
@@ -218,7 +247,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
         StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_1",
-            "MoveChildFromOtherContainmentInSameParent_Single");
+            "MoveAndReplaceChildFromOtherContainmentInSameParent_Single");
 
         lionWebServer.WaitForReceived(4);
 
