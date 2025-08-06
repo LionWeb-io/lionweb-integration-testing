@@ -29,6 +29,7 @@ using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Client.Forest;
 using LionWeb.Protocol.Delta.Client.Partition;
 using LionWeb.Protocol.Delta.Message;
+using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Client;
 

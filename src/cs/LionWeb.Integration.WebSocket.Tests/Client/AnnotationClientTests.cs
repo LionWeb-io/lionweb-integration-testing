@@ -25,7 +25,7 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
     public void AddAnnotation()
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
-        bClient.WaitForReceived(1);
+        bClient.WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
     }
