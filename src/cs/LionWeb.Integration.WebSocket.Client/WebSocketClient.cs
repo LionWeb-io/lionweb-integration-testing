@@ -273,7 +273,7 @@ public class WebSocketClient(string name) : IDeltaClientConnector
             true, CancellationToken.None);
 
     /// <inheritdoc />
-    public IDeltaContent Convert(IEvent internalEvent)
+    public IDeltaContent Convert(IDelta internalEvent)
         => _mapper.Map(internalEvent);
 
     private static void Log(string message, bool header = false) =>
