@@ -155,7 +155,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
 
     private static IDeltaContent UpdateSequenceNumber(IDeltaContent content, IClientInfo clientInfo)
     {
-        if (content is IDeltaEvent ev)
+        if (content is IEvent ev)
         {
             ev.SequenceNumber = clientInfo.GetAndIncrementSequenceNumber();
         }

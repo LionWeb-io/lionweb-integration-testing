@@ -74,7 +74,7 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
 
         Console.WriteLine(serialized);
 
-        var deltaEvent = JsonSerializer.Deserialize<IDeltaEvent>(serialized, jsonSerializerOptions);
+        var deltaEvent = JsonSerializer.Deserialize<IEvent>(serialized, jsonSerializerOptions);
         Console.WriteLine(deltaEvent);
         Console.WriteLine((deltaEvent as ChildAdded)?.NewChild.Nodes.First());
     }
