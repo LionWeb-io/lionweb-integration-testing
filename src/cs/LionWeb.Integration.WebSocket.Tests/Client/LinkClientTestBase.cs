@@ -41,12 +41,13 @@ public abstract class LinkClientTestBase(ServerProcesses serverProcess)
 
         bForest = new Forest();
         bClient = ConnectWebSocket(bForest, "B").Result;
-        
+
         aPartition = new("partition");
         aForest.AddPartitions([aPartition]);
         aClient.WaitForReceived(1);
-        // bClient.WaitForReceived(1);
-        bPartition = (LinkTestConcept)bForest.Partitions.First();
+        bClient.WaitForReceived(1);
+        while ((bPartition = (LinkTestConcept)bForest.Partitions.FirstOrDefault()) == null)
+            Thread.Sleep(100);
     }
 
     protected override string AdditionalServerParameters() =>
