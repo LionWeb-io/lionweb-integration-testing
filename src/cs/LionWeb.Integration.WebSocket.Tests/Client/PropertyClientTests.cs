@@ -44,7 +44,7 @@ public class PropertyClientTests(ServerProcesses serverProcess)
 
         aPartition = new("partition");
         aForest.AddPartitions([aPartition]);
-        // bClient.WaitForReceived(1);
+        WaitForReceived();
         bPartition = (DataTypeTestConcept)aForest.Partitions.First();
     }
 
@@ -56,7 +56,7 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     public void AddProperty()
     {
         aPartition.StringValue_0_1 = "new property";
-        bClient.WaitForReceived(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
     }
@@ -65,10 +65,10 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     public void ChangeProperty()
     {
         aPartition.StringValue_0_1 = "new property";
-        bClient.WaitForReceived(1);
+        WaitForReceived();
 
         bPartition.StringValue_0_1 = "changed property";
-        aClient.WaitForReceived(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
     }
@@ -77,13 +77,19 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     public void DeleteProperty()
     {
         aPartition.StringValue_0_1 = "new property";
-        bClient.WaitForReceived(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
         bPartition.StringValue_0_1 = null;
-        aClient.WaitForReceived(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+    }
+    
+    protected void WaitForReceived(int delta = 1)
+    {
+        aClient.WaitForReceived(delta);
+        bClient.WaitForReceived(delta);
     }
 }

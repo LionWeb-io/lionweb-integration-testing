@@ -44,12 +44,17 @@ public abstract class LinkClientTestBase(ServerProcesses serverProcess)
 
         aPartition = new("partition");
         aForest.AddPartitions([aPartition]);
-        aClient.WaitForReceived(1);
-        bClient.WaitForReceived(1);
+        WaitForReceived();
         while ((bPartition = (LinkTestConcept)bForest.Partitions.FirstOrDefault()) == null)
             Thread.Sleep(100);
     }
 
     protected override string AdditionalServerParameters() =>
         TestLanguageLanguage.Instance.LinkTestConcept.Key;
+
+    protected void WaitForReceived(int delta = 1)
+    {
+        aClient.WaitForReceived(delta);
+        bClient.WaitForReceived(delta);
+    }
 }
