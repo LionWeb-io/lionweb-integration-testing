@@ -164,8 +164,8 @@ public class WebSocketServer : IDeltaRepositoryConnector
     }
 
     /// <inheritdoc />
-    public IDeltaContent Convert(IEvent internalEvent) =>
-        _mapper.Map(internalEvent);
+    public IDeltaContent Convert(INotification internalNotification) =>
+        _mapper.Map(internalNotification);
 
     private static byte[] Encode(string msg) =>
         Encoding.UTF8.GetBytes(msg);
