@@ -233,7 +233,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node within the same parent containment.
     /// </summary>
     [Test]
-    [Ignore("Fails to correlate internal event id to ParticipationNotificationId")]
+    [Ignore("Fails to correlate notification id to ParticipationNotificationId")]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
