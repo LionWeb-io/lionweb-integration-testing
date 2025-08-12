@@ -213,15 +213,15 @@ public class WebSocketClient : IDeltaClientConnector
         Console.ReadLine();
     }
 
-    private readonly EventToDeltaCommandMapper _mapper;
+    private readonly NotificationToDeltaCommandMapper _mapper;
 
     public WebSocketClient(string name)
     {
         _name = name;
         var commandIdProvider = new CommandIdProvider();
         _mapper = new(
-            new PartitionEventToDeltaCommandMapper(commandIdProvider, _lionWebVersion),
-            new ForestEventToDeltaCommandMapper(commandIdProvider, _lionWebVersion)
+            new PartitionNotificationToDeltaCommandMapper(commandIdProvider, _lionWebVersion),
+            new ForestNotificationToDeltaCommandMapper(commandIdProvider, _lionWebVersion)
         );
     }
 

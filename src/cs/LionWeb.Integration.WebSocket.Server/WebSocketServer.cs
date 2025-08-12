@@ -21,6 +21,7 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
+using LionWeb.Core.M1;
 using LionWeb.Core.M2;
 using LionWeb.Core.M3;
 using LionWeb.Core.Notification;
@@ -95,7 +96,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     public required List<Language> Languages { get; init; }
 
     private readonly DeltaSerializer _deltaSerializer = new();
-    private readonly EventToDeltaEventMapper _mapper;
+    private readonly NotificationToDeltaEventMapper _mapper;
 
     private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];
     private int _nextParticipationId = 0;
@@ -107,8 +108,8 @@ public class WebSocketServer : IDeltaRepositoryConnector
         LionWebVersion = lionWebVersion;
         var exceptionParticipationIdProvider = new ExceptionParticipationIdProvider();
         _mapper = new(
-            new PartitionEventToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion),
-            new ForestEventToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion)
+            new PartitionNotificationToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion),
+            new ForestNotificationToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion)
         );
     }
 

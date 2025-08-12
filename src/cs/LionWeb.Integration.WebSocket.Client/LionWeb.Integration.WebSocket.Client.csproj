@@ -11,6 +11,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj" />
+      <ProjectReference Include="..\..\..\..\lionweb-csharp\test\LionWeb.Protocol.Delta.Test\LionWeb.Protocol.Delta.Test.csproj" />
       <ProjectReference Include="..\LionWeb.Integration.Languages\LionWeb.Integration.Languages.csproj" />
     </ItemGroup>
 
