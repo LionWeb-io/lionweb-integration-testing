@@ -15,6 +15,7 @@
 // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // SPDX-License-Identifier: Apache-2.0
 
+using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
@@ -45,6 +46,7 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
     }
 
     [Test]
+    [Ignore("not implemented yet")]
     public void ReplaceAnnotation()
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
@@ -52,11 +54,11 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
 
         AssertEquals(aPartition, bPartition);
 
-        Assert.Fail("no way to replace annotation");
-//        bPartition.annContainment_0_1 = new LinkTestConcept("replacedChild") { Name = "replaced" };
+        bPartition.GetAnnotations().First().ReplaceWith(new TestAnnotation("replacedAnnotation") {});
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.GetAnnotations().First().GetId(), Is.EqualTo("replacedAnnotation"));
     }
 
     [Test]

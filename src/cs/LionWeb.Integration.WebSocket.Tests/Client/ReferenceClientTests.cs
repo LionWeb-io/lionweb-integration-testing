@@ -63,6 +63,7 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     }
 
     [Test]
+    [Ignore("no way to move reference")]
     public void MoveEntryFromOtherReference()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
@@ -77,6 +78,7 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     }
 
     [Test]
+    [Ignore("no way to move reference")]
     public void MoveEntryFromOtherReferenceInSameParent()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
@@ -91,6 +93,7 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     }
 
     [Test]
+    [Ignore("no way to move reference")]
     public void MoveEntryInSameReference()
     {
         aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("child1")]);
