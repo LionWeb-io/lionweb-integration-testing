@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using LionWeb.Core.M1;
-using LionWeb.Core.M1.Event;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;

@@ -20,8 +20,8 @@ using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
 using LionWeb.Core.M1;
-using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
+using LionWeb.Core.Notification;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
@@ -144,7 +144,7 @@ public class WebSocketClient : IDeltaClientConnector
                     lionWeb.WaitForReceived(1);
                     break;
                 case "ReplaceContainment_0_1":
-                    ((LinkTestConcept)partition).Containment_0_1 = new LinkTestConcept("substitute");
+                    ((LinkTestConcept)partition).Containment_0_1!.ReplaceWith(new LinkTestConcept("substitute"));
                     lionWeb.WaitForReceived(1);
                     break;
                 case "DeleteContainment_0_1":
@@ -159,20 +159,28 @@ public class WebSocketClient : IDeltaClientConnector
                     ((LinkTestConcept)partition).Containment_1.Containment_0_1 = new LinkTestConcept("containment_1_containment_0_1");
                     lionWeb.WaitForReceived(1);
                     break;
-                case "MoveAndReplaceChildFromOtherContainment_Single":
-                    ((LinkTestConcept)partition).Containment_1.Containment_0_1 = ((LinkTestConcept)partition).Containment_0_1!.Containment_0_1!;
-                    lionWeb.WaitForReceived(1);
-                    break;
                 case "AddContainment_0_n":
                     ((LinkTestConcept)partition).AddContainment_0_n([new LinkTestConcept("containment_0_n_child0"), new LinkTestConcept("containment_0_n_child1")]);
                     lionWeb.WaitForReceived(2);
+                    break;
+                case "AddContainment_0_n_Containment_0_n":
+                    ((LinkTestConcept)partition).AddContainment_0_n([new LinkTestConcept("containment_0_n_child0") {Containment_0_n = [new LinkTestConcept("containment_0_n_containment_0_n_child0")] }]);
+                    lionWeb.WaitForReceived(1);
                     break;
                 case "AddContainment_1_n":
                     ((LinkTestConcept)partition).AddContainment_1_n([new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_1_n_child1")]);
                     lionWeb.WaitForReceived(2);
                     break;
+                case "MoveAndReplaceChildFromOtherContainment_Single":
+                    ((LinkTestConcept)partition).Containment_1.Containment_0_1!.ReplaceWith(((LinkTestConcept)partition).Containment_0_1!.Containment_0_1!);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case "MoveAndReplaceChildFromOtherContainmentInSameParent_Single":
+                    ((LinkTestConcept)partition).Containment_1.ReplaceWith(((LinkTestConcept)partition).Containment_0_1!);
+                    lionWeb.WaitForReceived(1);
+                    break;
                 case "MoveAndReplaceChildFromOtherContainment_Multiple":
-                    ((LinkTestConcept)partition).Containment_1_n[^1].ReplaceWith(((LinkTestConcept)partition).Containment_0_n[^1]);
+                    ((LinkTestConcept)partition).Containment_1_n[^1].ReplaceWith(((LinkTestConcept)partition).Containment_0_n[^1].Containment_0_n[^1]);
                     lionWeb.WaitForReceived(1);
                     break;
                 case "MoveChildInSameContainment":
@@ -183,12 +191,20 @@ public class WebSocketClient : IDeltaClientConnector
                     ((LinkTestConcept)partition).Containment_1 = ((LinkTestConcept)partition).Containment_0_1!.Containment_0_1!;
                     lionWeb.WaitForReceived(1);
                     break;
-                case "MoveChildFromOtherContainmentInSameParent":
+                case "MoveChildFromOtherContainment_Multiple":
+                    ((LinkTestConcept)partition).InsertContainment_1_n(1,[((LinkTestConcept)partition).Containment_0_n[^1].Containment_0_n[0]]);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case "MoveChildFromOtherContainmentInSameParent_Single":
                     ((LinkTestConcept)partition).Containment_1 = ((LinkTestConcept)partition).Containment_0_1!;
                     lionWeb.WaitForReceived(1);
                     break;
                 case "Partition":
                     forest.AddPartitions([new LinkTestConcept("partition")]);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case "MoveChildFromOtherContainmentInSameParent_Multiple":
+                    ((LinkTestConcept)partition).InsertContainment_1_n(1,[((LinkTestConcept)partition).Containment_0_n[^1]]);
                     lionWeb.WaitForReceived(1);
                     break;
             }
@@ -267,8 +283,8 @@ public class WebSocketClient : IDeltaClientConnector
             true, CancellationToken.None);
 
     /// <inheritdoc />
-    public IDeltaContent Convert(IEvent internalEvent)
-        => _mapper.Map(internalEvent);
+    public IDeltaContent Convert(INotification notification)
+        => _mapper.Map(notification);
 
     private static void Log(string message, bool header = false) =>
         Console.WriteLine(header

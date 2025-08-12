@@ -17,9 +17,7 @@
 
 using System.Diagnostics;
 using System.Text.Json;
-using LionWeb.Core.M1;
-using LionWeb.Core.M1.Event;
-using LionWeb.Core.M1.Event.Processor;
+using LionWeb.Core.Notification;
 using LionWeb.Core.Serialization;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.WebSocket.Client;
@@ -156,13 +154,13 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         aPartition.Documentation.Text = "hello there";
 
-        bClient.WaitForReceived(2);
+        bClient.WaitForReceived(1);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
         bPartition.Documentation.Text = "bye there";
-        aClient.WaitForReceived(2);
+        aClient.WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }
