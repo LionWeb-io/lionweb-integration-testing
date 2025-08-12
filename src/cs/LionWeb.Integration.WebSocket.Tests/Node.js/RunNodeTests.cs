@@ -21,7 +21,7 @@ namespace LionWeb.Integration.WebSocket.Tests.Node.js;
 
 public class RunNodeTests
 {
-    private readonly ExternalProcessRunner _externalProcessRunner = new ();
+    private readonly ExternalProcessRunner _externalProcessRunner = new();
 
     [Test]
     public void RunNodeProgram()
@@ -29,16 +29,17 @@ public class RunNodeTests
         _externalProcessRunner.StartProcess(
             "node",
             $"{Directory.GetCurrentDirectory()}/../../../Node.js",
-                // cwd is assumed to be: <repo root>/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
-                // (hence 3x ../)
+            // cwd is assumed to be: <repo root>/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
+            // (hence 3x ../)
             "node-program.js",
-            "started"
+            "started",
+            "Exception"
         );
     }
 
     [TearDown]
     public void StopClients()
     {
-        _externalProcessRunner.StopAllProcesses();
+        _externalProcessRunner.Cleanup();
     }
 }

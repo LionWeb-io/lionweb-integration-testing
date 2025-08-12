@@ -18,20 +18,15 @@
 using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
-using LionWeb.Protocol.Delta.Client;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
 public abstract class LinkClientTestBase(ServerProcesses serverProcess)
     : WebSocketClientTestBase(serverProcess, LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
 {
-    private IForest aForest;
     protected LinkTestConcept aPartition;
-    protected LionWebTestClient aClient;
 
-    private IForest bForest;
     protected LinkTestConcept bPartition;
-    protected LionWebTestClient bClient;
 
     [SetUp]
     public void ConnectToServer()
@@ -51,10 +46,4 @@ public abstract class LinkClientTestBase(ServerProcesses serverProcess)
 
     protected override string AdditionalServerParameters() =>
         TestLanguageLanguage.Instance.LinkTestConcept.Key;
-
-    protected void WaitForReceived(int delta = 1)
-    {
-        aClient.WaitForReceived(delta);
-        bClient.WaitForReceived(delta);
-    }
 }

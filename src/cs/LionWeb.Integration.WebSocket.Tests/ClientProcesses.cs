@@ -28,15 +28,16 @@ public enum ClientProcesses
 
 public static class ClientProcessesExtensions
 {
-    public static Process Create(this ClientProcesses process, string name, string partitionType, int port, string[] tasks,
-        out string trigger) => process switch
+    public static Process Create(this ClientProcesses process, string name, string partitionType, int port,
+        IEnumerable<string> tasks, out string readyTrigger, out string errorTrigger) => process switch
     {
-        ClientProcesses.CSharp => CSharpClient(name, partitionType, port, tasks, out trigger),
-        ClientProcesses.Ts => TsClient(name, port, tasks, out trigger),
+        ClientProcesses.CSharp => CSharpClient(name, partitionType, port, tasks, out readyTrigger, out errorTrigger),
+        ClientProcesses.Ts => TsClient(name, port, tasks, out readyTrigger, out errorTrigger),
         _ => throw new ArgumentOutOfRangeException(nameof(process), process, null)
     };
 
-    private static Process CSharpClient(string name, string partitionType, int port, string[] tasks, out string trigger)
+    private static Process CSharpClient(string name, string partitionType, int port, IEnumerable<string> tasks,
+        out string readyTrigger, out string errorTrigger)
     {
         var result = new Process();
         result.StartInfo.FileName = "dotnet";
@@ -53,11 +54,13 @@ public static class ClientProcessesExtensions
                                       {string.Join(",", tasks)}
                                       """.ReplaceLineEndings(" ");
         result.StartInfo.UseShellExecute = false;
-        trigger = WebSocketClient.ClientStartedMessage;
+        readyTrigger = WebSocketClient.ClientStartedMessage;
+        errorTrigger = "Exception";
         return result;
     }
 
-    private static Process TsClient(string clientId, int port, string[] tasks, out string trigger)
+    private static Process TsClient(string clientId, int port, IEnumerable<string> tasks, out string trigger,
+        out string errorTrigger)
     {
         var result = new Process();
         result.StartInfo.FileName = "node";
@@ -72,6 +75,7 @@ public static class ClientProcessesExtensions
         result.StartInfo.Arguments = $"dist/cli/client.js {port} {clientId} {string.Join(",", tasks)}";
         result.StartInfo.UseShellExecute = false;
         trigger = "LionWeb delta protocol client";
+        errorTrigger = "Error";
         return result;
     }
 }

@@ -17,7 +17,9 @@
 
 using System.Diagnostics;
 using System.Text.Json;
+using LionWeb.Core.M1;
 using LionWeb.Core.Notification;
+using LionWeb.Core.Notification.Processor;
 using LionWeb.Core.Serialization;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.WebSocket.Client;
@@ -101,10 +103,10 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         var serverNode = new Geometry("a");
 
         var aPartition = SameIdCloner.Clone(serverNode);
-        var aClient = await ConnectWebSocket(aPartition, "A");
+        aClient = await ConnectWebSocket(aPartition, "A");
 
         var bPartition = SameIdCloner.Clone(serverNode);
-        var bClient = await ConnectWebSocket(bPartition, "B");
+        bClient = await ConnectWebSocket(bPartition, "B");
 
         Debug.WriteLine($"{nameof(aPartition)}: Partition {aPartition.PrintIdentity()}");
         Debug.WriteLine($"{nameof(bPartition)}: Partition {bPartition.PrintIdentity()}");
@@ -112,18 +114,18 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         bPartition.Documentation = new Documentation("documentation");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
-        aClient.WaitForReceived(1);
+        WaitForReceived(1);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         aPartition.Documentation.Text = "hello there";
 
-        bClient.WaitForReceived(2);
+        WaitForReceived(2);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
         bPartition.Documentation.Text = "bye there";
-        aClient.WaitForReceived(2);
+        WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
     }
@@ -131,16 +133,16 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
     [Test]
     public async Task Partition()
     {
-        var aForest = new Forest();
-        var aClient = await ConnectWebSocket(aForest, "A");
+        aForest = new Forest();
+        aClient = await ConnectWebSocket(aForest, "A");
 
-        var bForest = new Forest();
-        var bClient = await ConnectWebSocket(bForest, "B");
+        bForest = new Forest();
+        bClient = await ConnectWebSocket(bForest, "B");
         
         var aPartition = new Geometry("a");
         aForest.AddPartitions([aPartition]);
 
-        bClient.WaitForReceived(1);
+        WaitForReceived(1);
         
         var bPartition = bForest.Partitions.First() as Geometry;
         
@@ -149,18 +151,18 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         bPartition.Documentation = new Documentation("documentation");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
-        aClient.WaitForReceived(1);
+        WaitForReceived(1);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         aPartition.Documentation.Text = "hello there";
 
-        bClient.WaitForReceived(1);
+        WaitForReceived(1);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
         bPartition.Documentation.Text = "bye there";
-        aClient.WaitForReceived(1);
+        WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }

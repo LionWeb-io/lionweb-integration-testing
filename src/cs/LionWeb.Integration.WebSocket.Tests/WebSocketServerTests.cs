@@ -15,8 +15,13 @@
 // SPDX-FileCopyrightText: 2025 LionWeb Project
 // SPDX-License-Identifier: Apache-2.0
 
+using System.Diagnostics;
+using LionWeb.Core;
+using LionWeb.Core.M1;
+using LionWeb.Core.Notification;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 
@@ -36,15 +41,14 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         var serverPartition = new Geometry("a");
         var serverForest = new Forest();
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
-
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
-
         serverForest.AddPartitions([serverPartition]);
 
-        StartClient("A", serverPartition.GetType().Name,"SignOn");
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        lionWebServer.WaitForReceived(1);
+
+        StartClient("A", serverPartition.GetType(),Tasks.SignOn);
+
+        WaitForReceived(1);
     }
 
     [Test]
@@ -56,16 +60,15 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         var serverPartition = new Geometry("a");
         var serverForest = new Forest();
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
-
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
-
         serverForest.AddPartitions([serverPartition]);
 
-        StartClient("A", serverPartition.GetType().Name,"SignOn");
-        StartClient("B", serverPartition.GetType().Name, "SignOn");
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        lionWebServer.WaitForReceived(2);
+
+        StartClient("A", serverPartition.GetType(),Tasks.SignOn);
+        StartClient("B", serverPartition.GetType(), Tasks.SignOn);
+
+        WaitForReceived(2);
     }
 
 
@@ -83,17 +86,15 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        serverForest.AddPartitions([serverPartition]);
+        StartClient("A", serverPartition.GetType(), Tasks.SignOn,Tasks.Wait,Tasks.SetDocsText);
+        StartClient("B", serverPartition.GetType(), Tasks.SignOn,Tasks.AddDocs);
 
-        StartClient("A", "SignOn,Wait,SetDocsText");
-        StartClient("B", "SignOn,AddDocs");
-
-        lionWebServer.WaitForReceived(4);
+        WaitForReceived(4);
 
         AssertEquals(new Geometry("g")
         {
@@ -116,13 +117,12 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         var serverForest = new Forest();
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        StartClient("A", "SignOn,Partition");
-        StartClient("B", "SignOn");
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.Partition);
+        StartClient("B", typeof(LinkTestConcept), Tasks.SignOn);
 
-        lionWebServer.WaitForReceived(3);
+        WaitForReceived(3);
 
         AssertEquals(
             (INode)new LinkTestConcept("partition"),
