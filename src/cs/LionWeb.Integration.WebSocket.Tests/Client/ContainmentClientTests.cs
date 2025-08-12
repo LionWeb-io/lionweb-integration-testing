@@ -332,7 +332,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from one containment to another within the same parent and replaces the existing child node.
     /// </summary>
     [Test]
-    [Ignore("Fails to correlate internal event id to ParticipationEventId")]
+    [Ignore("Fails to correlate notification id to ParticipationNotificationId")]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("moved-child");

@@ -20,8 +20,8 @@ using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
 using LionWeb.Core.M1;
-using LionWeb.Core.M1.Event;
 using LionWeb.Core.M3;
+using LionWeb.Core.Notification;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
@@ -273,8 +273,8 @@ public class WebSocketClient(string name) : IDeltaClientConnector
             true, CancellationToken.None);
 
     /// <inheritdoc />
-    public IDeltaContent Convert(IEvent internalEvent)
-        => _mapper.Map(internalEvent);
+    public IDeltaContent Convert(INotification notification)
+        => _mapper.Map(notification);
 
     private static void Log(string message, bool header = false) =>
         Console.WriteLine(header

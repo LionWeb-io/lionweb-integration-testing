@@ -19,12 +19,11 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using System.Net.WebSockets;
-using System.Runtime.CompilerServices;
 using System.Text;
 using LionWeb.Core;
-using LionWeb.Core.M1.Event;
 using LionWeb.Core.M2;
 using LionWeb.Core.M3;
+using LionWeb.Core.Notification;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
@@ -164,8 +163,8 @@ public class WebSocketServer : IDeltaRepositoryConnector
     }
 
     /// <inheritdoc />
-    public IDeltaContent Convert(IEvent internalEvent) =>
-        _mapper.Map(internalEvent);
+    public IDeltaContent Convert(INotification notification) =>
+        _mapper.Map(notification);
 
     private static byte[] Encode(string msg) =>
         Encoding.UTF8.GetBytes(msg);

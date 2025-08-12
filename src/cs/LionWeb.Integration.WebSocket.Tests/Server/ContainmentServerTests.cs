@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using LionWeb.Core.M1.Event;
-using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+﻿using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 using NUnit.Framework.Legacy;
@@ -235,7 +233,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node within the same parent containment.
     /// </summary>
     [Test]
-    [Ignore("Fails to correlate internal event id to ParticipationEventId")]
+    [Ignore("Fails to correlate notification id to ParticipationNotificationId")]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
