@@ -1429,12 +1429,12 @@ public partial class Geometry : ConceptInstanceBase, IPartitionInstance<INode>
 
 	public Geometry(string id) : base(id)
 	{
-		_notificationHandler = new(this);
+		_notificationHandler = new PartitionNotificationHandler(this);
 	}
 
 	/// <inheritdoc/>
         public override Concept GetConcept() => ShapesLanguage.Instance.Geometry;
-	private readonly PartitionNotificationHandler _notificationHandler;
+	private readonly IPartitionNotificationHandler _notificationHandler;
 	public IPartitionNotificationHandler? GetNotificationHandler() => _notificationHandler;
 	/// <inheritdoc/>
         protected override bool GetInternal(Feature? feature, out object? result)
@@ -2293,12 +2293,12 @@ public partial class ReferenceGeometry : ConceptInstanceBase, IPartitionInstance
 
 	public ReferenceGeometry(string id) : base(id)
 	{
-		_notificationHandler = new(this);
+		_notificationHandler = new PartitionNotificationHandler(this);
 	}
 
 	/// <inheritdoc/>
         public override Concept GetConcept() => ShapesLanguage.Instance.ReferenceGeometry;
-	private readonly PartitionNotificationHandler _notificationHandler;
+	private readonly IPartitionNotificationHandler _notificationHandler;
 	public IPartitionNotificationHandler? GetNotificationHandler() => _notificationHandler;
 	/// <inheritdoc/>
         protected override bool GetInternal(Feature? feature, out object? result)

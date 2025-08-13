@@ -407,12 +407,12 @@ public partial class DataTypeTestConcept : ConceptInstanceBase, IPartitionInstan
 
 	public DataTypeTestConcept(string id) : base(id)
 	{
-		_notificationHandler = new(this);
+		_notificationHandler = new PartitionNotificationHandler(this);
 	}
 
 	/// <inheritdoc/>
         public override Concept GetConcept() => TestLanguageLanguage.Instance.DataTypeTestConcept;
-	private readonly PartitionNotificationHandler _notificationHandler;
+	private readonly IPartitionNotificationHandler _notificationHandler;
 	public IPartitionNotificationHandler? GetNotificationHandler() => _notificationHandler;
 	/// <inheritdoc/>
         protected override bool GetInternal(Feature? feature, out object? result)
@@ -937,12 +937,12 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable, IPar
 
 	public LinkTestConcept(string id) : base(id)
 	{
-		_notificationHandler = new(this);
+		_notificationHandler = new PartitionNotificationHandler(this);
 	}
 
 	/// <inheritdoc/>
         public override Concept GetConcept() => TestLanguageLanguage.Instance.LinkTestConcept;
-	private readonly PartitionNotificationHandler _notificationHandler;
+	private readonly IPartitionNotificationHandler _notificationHandler;
 	public IPartitionNotificationHandler? GetNotificationHandler() => _notificationHandler;
 	/// <inheritdoc/>
         protected override bool GetInternal(Feature? feature, out object? result)
