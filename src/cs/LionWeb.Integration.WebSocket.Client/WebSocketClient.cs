@@ -213,6 +213,8 @@ public class WebSocketClient : IDeltaClientConnector
                     ((LinkTestConcept)partition).InsertContainment_1_n(1,[((LinkTestConcept)partition).Containment_0_n[^1]]);
                     lionWeb.WaitForReceived(1);
                     break;
+                default:
+                    throw new ArgumentException($"Can't execute task {task}");
             }
         }
 

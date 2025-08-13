@@ -19,7 +19,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using LionWeb.Core.M1;
 using LionWeb.Core.Notification;
-using LionWeb.Core.Notification.Processor;
+using LionWeb.Core.Notification.Handler;
 using LionWeb.Core.Serialization;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.WebSocket.Client;
