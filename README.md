@@ -31,5 +31,5 @@ And remember: a green build is not a guarantee for the absence of bugs (or prese
 
 * [Deno](https://deno.com), currently (at least) version 2.4.1 - for the integration tests written in Deno-compliant TypeScript in [`src/`](./src).
   (Deno is used instead of Node.js because Deno can reliably execute TypeScript code natively.)
-* Java 11 (but really Java 8) - for the [`lioncore-java` repo](./repos/lioncore-java).
+* Java 11 (but really Java 8) - for the [`lionweb-java` repo](./repos/lionweb-java).
 
