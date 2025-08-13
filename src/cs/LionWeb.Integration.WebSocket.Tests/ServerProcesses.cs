@@ -26,6 +26,7 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public enum ServerProcesses
 {
     CSharp,
+    OtherCSharp,
     LionWebServer // The server from the lionweb-server project
 }
 
@@ -35,6 +36,8 @@ public static class ServerProcessesExtensions
         out string readyTrigger, out string errorTrigger) => process switch
     {
         ServerProcesses.CSharp => CSharpServer(port, additionalServerParameters, out readyTrigger,
+            out errorTrigger),
+        ServerProcesses.OtherCSharp => CSharpServer(port, additionalServerParameters, out readyTrigger,
             out errorTrigger),
         ServerProcesses.LionWebServer => LionWebServer(port, additionalServerParameters, out readyTrigger,
             out errorTrigger),
@@ -82,6 +85,25 @@ public static class ServerProcessesExtensions
         result.StartInfo.Arguments = "./dist/server.js --run --config ../../../lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
         result.StartInfo.UseShellExecute = false;
         readyTrigger = "Server is running";
+        errorTrigger = "Error";
+        return result;
+    }
+
+    private static Process LionWebServer(int port, string additionalServerParameters, out string readyTrigger, out string errorTrigger)
+    {
+        TestContext.WriteLine($"AdditionalServerParameters: {additionalServerParameters}");
+        var result = new Process();
+        result.StartInfo.FileName = "node";
+        result.StartInfo.WorkingDirectory =
+            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-server/packages/server";
+        result.StartInfo.Arguments = $"""
+                                      run
+                                      --no-build
+                                      {port}
+                                      {additionalServerParameters}
+                                      """.ReplaceLineEndings(" ");
+        result.StartInfo.UseShellExecute = false;
+        readyTrigger = WebSocketServer.ServerStartedMessage;
         errorTrigger = "Error";
         return result;
     }

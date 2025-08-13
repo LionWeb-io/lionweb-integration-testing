@@ -24,8 +24,9 @@ using LionWeb.Protocol.Delta.Client;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
-// [TestFixture(ServerProcesses.LionWebServer)]
-[TestFixture(ServerProcesses.CSharp)]
+[TestFixture(ServerProcesses.LionWebServer)]
+// [TestFixture(ServerProcesses.CSharp)]
+// [TestFixture(ServerProcesses.OtherCSharp)]
 public abstract class WebSocketClientTestBase : WebSocketTestBase
 {
     private readonly ServerProcesses _serverProcess;
@@ -47,6 +48,25 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     public void StartServer()
     {
         Console.WriteLine("StartServer()");
+        if (_serverProcess == ServerProcesses.LionWebServer)
+        {
+            var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var trigger);
+            _externalProcessRunner.StartProcess(
+                "node",
+                process.StartInfo.WorkingDirectory + "dist/",
+                // cwd is assumed to be: <repo root>/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
+                // (hence 3x ../)
+                "/server.js",
+                "started"
+                "ERROR"
+            );
+        }
+        else
+        {
+            var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var readyTrigger,
+                out var errorTrigger);
+            _externalProcessRunner.StartProcess(process, readyTrigger, errorTrigger);
+        }
         var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var readyTrigger,
             out var errorTrigger);
         _externalProcessRunner.StartProcess(process, readyTrigger, errorTrigger);
