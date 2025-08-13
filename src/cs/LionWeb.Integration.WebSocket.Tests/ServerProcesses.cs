@@ -23,7 +23,8 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public enum ServerProcesses
 {
     CSharp,
-    OtherCSharp
+    OtherCSharp,
+    LionWebServer // The server from the lionweb-server project
 }
 
 public static class ServerProcessesExtensions
@@ -31,8 +32,11 @@ public static class ServerProcessesExtensions
     public static Process Create(this ServerProcesses process, int port, string additionalServerParameters,
         out string readyTrigger, out string errorTrigger) => process switch
     {
-        ServerProcesses.CSharp => CSharpServer(port, additionalServerParameters, out readyTrigger, out errorTrigger),
+        ServerProcesses.CSharp => CSharpServer(port, additionalServerParameters, out readyTrigger,
+            out errorTrigger),
         ServerProcesses.OtherCSharp => CSharpServer(port, additionalServerParameters, out readyTrigger,
+            out errorTrigger),
+        ServerProcesses.LionWebServer => LionWebServer(port, additionalServerParameters, out readyTrigger,
             out errorTrigger),
         _ => throw new ArgumentOutOfRangeException(nameof(process), process, null)
     };
@@ -45,6 +49,25 @@ public static class ServerProcessesExtensions
         result.StartInfo.FileName = "dotnet";
         result.StartInfo.WorkingDirectory =
             $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Server";
+        result.StartInfo.Arguments = $"""
+                                      run
+                                      --no-build
+                                      {port}
+                                      {additionalServerParameters}
+                                      """.ReplaceLineEndings(" ");
+        result.StartInfo.UseShellExecute = false;
+        readyTrigger = WebSocketServer.ServerStartedMessage;
+        errorTrigger = "Error";
+        return result;
+    }
+
+    private static Process LionWebServer(int port, string additionalServerParameters, out string readyTrigger, out string errorTrigger)
+    {
+        TestContext.WriteLine($"AdditionalServerParameters: {additionalServerParameters}");
+        var result = new Process();
+        result.StartInfo.FileName = "node";
+        result.StartInfo.WorkingDirectory =
+            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-server/packages/server";
         result.StartInfo.Arguments = $"""
                                       run
                                       --no-build
