@@ -23,7 +23,8 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public enum ServerProcesses
 {
     CSharp,
-    OtherCSharp
+    OtherCSharp,
+    LionWebServer // The server from the lionweb-server project
 }
 
 public static class ServerProcessesExtensions
@@ -33,6 +34,7 @@ public static class ServerProcessesExtensions
     {
         ServerProcesses.CSharp => CSharpServer(port, additionalServerParameters, out trigger),
         ServerProcesses.OtherCSharp => CSharpServer(port, additionalServerParameters, out trigger),
+        ServerProcesses.LionWebServer => LionWebServer(port, additionalServerParameters, out trigger),
         _ => throw new ArgumentOutOfRangeException(nameof(process), process, null)
     };
 
@@ -43,6 +45,24 @@ public static class ServerProcessesExtensions
         result.StartInfo.FileName = "dotnet";
         result.StartInfo.WorkingDirectory =
             $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Server";
+        result.StartInfo.Arguments = $"""
+                                      run
+                                      --no-build
+                                      {port}
+                                      {additionalServerParameters}
+                                      """.ReplaceLineEndings(" ");
+        result.StartInfo.UseShellExecute = false;
+        trigger = WebSocketServer.ServerStartedMessage;
+        return result;
+    }
+
+    private static Process LionWebServer(int port, string additionalServerParameters, out string trigger)
+    {
+        TestContext.WriteLine($"AdditionalServerParameters: {additionalServerParameters}");
+        var result = new Process();
+        result.StartInfo.FileName = "node";
+        result.StartInfo.WorkingDirectory =
+            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-server/packages/server";
         result.StartInfo.Arguments = $"""
                                       run
                                       --no-build
