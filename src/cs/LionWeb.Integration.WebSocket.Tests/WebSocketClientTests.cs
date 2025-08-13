@@ -32,7 +32,7 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
     [Test]
     public void bla()
     {
-        var childAdded = new ChildAdded(
+        var childAdded = new ChildAddedEvent(
             "parent",
             new DeltaSerializationChunk([
                 new SerializedNode()
@@ -76,7 +76,7 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
 
         var deltaEvent = JsonSerializer.Deserialize<IDeltaEvent>(serialized, jsonSerializerOptions);
         Console.WriteLine(deltaEvent);
-        Console.WriteLine((deltaEvent as ChildAdded)?.NewChild.Nodes.First());
+        Console.WriteLine((deltaEvent as ChildAddedEvent)?.NewChild.Nodes.First());
     }
 
     [Test]
