@@ -48,7 +48,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
 
         StartClient("A", serverPartition.GetType(),Tasks.SignOn);
 
-        WaitForReceived(1);
+        WaitForSent(1);
     }
 
     [Test]
@@ -68,7 +68,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         StartClient("A", serverPartition.GetType(),Tasks.SignOn);
         StartClient("B", serverPartition.GetType(), Tasks.SignOn);
 
-        WaitForReceived(2);
+        WaitForSent(2);
     }
 
 
@@ -94,7 +94,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         StartClient("A", serverPartition.GetType(), Tasks.SignOn,Tasks.Wait,Tasks.SetDocsText);
         StartClient("B", serverPartition.GetType(), Tasks.SignOn,Tasks.AddDocs);
 
-        WaitForReceived(4);
+        WaitForSent(4);
 
         AssertEquals(new Geometry("g")
         {
@@ -122,7 +122,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.Partition);
         StartClient("B", typeof(LinkTestConcept), Tasks.SignOn);
 
-        WaitForReceived(3);
+        WaitForSent(3);
 
         AssertEquals(
             (INode)new LinkTestConcept("partition"),

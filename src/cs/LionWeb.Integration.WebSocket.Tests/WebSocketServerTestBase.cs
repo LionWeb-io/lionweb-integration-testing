@@ -63,10 +63,10 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
         _webSocketServer.Stop();
     }
 
-    protected void WaitForReceived(int delta = 1)
+    protected void WaitForSent(int delta = 1)
     {
-        long count = lionWebServer.WaitCount += delta;
-        while (!_externalProcessRunner.ShouldCancel && lionWebServer.MessageCount < count)
+        long count = lionWebServer.WaitSentCount += delta;
+        while (!_externalProcessRunner.ShouldCancel && lionWebServer.MessageSentCount < count)
         {
             Thread.Sleep(LionWebTestClient._sleepInterval);
         }
