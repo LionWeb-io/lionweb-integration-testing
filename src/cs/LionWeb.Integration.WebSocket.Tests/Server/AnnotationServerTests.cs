@@ -21,7 +21,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddAnnotation");
+        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddAnnotation);
 
         lionWebServer.WaitForReceived(2);
 
@@ -45,7 +45,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddAnnotation", "DeleteAnnotation");
+        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddAnnotation, Tasks.DeleteAnnotation);
 
         lionWebServer.WaitForReceived(3);
 
@@ -67,8 +67,9 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddAnnotation_to_Containment_0_1",
-            "MoveAnnotationFromOtherParent");
+        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1,
+            Tasks.AddAnnotation_to_Containment_0_1,
+            Tasks.MoveAnnotationFromOtherParent);
 
         lionWebServer.WaitForReceived(4);
 
@@ -95,7 +96,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddAnnotations", "MoveAnnotationInSameParent");
+        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddAnnotations, Tasks.MoveAnnotationInSameParent);
 
         lionWebServer.WaitForReceived(4);
 

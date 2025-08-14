@@ -78,8 +78,8 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         var lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
 
-        StartClient("A",  serverPartition.GetType().Name,"SignOn,Wait,SetDocsText");
-        StartClient("B",  serverPartition.GetType().Name,"SignOn,AddDocs");
+        StartClient("A", serverPartition.GetType(), Tasks.SignOn,Tasks.Wait,Tasks.SetDocsText);
+        StartClient("B", serverPartition.GetType(), Tasks.SignOn,Tasks.AddDocs);
 
         lionWebServer.WaitForReceived(4);
 

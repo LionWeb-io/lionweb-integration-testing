@@ -39,10 +39,12 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
         nextClientProcess = 0;
     }
 
-    private Process NextProcess(string name, string partitionType, string[] tasks, out string trigger) =>
-        _clientProcesses[nextClientProcess++ % _clientProcesses.Length].Create(name, partitionType, Port, tasks, out trigger);
+    private Process NextProcess(string name, Type partitionType, Tasks[] tasks, out string readyTrigger,
+        out string errorTrigger) =>
+        _clientProcesses[nextClientProcess++ % _clientProcesses.Length]
+            .Create(name, partitionType.Name, Port, tasks.Select(t => Enum.GetName(t)), out readyTrigger, out errorTrigger);
 
-    protected void StartClient(string name, string partitionType, params string[] tasks)
+    protected void StartClient(string name, Type partitionType, params Tasks[] tasks)
     {
         var process = NextProcess(name, partitionType, tasks, out var trigger);
         _externalProcessRunner.StartProcess(process, trigger);
