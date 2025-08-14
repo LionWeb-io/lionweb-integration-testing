@@ -46,7 +46,6 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
     }
 
     [Test]
-    [Ignore("not implemented yet")]
     public void ReplaceAnnotation()
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
@@ -54,8 +53,8 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.GetAnnotations().First().ReplaceWith(new TestAnnotation("replacedAnnotation") {});
-        WaitForReceived();
+        bPartition.GetAnnotations().First().ReplaceWith(new TestAnnotation("replacedAnnotation"));
+        WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
         Assert.That(aPartition.GetAnnotations().First().GetId(), Is.EqualTo("replacedAnnotation"));
