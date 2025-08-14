@@ -200,7 +200,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromOtherContainment_Multiple);
 
-        WaitForSent(4);
+        WaitForSent(5);
 
         var expected = new LinkTestConcept("a")
         {

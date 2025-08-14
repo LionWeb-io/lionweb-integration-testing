@@ -72,6 +72,6 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
         }
 
         if (_externalProcessRunner.ShouldCancel)
-            Assert.Fail("repo failure");
+            Assert.Fail("client failure");
     }
 }

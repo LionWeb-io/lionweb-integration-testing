@@ -78,9 +78,11 @@ public class WebSocketClient : IDeltaClientConnector
             {
                 case Tasks.SignOn:
                     await webSocketClient.SignOn(lionWeb);
+                    lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.SignOff:
                     await webSocketClient.SignOff(lionWeb);
+                    lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.Wait:
                     lionWeb.WaitForReceived(1);

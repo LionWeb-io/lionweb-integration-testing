@@ -56,21 +56,6 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     protected virtual string AdditionalServerParameters() =>
         "";
 
-    protected async Task<LionWebTestClient> ConnectWebSocket(IPartitionInstance partition, string name)
-    {
-        var forest = new Forest();
-        var webSocket = new WebSocketClient(name);
-        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket);
-
-        await webSocket.ConnectToServer(IpAddress, Port);
-        await lionWeb.SignOn();
-        lionWeb.WaitForReceived(1);
-
-        lionWeb.WaitForReceived(1);
-
-        return lionWeb;
-    }
-
     protected async Task<LionWebTestClient> ConnectWebSocket(IForest forest, string name)
     {
         var webSocket = new WebSocketClient(name);
