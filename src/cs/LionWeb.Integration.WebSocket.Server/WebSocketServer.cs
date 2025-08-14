@@ -86,8 +86,6 @@ public class WebSocketServer : IDeltaRepositoryConnector
             serverForest,
             webSocketServer);
 
-        // serverForest.AddPartitions([serverPartition]);
-
         Console.ReadLine();
         webSocketServer.Stop();
     }
