@@ -53,11 +53,9 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
             var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var trigger);
             _externalProcessRunner.StartProcess(
                 "node",
-                process.StartInfo.WorkingDirectory + "dist/",
-                // cwd is assumed to be: <repo root>/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
-                // (hence 3x ../)
-                "/server.js",
-                "started"
+                process.StartInfo.WorkingDirectory,
+                process.StartInfo.Arguments,
+                "Server is running"
                 "ERROR"
             );
         }
