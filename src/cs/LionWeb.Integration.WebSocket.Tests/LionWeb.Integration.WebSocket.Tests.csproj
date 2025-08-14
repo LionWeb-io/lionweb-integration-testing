@@ -5,9 +5,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-        <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
-        <PackageReference Include="NUnit"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Testing.Extensions.TrxReport">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="NUnit">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="coverlet.collector">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,6 +23,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />
       <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj" />
+      <ProjectReference Include="..\..\..\..\lionweb-csharp\test\LionWeb.Protocol.Delta.Test\LionWeb.Protocol.Delta.Test.csproj" />
       <ProjectReference Include="..\LionWeb.Integration.Languages\LionWeb.Integration.Languages.csproj" />
       <ProjectReference Include="..\LionWeb.Integration.WebSocket.Client\LionWeb.Integration.WebSocket.Client.csproj" />
       <ProjectReference Include="..\LionWeb.Integration.WebSocket.Server\LionWeb.Integration.WebSocket.Server.csproj" />
