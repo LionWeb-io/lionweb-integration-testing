@@ -16,6 +16,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using LionWeb.Integration.WebSocket.Server;
 
 namespace LionWeb.Integration.WebSocket.Tests;
@@ -63,20 +66,38 @@ public static class ServerProcessesExtensions
 
     private static Process LionWebServer(int port, string additionalServerParameters, out string readyTrigger, out string errorTrigger)
     {
-        TestContext.WriteLine($"AdditionalServerParameters: {additionalServerParameters}");
+        string currentDirFile = $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json"; 
+        string serverDir = $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-server/packages/server";
+        // Read config file
+        JsonNode configJson = ReadJsonFromFile(serverDir + "/" + "server-config.json");
+        configJson["server"]["serverPort"] = port;
+        WriteJsonToFile(currentDirFile, configJson);
+        TestContext.WriteLine($"Config file: {currentDirFile}");
+
+        TestContext.WriteLine($"LionWebServer.AdditionalServerParameters: {additionalServerParameters}");
         var result = new Process();
         result.StartInfo.FileName = "node";
         result.StartInfo.WorkingDirectory =
             $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-server/packages/server";
-        result.StartInfo.Arguments = $"""
-                                      run
-                                      --no-build
-                                      {port}
-                                      {additionalServerParameters}
-                                      """.ReplaceLineEndings(" ");
+        result.StartInfo.Arguments = "./dist/server.js --run --config ../../../lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
         result.StartInfo.UseShellExecute = false;
-        readyTrigger = WebSocketServer.ServerStartedMessage;
+        readyTrigger = "Server is running";
         errorTrigger = "Error";
         return result;
+    }
+    
+    // Method to write data to a JSON file
+    private static void WriteJsonToFile(string filePath, JsonNode node)
+    {
+        string json = JsonSerializer.Serialize(node, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(filePath, json, Encoding.ASCII);
+    }
+
+    // Method to read data from a JSON file
+    static JsonNode ReadJsonFromFile(string filePath)
+    {
+        string json = File.ReadAllText(filePath);
+        JsonNode node = JsonNode.Parse(json)!;
+        return node;
     }
 }
