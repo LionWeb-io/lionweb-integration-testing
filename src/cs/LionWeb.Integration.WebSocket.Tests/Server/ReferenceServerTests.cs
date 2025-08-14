@@ -27,7 +27,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1,
             Tasks.AddReference_0_1_to_Containment_0_1);
 
-        WaitForReceived(3);
+        WaitForSent(3);
 
         var expected = new LinkTestConcept("a")
         {
@@ -56,7 +56,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1,
             Tasks.AddReference_0_1_to_Containment_0_1, Tasks.DeleteReference_0_1);
 
-        WaitForReceived(4);
+        WaitForSent(4);
 
         var expected = new LinkTestConcept("a")
         {
@@ -84,7 +84,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
             Tasks.AddReference_0_1_to_Containment_0_1, Tasks.AddReference_0_1_to_Containment_1);
 
-        WaitForReceived(5);
+        WaitForSent(5);
 
         var expected = new LinkTestConcept("a")
         {

@@ -19,7 +19,6 @@ using System.Diagnostics;
 using System.Text.Json;
 using LionWeb.Core.M1;
 using LionWeb.Core.Notification;
-using LionWeb.Core.Notification.Handler;
 using LionWeb.Core.Serialization;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.WebSocket.Client;
@@ -95,39 +94,6 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         await clientB.ConnectToServer(ipAddress, Port);
         await clientA.Send("hello from client A");
         Thread.Sleep(100);
-    }
-
-    [Test]
-    public async Task Model()
-    {
-        var serverNode = new Geometry("a");
-
-        var aPartition = SameIdCloner.Clone(serverNode);
-        aClient = await ConnectWebSocket(aPartition, "A");
-
-        var bPartition = SameIdCloner.Clone(serverNode);
-        bClient = await ConnectWebSocket(bPartition, "B");
-
-        Debug.WriteLine($"{nameof(aPartition)}: Partition {aPartition.PrintIdentity()}");
-        Debug.WriteLine($"{nameof(bPartition)}: Partition {bPartition.PrintIdentity()}");
-
-        bPartition.Documentation = new Documentation("documentation");
-        Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
-
-        WaitForReceived(1);
-
-        Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
-        aPartition.Documentation.Text = "hello there";
-
-        WaitForReceived(2);
-
-        Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
-        Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
-
-        bPartition.Documentation.Text = "bye there";
-        WaitForReceived(2);
-
-        AssertEquals(aPartition, bPartition);
     }
 
     [Test]

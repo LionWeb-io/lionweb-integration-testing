@@ -26,7 +26,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         StartClient("A", serverPartition.GetType(),Tasks.SignOn, Tasks.AddStringValue_0_1);
 
-        WaitForReceived(2);  
+        WaitForSent(2);  
 
         var expected = new DataTypeTestConcept("a")
         {
@@ -53,7 +53,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         StartClient("A", serverPartition.GetType(),Tasks.SignOn, Tasks.AddStringValue_0_1, Tasks.SetStringValue_0_1);
 
-        WaitForReceived(3);  
+        WaitForSent(3);  
 
         var expected = new DataTypeTestConcept("a")
         {
@@ -80,7 +80,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         StartClient("A", serverPartition.GetType(),Tasks.SignOn, Tasks.AddStringValue_0_1, Tasks.DeleteStringValue_0_1);
 
-        WaitForReceived(3);  
+        WaitForSent(3);  
 
         var expected = new DataTypeTestConcept("a")
         {
