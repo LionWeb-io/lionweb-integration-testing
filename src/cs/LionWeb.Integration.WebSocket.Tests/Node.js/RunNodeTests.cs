@@ -33,7 +33,7 @@ public class RunNodeTests
             // (hence 3x ../)
             "node-program.js",
             "started",
-            "Exception"
+            "Error"
         );
     }
 
