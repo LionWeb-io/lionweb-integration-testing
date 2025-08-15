@@ -37,6 +37,22 @@ public class RunNodeTests
         );
     }
 
+    [Test]
+    public void RunNodeProgram_With_Error()
+    {
+        _externalProcessRunner.StartProcess(
+            "node",
+            $"{Directory.GetCurrentDirectory()}/../../../Node.js",
+            // cwd is assumed to be: <repo root>/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
+            // (hence 3x ../)
+            "node-program-with-error.js",
+            "started",
+            "Error"
+        );
+        
+        Assert.That(_externalProcessRunner.ShouldCancel);
+    }
+
     [TearDown]
     public void StopClients()
     {
