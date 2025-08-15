@@ -68,11 +68,11 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
         return lionWeb;
     }
     
-    protected void WaitForReceived(int delta = 1)
+    protected void WaitForReceived(int numberOfMessages = 1)
     {
-        long aCount = aClient.WaitCount += delta;
-        long bCount = bClient.WaitCount += delta;
-        while (!_externalProcessRunner.ShouldCancel && aClient.MessageCount < aCount || bClient.MessageCount < bCount)
+        long aMessageCount = aClient.WaitCount += numberOfMessages;
+        long bMessageCount = bClient.WaitCount += numberOfMessages;
+        while (!_externalProcessRunner.ShouldCancel && aClient.MessageCount < aMessageCount || bClient.MessageCount < bMessageCount)
         {
             Thread.Sleep(LionWebTestClient._sleepInterval);
         }
