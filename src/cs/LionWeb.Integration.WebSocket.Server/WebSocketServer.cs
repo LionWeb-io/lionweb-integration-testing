@@ -94,7 +94,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     public required List<Language> Languages { get; init; }
 
     private readonly DeltaSerializer _deltaSerializer = new();
-    private readonly EventToDeltaEventMapper _mapper;
+    private readonly NotificationToDeltaEventMapper _mapper;
 
     private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];
     private int _nextParticipationId = 0;
@@ -105,6 +105,10 @@ public class WebSocketServer : IDeltaRepositoryConnector
     {
         LionWebVersion = lionWebVersion;
         _mapper = new(new PartitionEventToDeltaEventMapper(new ExceptionParticipationIdProvider(), lionWebVersion));
+        _mapper = new(
+            new PartitionNotificationToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion),
+            new ForestNotificationToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion)
+        );
     }
 
     /// <inheritdoc />
