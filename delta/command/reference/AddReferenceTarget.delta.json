@@ -1,5 +1,5 @@
 {
-  "messageKind": "AddReferenceTarget",
+  "messageKind": "AddReferenceTargetCommand",
   "parent": "nodeId",
   "reference": {
     "language": "MyLang",

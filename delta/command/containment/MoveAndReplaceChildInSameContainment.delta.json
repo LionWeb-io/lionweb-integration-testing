@@ -1,5 +1,5 @@
 {
-  "messageKind": "MoveAndReplaceChildInSameContainment",
+  "messageKind": "MoveAndReplaceChildInSameContainmentCommand",
   "newIndex": 3,
   "replacedChild": "replacedNodeId",
   "movedChild": "otherNodeId",

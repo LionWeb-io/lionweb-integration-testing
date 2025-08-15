@@ -1,5 +1,5 @@
 {
-  "messageKind": "AddPartition",
+  "messageKind": "AddPartitionCommand",
   "newPartition": {
     "nodes": [
       {

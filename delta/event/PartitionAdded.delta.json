@@ -1,5 +1,5 @@
 {
-  "messageKind": "PartitionAdded",
+  "messageKind": "PartitionAddedEvent",
   "newPartition": {
     "nodes": [
       {

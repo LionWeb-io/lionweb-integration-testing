@@ -1,5 +1,5 @@
 {
-  "messageKind": "DeletePartition",
+  "messageKind": "DeletePartitionCommand",
   "deletedPartition": "nodeId",
   "commandId": "cmdId",
   "protocolMessages": [

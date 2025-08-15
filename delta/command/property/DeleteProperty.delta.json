@@ -1,5 +1,5 @@
 {
-  "messageKind": "DeleteProperty",
+  "messageKind": "DeletePropertyCommand",
   "node": "nodeId",
   "property": {
     "language": "MyLang",

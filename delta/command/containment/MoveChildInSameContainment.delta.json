@@ -1,5 +1,5 @@
 {
-  "messageKind": "MoveChildInSameContainment",
+  "messageKind": "MoveChildInSameContainmentCommand",
   "newIndex": 3,
   "movedChild": "otherNodeId",
   "commandId": "cmdId",

@@ -1,5 +1,5 @@
 {
-  "messageKind": "MoveChildFromOtherContainmentInSameParent",
+  "messageKind": "MoveChildFromOtherContainmentInSameParentCommand",
   "newContainment": {
     "language": "MyLang",
     "version": "4",

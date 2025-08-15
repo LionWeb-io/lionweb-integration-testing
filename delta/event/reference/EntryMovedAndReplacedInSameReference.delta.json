@@ -1,5 +1,5 @@
 {
-  "messageKind": "EntryMovedAndReplacedInSameReference",
+  "messageKind": "EntryMovedAndReplacedInSameReferenceEvent",
   "parent": "nodeId",
   "reference": {
     "language": "MyLang",
