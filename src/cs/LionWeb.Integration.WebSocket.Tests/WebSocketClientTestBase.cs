@@ -54,6 +54,21 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocket);
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn();
+
+        lionWeb.WaitForReceived(1);
         return lionWeb;
+    }
+    
+    protected void WaitForReceived(int delta = 1)
+    {
+        long aCount = aClient.WaitCount += delta;
+        long bCount = bClient.WaitCount += delta;
+        while (!_externalProcessRunner.ShouldCancel && aClient.MessageCount < aCount || bClient.MessageCount < bCount)
+        {
+            Thread.Sleep(LionWebTestClient._sleepInterval);
+        }
+
+        if (_externalProcessRunner.ShouldCancel)
+            Assert.Fail("repo failure");
     }
 }

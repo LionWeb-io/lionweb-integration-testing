@@ -38,6 +38,7 @@ public class PropertyClientTests(ServerProcesses serverProcess)
 
         bPartition = new("partition");
         bClient = ConnectWebSocket(bPartition, "B").Result;
+        WaitForReceived();
     }
 
     /// <inheritdoc />
@@ -48,7 +49,7 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     public void AddProperty()
     {
         aPartition.StringValue_0_1 = "new property";
-        bClient.WaitForReplies(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
     }
@@ -57,10 +58,10 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     public void ChangeProperty()
     {
         aPartition.StringValue_0_1 = "new property";
-        bClient.WaitForReplies(1);
+        WaitForReceived();
 
         bPartition.StringValue_0_1 = "changed property";
-        aClient.WaitForReplies(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
     }
@@ -70,12 +71,12 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     public void DeleteProperty()
     {
         aPartition.StringValue_0_1 = "new property";
-        bClient.WaitForReplies(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
         bPartition.StringValue_0_1 = null;
-        aClient.WaitForReplies(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
     }

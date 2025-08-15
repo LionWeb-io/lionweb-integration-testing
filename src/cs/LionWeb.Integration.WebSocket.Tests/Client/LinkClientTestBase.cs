@@ -38,6 +38,7 @@ public abstract class LinkClientTestBase(ServerProcesses serverProcess)
 
         bPartition = new("partition");
         bClient = ConnectWebSocket(bPartition, "B").Result;
+        WaitForReceived();
     }
 
     protected override string AdditionalServerParameters() =>
