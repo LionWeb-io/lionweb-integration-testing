@@ -16,7 +16,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
+using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
+using LionWeb.Protocol.Delta.Client;
+using LionWeb.Protocol.Delta.Repository;
 using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
@@ -28,7 +31,7 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
     protected WebSocketServer _webSocketServer;
     protected LionWebTestRepository lionWebServer;
 
-    protected WebSocketServerTestBase(params ClientProcesses[] clientProcesses) :base(null, null)
+    protected WebSocketServerTestBase(params ClientProcesses[] clientProcesses) : base(null, null)
     {
         _clientProcesses = clientProcesses;
         Debug.WriteLine(Directory.GetCurrentDirectory());
@@ -47,8 +50,8 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
 
     protected void StartClient(string name, Type partitionType, params Tasks[] tasks)
     {
-        var process = NextProcess(name, partitionType, tasks, out var trigger);
-        _externalProcessRunner.StartProcess(process, trigger);
+        var process = NextProcess(name, partitionType, tasks, out var readyTrigger, out var errorTrigger);
+        _externalProcessRunner.StartProcess(process, readyTrigger, errorTrigger);
 
         ClassicAssert.IsFalse(process.HasExited);
     }

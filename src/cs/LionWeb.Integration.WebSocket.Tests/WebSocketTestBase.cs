@@ -28,7 +28,7 @@ public abstract class WebSocketTestBase
     public const string IpAddress = "localhost";
     protected int Port => NextPort;
     private static int NextPort = 40000;
-    protected static readonly ExternalProcessRunner _externalProcessRunner = new ();
+    protected static readonly ExternalProcessRunner _externalProcessRunner = new();
 
     protected readonly LionWebVersions _lionWebVersion;
     protected readonly List<Language> _languages;
@@ -49,14 +49,14 @@ public abstract class WebSocketTestBase
     [SetUp]
     public void CleanOutLeftoverProcesses()
     {
-        _externalProcessRunner.StopAllProcesses();
+        _externalProcessRunner.Cleanup();
     }
 
     [TearDown]
     [OneTimeTearDown]
     public void StopProcesses()
     {
-        _externalProcessRunner.StopAllProcesses();
+        _externalProcessRunner.Cleanup();
     }
 
     protected void AssertEquals(INode? a, INode? b) =>

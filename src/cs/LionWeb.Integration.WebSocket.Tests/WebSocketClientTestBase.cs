@@ -47,9 +47,10 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     public void StartServer()
     {
         Console.WriteLine("StartServer()");
-        
-        var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var trigger);
-        _externalProcessRunner.StartProcess(process, trigger);
+
+        var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var readyTrigger,
+            out var errorTrigger);
+        _externalProcessRunner.StartProcess(process, readyTrigger, errorTrigger);
     }
 
     protected virtual string AdditionalServerParameters() =>
