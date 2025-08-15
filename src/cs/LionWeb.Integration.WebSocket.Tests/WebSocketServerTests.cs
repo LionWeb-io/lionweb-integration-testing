@@ -102,4 +102,29 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
             }
         }, serverPartition);
     }
+    
+    [Test]
+    public void Partition()
+    {
+        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
+        _webSocketServer.StartServer(IpAddress, Port);
+
+        var serverPartition = new Geometry("a");
+        // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
+        // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
+        var serverForest = new Forest();
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.Partition);
+        StartClient("B", typeof(LinkTestConcept), Tasks.SignOn);
+
+        WaitForSent(3);
+
+        AssertEquals(
+            (INode)new LinkTestConcept("partition"),
+            (INode)serverForest.Partitions.Except([serverPartition]).First()
+        );
+    }
 }
