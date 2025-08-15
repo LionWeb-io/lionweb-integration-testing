@@ -14,8 +14,8 @@
     "key": "MyOtherReference"
   },
   "oldIndex": 55,
-  "target": "targetNodeId",
-  "resolveInfo": "otherNode name",
+  "movedTarget": "targetNodeId",
+  "movedResolveInfo": "otherNode name",
   "originCommands": [
     {
       "participationId": "partId",
