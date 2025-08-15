@@ -17,6 +17,7 @@
 
 using System.Diagnostics;
 using LionWeb.Core;
+using LionWeb.Core.M1;
 using LionWeb.Core.M3;
 using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Protocol.Delta.Client;
@@ -30,7 +31,13 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     private readonly ServerProcesses _serverProcess;
     private Process _process;
 
-    protected WebSocketClientTestBase(ServerProcesses serverProcess, LionWebVersions? lionWebVersion = null, List<Language>? languages = null) : base(lionWebVersion, languages)
+    protected IForest aForest;
+    protected LionWebTestClient aClient;
+    protected IForest bForest;
+    protected LionWebTestClient bClient;
+
+    protected WebSocketClientTestBase(ServerProcesses serverProcess, LionWebVersions? lionWebVersion = null,
+        List<Language>? languages = null) : base(lionWebVersion, languages)
     {
         _serverProcess = serverProcess;
         Debug.WriteLine(Directory.GetCurrentDirectory());
@@ -40,20 +47,37 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     public void StartServer()
     {
         Console.WriteLine("StartServer()");
-        
-        var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var trigger);
-        _externalProcessRunner.StartProcess(process, trigger);
+
+        var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var readyTrigger,
+            out var errorTrigger);
+        _externalProcessRunner.StartProcess(process, readyTrigger, errorTrigger);
     }
 
     protected virtual string AdditionalServerParameters() =>
         "";
 
-    protected async Task<LionWebTestClient> ConnectWebSocket(IPartitionInstance partition, string name)
+    protected async Task<LionWebTestClient> ConnectWebSocket(IForest forest, string name)
     {
         var webSocket = new WebSocketClient(name);
-        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocket);
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket);
+        
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn();
+
+        lionWeb.WaitForReceived(1);
         return lionWeb;
+    }
+    
+    protected void WaitForReceived(int numberOfMessages = 1)
+    {
+        long aMessageCount = aClient.WaitCount += numberOfMessages;
+        long bMessageCount = bClient.WaitCount += numberOfMessages;
+        while (!_externalProcessRunner.ShouldCancel && aClient.MessageCount < aMessageCount || bClient.MessageCount < bMessageCount)
+        {
+            Thread.Sleep(LionWebTestClient._sleepInterval);
+        }
+
+        if (_externalProcessRunner.ShouldCancel)
+            Assert.Fail("repo failure");
     }
 }

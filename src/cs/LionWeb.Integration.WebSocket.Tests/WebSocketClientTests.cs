@@ -17,6 +17,7 @@
 
 using System.Diagnostics;
 using System.Text.Json;
+using LionWeb.Core.M1;
 using LionWeb.Core.Notification;
 using LionWeb.Core.Serialization;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
@@ -96,34 +97,37 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
     }
 
     [Test]
-    public async Task Model()
+    public async Task Partition()
     {
-        var serverNode = new Geometry("a");
+        aForest = new Forest();
+        aClient = await ConnectWebSocket(aForest, "A");
 
-        var aPartition = SameIdCloner.Clone(serverNode);
-        var aClient = await ConnectWebSocket(aPartition, "A");
+        bForest = new Forest();
+        bClient = await ConnectWebSocket(bForest, "B");
+        
+        var aPartition = new Geometry("a");
+        aForest.AddPartitions([aPartition]);
 
-        var bPartition = SameIdCloner.Clone(serverNode);
-        var bClient = await ConnectWebSocket(bPartition, "B");
-
-        Debug.WriteLine($"{nameof(aPartition)}: Partition {aPartition.PrintIdentity()}");
-        Debug.WriteLine($"{nameof(bPartition)}: Partition {bPartition.PrintIdentity()}");
+        WaitForReceived(1);
+        
+        var bPartition = bForest.Partitions.First() as Geometry;
+        Assert.That(bPartition, Is.Not.Null);
 
         bPartition.Documentation = new Documentation("documentation");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
-        aClient.WaitForReplies(1);
+        WaitForReceived(1);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         aPartition.Documentation.Text = "hello there";
 
-        bClient.WaitForReplies(1);
+        WaitForReceived(1);
 
         Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 
         bPartition.Documentation.Text = "bye there";
-        aClient.WaitForReplies(1);
+        WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
     }

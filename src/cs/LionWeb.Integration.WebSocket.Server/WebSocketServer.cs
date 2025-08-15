@@ -21,6 +21,7 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
+using LionWeb.Core.M1;
 using LionWeb.Core.M2;
 using LionWeb.Core.M3;
 using LionWeb.Core.Notification;
@@ -30,6 +31,8 @@ using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Message;
 using LionWeb.Protocol.Delta.Message.Event;
 using LionWeb.Protocol.Delta.Repository;
+using LionWeb.Protocol.Delta.Repository.Forest;
+using LionWeb.Protocol.Delta.Repository.Partition;
 
 namespace LionWeb.Integration.WebSocket.Server;
 
@@ -44,7 +47,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     {
         Trace.Listeners.Add(new ConsoleTraceListener());
 
-        Debug.WriteLine($"server args: {string.Join(", ", args)}");
+        Log($"server args: {string.Join(", ", args)}");
 
         var port = args.Length > 0
             ? int.Parse(args[0])
@@ -74,13 +77,15 @@ public class WebSocketServer : IDeltaRepositoryConnector
             ? (IPartitionInstance)optionalTestPartition.GetLanguage().GetFactory()
                 .CreateNode("partition", optionalTestPartition)
             : new Geometry("a");
+        var serverForest = new Forest();
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         Log($"Server partition: <{serverPartition.GetClassifier().Name}>{serverPartition.PrintIdentity()}");
 
         var lionWebServer = new LionWebRepository(lionWebVersion, webSocketServer.Languages, "server",
-            serverPartition,
+            serverForest,
             webSocketServer);
+
         Console.ReadLine();
         webSocketServer.Stop();
     }
@@ -89,7 +94,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     public required List<Language> Languages { get; init; }
 
     private readonly DeltaSerializer _deltaSerializer = new();
-    private readonly EventToDeltaEventMapper _mapper;
+    private readonly NotificationToDeltaEventMapper _mapper;
 
     private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];
     private int _nextParticipationId = 0;
@@ -99,7 +104,11 @@ public class WebSocketServer : IDeltaRepositoryConnector
     public WebSocketServer(LionWebVersions lionWebVersion)
     {
         LionWebVersion = lionWebVersion;
-        _mapper = new(new PartitionEventToDeltaEventMapper(new ExceptionParticipationIdProvider(), lionWebVersion));
+        var exceptionParticipationIdProvider = new ExceptionParticipationIdProvider();
+        _mapper = new(
+            new PartitionNotificationToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion),
+            new ForestNotificationToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion)
+        );
     }
 
     /// <inheritdoc />
@@ -154,9 +163,9 @@ public class WebSocketServer : IDeltaRepositoryConnector
 
     private static IDeltaContent UpdateSequenceNumber(IDeltaContent content, IClientInfo clientInfo)
     {
-        if (content is IDeltaEvent ev)
+        if (content is IDeltaEvent deltaEvent)
         {
-            ev.SequenceNumber = clientInfo.GetAndIncrementSequenceNumber();
+            deltaEvent.SequenceNumber = clientInfo.IncrementAndGetSequenceNumber();
         }
 
         return content;

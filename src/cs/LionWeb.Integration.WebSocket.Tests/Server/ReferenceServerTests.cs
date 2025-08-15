@@ -1,5 +1,6 @@
-﻿using System.Diagnostics;
+﻿using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 
@@ -18,13 +19,15 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddReference_0_1_to_Containment_0_1");
+        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1,
+            Tasks.AddReference_0_1_to_Containment_0_1);
 
-        lionWebServer.WaitForReceived(3);
+        WaitForSent(3);
 
         var expected = new LinkTestConcept("a")
         {
@@ -45,13 +48,15 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddReference_0_1_to_Containment_0_1", "DeleteReference_0_1");
+        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1,
+            Tasks.AddReference_0_1_to_Containment_0_1, Tasks.DeleteReference_0_1);
 
-        lionWebServer.WaitForReceived(4);
+        WaitForSent(4);
 
         var expected = new LinkTestConcept("a")
         {
@@ -71,14 +76,15 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType().Name, "SignOn", "AddContainment_0_1", "AddContainment_1", 
-            "AddReference_0_1_to_Containment_0_1", "AddReference_0_1_to_Containment_1");
+        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
+            Tasks.AddReference_0_1_to_Containment_0_1, Tasks.AddReference_0_1_to_Containment_1);
 
-        lionWebServer.WaitForReceived(5);
+        WaitForSent(5);
 
         var expected = new LinkTestConcept("a")
         {

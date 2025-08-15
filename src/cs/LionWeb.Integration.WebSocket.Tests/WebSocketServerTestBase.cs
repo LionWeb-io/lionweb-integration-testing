@@ -16,7 +16,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
+using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
+using LionWeb.Protocol.Delta.Client;
+using LionWeb.Protocol.Delta.Repository;
 using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
@@ -26,8 +29,9 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
     private readonly ClientProcesses[] _clientProcesses;
     private int nextClientProcess;
     protected WebSocketServer _webSocketServer;
+    protected LionWebTestRepository lionWebServer;
 
-    protected WebSocketServerTestBase(params ClientProcesses[] clientProcesses) :base(null, null)
+    protected WebSocketServerTestBase(params ClientProcesses[] clientProcesses) : base(null, null)
     {
         _clientProcesses = clientProcesses;
         Debug.WriteLine(Directory.GetCurrentDirectory());
@@ -39,13 +43,15 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
         nextClientProcess = 0;
     }
 
-    private Process NextProcess(string name, string partitionType, string[] tasks, out string trigger) =>
-        _clientProcesses[nextClientProcess++ % _clientProcesses.Length].Create(name, partitionType, Port, tasks, out trigger);
+    private Process NextProcess(string name, Type partitionType, Tasks[] tasks, out string readyTrigger,
+        out string errorTrigger) =>
+        _clientProcesses[nextClientProcess++ % _clientProcesses.Length]
+            .Create(name, partitionType.Name, Port, tasks.Select(t => Enum.GetName(t)), out readyTrigger, out errorTrigger);
 
-    protected void StartClient(string name, string partitionType, params string[] tasks)
+    protected void StartClient(string name, Type partitionType, params Tasks[] tasks)
     {
-        var process = NextProcess(name, partitionType, tasks, out var trigger);
-        _externalProcessRunner.StartProcess(process, trigger);
+        var process = NextProcess(name, partitionType, tasks, out var readyTrigger, out var errorTrigger);
+        _externalProcessRunner.StartProcess(process, readyTrigger, errorTrigger);
 
         ClassicAssert.IsFalse(process.HasExited);
     }
@@ -55,5 +61,17 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
     public void StopServer()
     {
         _webSocketServer.Stop();
+    }
+
+    protected void WaitForSent(int numberOfMessages = 1)
+    {
+        long messageCount = lionWebServer.WaitSentCount += numberOfMessages;
+        while (!_externalProcessRunner.ShouldCancel && lionWebServer.MessageSentCount < messageCount)
+        {
+            Thread.Sleep(LionWebTestClient._sleepInterval);
+        }
+
+        if (_externalProcessRunner.ShouldCancel)
+            Assert.Fail("client failure");
     }
 }

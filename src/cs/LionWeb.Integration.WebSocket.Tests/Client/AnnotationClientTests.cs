@@ -15,6 +15,7 @@
 // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // SPDX-License-Identifier: Apache-2.0
 
+using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
@@ -25,7 +26,7 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
     public void AddAnnotation()
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
-        bClient.WaitForReplies(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
     }
@@ -34,12 +35,12 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
     public void DeleteAnnotation()
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
-        bClient.WaitForReplies(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
         bPartition.RemoveAnnotations(bPartition.GetAnnotations());
-        aClient.WaitForReplies(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
     }
@@ -48,15 +49,15 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
     public void ReplaceAnnotation()
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation")]);
-        bClient.WaitForReplies(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
-        Assert.Fail("no way to replace annotation");
-//        bPartition.annContainment_0_1 = new LinkTestConcept("replacedChild") { Name = "replaced" };
-        aClient.WaitForReplies(1);
+        bPartition.GetAnnotations().First().ReplaceWith(new TestAnnotation("replacedAnnotation"));
+        WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.GetAnnotations().First().GetId(), Is.EqualTo("replacedAnnotation"));
     }
 
     [Test]
@@ -64,12 +65,12 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
     {
         aPartition.Containment_0_1 = new LinkTestConcept("subHost");
         aPartition.Containment_0_1.AddAnnotations([new TestAnnotation("annotation")]);
-        bClient.WaitForReplies(2);
+        WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
 
         bPartition.AddAnnotations(bPartition.Containment_0_1.GetAnnotations());
-        aClient.WaitForReplies(1);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
     }
@@ -79,12 +80,12 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
 
     {
         aPartition.AddAnnotations([new TestAnnotation("annotation0"), new TestAnnotation("annotation1")]);
-        bClient.WaitForReplies(2);
+        WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.InsertAnnotations(0, [bPartition.GetAnnotations()[^1]]);
-        aClient.WaitForReplies(1);
+        bPartition.InsertAnnotations(0, [bPartition.GetAnnotations().Last()]);
+        WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
     }

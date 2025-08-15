@@ -25,6 +25,7 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public class ExternalProcessRunner
 {
     private readonly List<Process> _processes = [];
+    public bool ShouldCancel { get; private set; }
 
     /// <summary>
     /// Starts a process (that can be stopped later using <see cref="StopAllProcesses"/>)
@@ -34,8 +35,10 @@ public class ExternalProcessRunner
     /// <param name="executable"></param>
     /// <param name="workingDirectory"></param>
     /// <param name="arguments"></param>
-    /// <param name="trigger"></param>
-    public void StartProcess(string executable, string workingDirectory, string arguments, string trigger)
+    /// <param name="readyTrigger"></param>
+    /// <param name="errorTrigger"></param>
+    public void StartProcess(string executable, string workingDirectory, string arguments, string readyTrigger,
+        string errorTrigger)
     {
         var process = new Process();
 
@@ -44,10 +47,10 @@ public class ExternalProcessRunner
         process.StartInfo.Arguments = arguments.ReplaceLineEndings(" ");
         process.StartInfo.UseShellExecute = false;
 
-        StartProcess(process, trigger);
+        StartProcess(process, readyTrigger, errorTrigger);
     }
 
-    public void StartProcess(Process process, string trigger)
+    public void StartProcess(Process process, string readyTrigger, string errorTrigger)
     {
         process.StartInfo.RedirectStandardInput = true;
         process.StartInfo.RedirectStandardOutput = true;
@@ -57,14 +60,21 @@ public class ExternalProcessRunner
 
         process.OutputDataReceived += (_, args) =>
         {
-            if (args.Data?.Contains(trigger) ?? false)
+            if (args.Data?.Contains(readyTrigger) ?? false)
             {
                 processStarted = true;
             }
 
             Console.WriteLine(args.Data);
         };
-        process.ErrorDataReceived += (_, args) => Console.Error.WriteLine(args.Data);
+        
+        process.ErrorDataReceived += (_, args) =>
+        {
+            Console.Error.WriteLine(args.Data);
+
+            if (args.Data?.Contains(errorTrigger) ?? false)
+                ShouldCancel = true;
+        };
 
         Assert.That(process.Start());
         _processes.Add(process);
@@ -80,10 +90,16 @@ public class ExternalProcessRunner
         Assert.That(!process.HasExited);
     }
 
+    public void Cleanup()
+    {
+        ShouldCancel = false;
+        StopAllProcesses();
+    }
+
     /// <summary>
     /// Stops (/kills) all external processes that have been started using <see cref="StartProcess"/>.
     /// </summary>
-    public void StopAllProcesses()
+    private void StopAllProcesses()
     {
         foreach (var process in _processes)
         {

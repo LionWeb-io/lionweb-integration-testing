@@ -29,14 +29,16 @@ public enum ServerProcesses
 public static class ServerProcessesExtensions
 {
     public static Process Create(this ServerProcesses process, int port, string additionalServerParameters,
-        out string trigger) => process switch
+        out string readyTrigger, out string errorTrigger) => process switch
     {
-        ServerProcesses.CSharp => CSharpServer(port, additionalServerParameters, out trigger),
-        ServerProcesses.OtherCSharp => CSharpServer(port, additionalServerParameters, out trigger),
+        ServerProcesses.CSharp => CSharpServer(port, additionalServerParameters, out readyTrigger, out errorTrigger),
+        ServerProcesses.OtherCSharp => CSharpServer(port, additionalServerParameters, out readyTrigger,
+            out errorTrigger),
         _ => throw new ArgumentOutOfRangeException(nameof(process), process, null)
     };
 
-    private static Process CSharpServer(int port, string additionalServerParameters, out string trigger)
+    private static Process CSharpServer(int port, string additionalServerParameters, out string readyTrigger,
+        out string errorTrigger)
     {
         TestContext.WriteLine($"AdditionalServerParameters: {additionalServerParameters}");
         var result = new Process();
@@ -50,7 +52,8 @@ public static class ServerProcessesExtensions
                                       {additionalServerParameters}
                                       """.ReplaceLineEndings(" ");
         result.StartInfo.UseShellExecute = false;
-        trigger = WebSocketServer.ServerStartedMessage;
+        readyTrigger = WebSocketServer.ServerStartedMessage;
+        errorTrigger = "Error";
         return result;
     }
 }
