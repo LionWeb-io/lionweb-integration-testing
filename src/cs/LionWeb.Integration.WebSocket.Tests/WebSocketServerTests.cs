@@ -44,7 +44,9 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        lionWebServer.WaitForReceived(1);
+        StartClient("A", serverPartition.GetType(),Tasks.SignOn);
+
+        WaitForSent(1);
     }
 
     [Test]
@@ -60,7 +62,10 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        lionWebServer.WaitForReceived(2);
+        StartClient("A", serverPartition.GetType(),Tasks.SignOn);
+        StartClient("B", serverPartition.GetType(), Tasks.SignOn);
+
+        WaitForSent(2);
     }
 
 
@@ -86,7 +91,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         StartClient("A", serverPartition.GetType(), Tasks.SignOn,Tasks.Wait,Tasks.SetDocsText);
         StartClient("B", serverPartition.GetType(), Tasks.SignOn,Tasks.AddDocs);
 
-        lionWebServer.WaitForReceived(4);
+        WaitForSent(4);
 
         AssertEquals(new Geometry("g")
         {

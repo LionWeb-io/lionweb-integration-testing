@@ -1,5 +1,6 @@
 ﻿using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 using NUnit.Framework.Legacy;
@@ -26,7 +27,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1);
 
-        lionWebServer.WaitForReceived(2);
+        WaitForSent(2);
 
         var expected = new LinkTestConcept("a")
         {
@@ -53,7 +54,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.DeleteContainment_0_1);
 
-        lionWebServer.WaitForReceived(3);
+        WaitForSent(3);
 
         var expected = new LinkTestConcept("a")
         {
@@ -81,7 +82,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.ReplaceContainment_0_1);
 
-        lionWebServer.WaitForReceived(3);
+        WaitForSent(3);
 
         var expected = new LinkTestConcept("a")
         {
@@ -109,7 +110,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
             Tasks.MoveChildFromOtherContainment_Single);
 
-        lionWebServer.WaitForReceived(4);
+        WaitForSent(4);
 
         var expected = new LinkTestConcept("a")
         {
@@ -138,7 +139,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n,
             Tasks.MoveChildFromOtherContainment_Multiple);
 
-        lionWebServer.WaitForReceived(5);
+        WaitForSent(5);
 
         var expected = new LinkTestConcept("a")
         {
@@ -167,7 +168,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
             Tasks.AddContainment_1, Tasks.AddContainment_1_Containment_0_1, Tasks.MoveAndReplaceChildFromOtherContainment_Single);
 
-        lionWebServer.WaitForReceived(6);
+        WaitForSent(6);
 
         var expected = new LinkTestConcept("a")
         {
@@ -199,7 +200,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromOtherContainment_Multiple);
 
-        lionWebServer.WaitForReceived(5);
+        WaitForSent(5);
 
         var expected = new LinkTestConcept("a")
         {
@@ -227,7 +228,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.MoveChildFromOtherContainmentInSameParent_Single);
 
-        lionWebServer.WaitForReceived(3);
+        WaitForSent(3);
 
         var expected = new LinkTestConcept("a")
         {
@@ -256,7 +257,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
             Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Single);
 
-        lionWebServer.WaitForReceived(4);
+        WaitForSent(4);
 
         var expected = new LinkTestConcept("a")
         {
@@ -284,7 +285,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_n, Tasks.AddContainment_1_n,
             Tasks.MoveChildFromOtherContainmentInSameParent_Multiple);
 
-        lionWebServer.WaitForReceived(6);
+        WaitForSent(6);
 
         var expected = new LinkTestConcept("a")
         {
@@ -313,7 +314,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_n,
             Tasks.MoveChildInSameContainment);
 
-        lionWebServer.WaitForReceived(4);
+        WaitForSent(4);
 
         var expected = new LinkTestConcept("a")
         {
