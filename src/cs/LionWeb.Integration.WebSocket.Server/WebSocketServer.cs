@@ -21,6 +21,7 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Text;
 using LionWeb.Core;
+using LionWeb.Core.M1;
 using LionWeb.Core.M2;
 using LionWeb.Core.M3;
 using LionWeb.Core.Notification;
@@ -30,6 +31,8 @@ using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Message;
 using LionWeb.Protocol.Delta.Message.Event;
 using LionWeb.Protocol.Delta.Repository;
+using LionWeb.Protocol.Delta.Repository.Forest;
+using LionWeb.Protocol.Delta.Repository.Partition;
 
 namespace LionWeb.Integration.WebSocket.Server;
 
@@ -74,13 +77,15 @@ public class WebSocketServer : IDeltaRepositoryConnector
             ? (IPartitionInstance)optionalTestPartition.GetLanguage().GetFactory()
                 .CreateNode("partition", optionalTestPartition)
             : new Geometry("a");
+        var serverForest = new Forest();
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         Log($"Server partition: <{serverPartition.GetClassifier().Name}>{serverPartition.PrintIdentity()}");
 
         var lionWebServer = new LionWebRepository(lionWebVersion, webSocketServer.Languages, "server",
-            serverPartition,
+            serverForest,
             webSocketServer);
+
         Console.ReadLine();
         webSocketServer.Stop();
     }

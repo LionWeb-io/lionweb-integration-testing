@@ -15,6 +15,10 @@
 // SPDX-FileCopyrightText: 2025 LionWeb Project
 // SPDX-License-Identifier: Apache-2.0
 
+using System.Diagnostics;
+using LionWeb.Core;
+using LionWeb.Core.M1;
+using LionWeb.Core.Notification;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Server;
@@ -33,12 +37,12 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new LinkTestConcept("a");
+        var serverPartition = new Geometry("a");
+        var serverForest = new Forest();
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+        serverForest.AddPartitions([serverPartition]);
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
-
-        StartClient("A", serverPartition.GetType().Name,"SignOn");
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         lionWebServer.WaitForReceived(1);
     }
@@ -49,13 +53,12 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new LinkTestConcept("a");
+        var serverPartition = new Geometry("a");
+        var serverForest = new Forest();
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
+        serverForest.AddPartitions([serverPartition]);
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
-
-        StartClient("A", serverPartition.GetType().Name,"SignOn");
-        StartClient("B", serverPartition.GetType().Name, "SignOn");
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         lionWebServer.WaitForReceived(2);
     }
@@ -74,9 +77,11 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         var serverPartition = new Geometry("a");
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
+        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn,Tasks.Wait,Tasks.SetDocsText);
         StartClient("B", serverPartition.GetType(), Tasks.SignOn,Tasks.AddDocs);

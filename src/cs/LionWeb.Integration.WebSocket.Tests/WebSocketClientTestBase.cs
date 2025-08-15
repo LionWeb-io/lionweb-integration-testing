@@ -17,6 +17,7 @@
 
 using System.Diagnostics;
 using LionWeb.Core;
+using LionWeb.Core.M1;
 using LionWeb.Core.M3;
 using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Protocol.Delta.Client;
@@ -30,7 +31,13 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     private readonly ServerProcesses _serverProcess;
     private Process _process;
 
-    protected WebSocketClientTestBase(ServerProcesses serverProcess, LionWebVersions? lionWebVersion = null, List<Language>? languages = null) : base(lionWebVersion, languages)
+    protected IForest aForest;
+    protected LionWebTestClient aClient;
+    protected IForest bForest;
+    protected LionWebTestClient bClient;
+
+    protected WebSocketClientTestBase(ServerProcesses serverProcess, LionWebVersions? lionWebVersion = null,
+        List<Language>? languages = null) : base(lionWebVersion, languages)
     {
         _serverProcess = serverProcess;
         Debug.WriteLine(Directory.GetCurrentDirectory());
@@ -48,10 +55,11 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     protected virtual string AdditionalServerParameters() =>
         "";
 
-    protected async Task<LionWebTestClient> ConnectWebSocket(IPartitionInstance partition, string name)
+    protected async Task<LionWebTestClient> ConnectWebSocket(IForest forest, string name)
     {
         var webSocket = new WebSocketClient(name);
-        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocket);
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket);
+        
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn();
 

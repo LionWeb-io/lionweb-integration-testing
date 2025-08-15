@@ -26,6 +26,8 @@ using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Client;
+using LionWeb.Protocol.Delta.Client.Forest;
+using LionWeb.Protocol.Delta.Client.Partition;
 using LionWeb.Protocol.Delta.Message;
 
 namespace LionWeb.Integration.WebSocket.Client;
@@ -57,6 +59,9 @@ public class WebSocketClient(string name) : IDeltaClientConnector
         var webSocketClient = new WebSocketClient(name);
         var partition = webSocketClient.GetPartition(partitionType);
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocketClient);
+        var forest = new Forest();
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocketClient);
+
         if (!tasks.Contains(Tasks.Partition))
             forest.AddPartitions([partition]);
 

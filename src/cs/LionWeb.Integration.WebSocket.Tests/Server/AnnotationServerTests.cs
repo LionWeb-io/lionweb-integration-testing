@@ -1,4 +1,5 @@
-﻿using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+﻿using LionWeb.Core.M1;
+using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 
@@ -17,9 +18,11 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+        lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddAnnotation);
 
@@ -41,9 +44,11 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+        lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddAnnotation, Tasks.DeleteAnnotation);
 
@@ -63,9 +68,11 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+        lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1,
             Tasks.AddAnnotation_to_Containment_0_1,
@@ -92,9 +99,11 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         _webSocketServer.StartServer(IpAddress, Port);
 
         var serverPartition = new LinkTestConcept("a");
+        var serverForest = new Forest();
+        serverForest.AddPartitions([serverPartition]);
 
-        var lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverPartition, _webSocketServer);
+        lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
         StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddAnnotations, Tasks.MoveAnnotationInSameParent);
 

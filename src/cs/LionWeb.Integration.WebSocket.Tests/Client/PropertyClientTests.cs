@@ -16,8 +16,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using LionWeb.Core;
+using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
-using LionWeb.Protocol.Delta.Client;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
@@ -25,20 +25,22 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     : WebSocketClientTestBase(serverProcess, LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
 {
     private DataTypeTestConcept aPartition;
-    private LionWebTestClient aClient;
 
     private DataTypeTestConcept bPartition;
-    private LionWebTestClient bClient;
 
     [SetUp]
     public void ConnectToServer()
     {
-        aPartition = new("partition");
-        aClient = ConnectWebSocket(aPartition, "A").Result;
+        aForest = new Forest();
+        aClient = ConnectWebSocket(aForest, "A").Result;
 
-        bPartition = new("partition");
-        bClient = ConnectWebSocket(bPartition, "B").Result;
+        bForest = new Forest();
+        bClient = ConnectWebSocket(bForest, "B").Result;
+
+        aPartition = new("partition");
+        aForest.AddPartitions([aPartition]);
         WaitForReceived();
+        bPartition = (DataTypeTestConcept)aForest.Partitions.First();
     }
 
     /// <inheritdoc />

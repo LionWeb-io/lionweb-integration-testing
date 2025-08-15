@@ -17,6 +17,7 @@
 
 using System.Diagnostics;
 using System.Text.Json;
+using LionWeb.Core.M1;
 using LionWeb.Core.Notification;
 using LionWeb.Core.Serialization;
 using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
@@ -96,12 +97,16 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
     }
 
     [Test]
-    public async Task Model()
+    public async Task Partition()
     {
-        var serverNode = new Geometry("a");
+        aForest = new Forest();
+        aClient = await ConnectWebSocket(aForest, "A");
 
-        var aPartition = SameIdCloner.Clone(serverNode);
-        var aClient = await ConnectWebSocket(aPartition, "A");
+        bForest = new Forest();
+        bClient = await ConnectWebSocket(bForest, "B");
+        
+        var aPartition = new Geometry("a");
+        aForest.AddPartitions([aPartition]);
 
         WaitForReceived(1);
         

@@ -26,6 +26,7 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
     private readonly ClientProcesses[] _clientProcesses;
     private int nextClientProcess;
     protected WebSocketServer _webSocketServer;
+    protected LionWebTestRepository lionWebServer;
 
     protected WebSocketServerTestBase(params ClientProcesses[] clientProcesses) :base(null, null)
     {
