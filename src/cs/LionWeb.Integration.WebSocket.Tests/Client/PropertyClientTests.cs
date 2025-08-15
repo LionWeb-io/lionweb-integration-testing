@@ -67,9 +67,8 @@ public class PropertyClientTests(ServerProcesses serverProcess)
 
         AssertEquals(aPartition, bPartition);
     }
-    
-    [Test]
 
+    [Test]
     public void DeleteProperty()
     {
         aPartition.StringValue_0_1 = "new property";
