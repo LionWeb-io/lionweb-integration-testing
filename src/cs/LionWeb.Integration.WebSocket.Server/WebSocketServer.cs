@@ -31,8 +31,6 @@ using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Message;
 using LionWeb.Protocol.Delta.Message.Event;
 using LionWeb.Protocol.Delta.Repository;
-using LionWeb.Protocol.Delta.Repository.Forest;
-using LionWeb.Protocol.Delta.Repository.Partition;
 
 namespace LionWeb.Integration.WebSocket.Server;
 
@@ -104,11 +102,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     public WebSocketServer(LionWebVersions lionWebVersion)
     {
         LionWebVersion = lionWebVersion;
-        var exceptionParticipationIdProvider = new ExceptionParticipationIdProvider();
-        _mapper = new(
-            new PartitionNotificationToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion),
-            new ForestNotificationToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion)
-        );
+        _mapper = new(new ExceptionParticipationIdProvider(), lionWebVersion);
     }
 
     /// <inheritdoc />

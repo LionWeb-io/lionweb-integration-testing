@@ -26,8 +26,6 @@ using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Client;
-using LionWeb.Protocol.Delta.Client.Forest;
-using LionWeb.Protocol.Delta.Client.Partition;
 using LionWeb.Protocol.Delta.Message;
 
 namespace LionWeb.Integration.WebSocket.Client;
@@ -228,11 +226,7 @@ public class WebSocketClient : IDeltaClientConnector
     public WebSocketClient(string name)
     {
         _name = name;
-        var commandIdProvider = new CommandIdProvider();
-        _mapper = new(
-            new PartitionNotificationToDeltaCommandMapper(commandIdProvider, _lionWebVersion),
-            new ForestNotificationToDeltaCommandMapper(commandIdProvider, _lionWebVersion)
-        );
+        _mapper = new(new CommandIdProvider(), _lionWebVersion);
     }
 
     private async Task SignOn(LionWebTestClient lionWeb) =>
