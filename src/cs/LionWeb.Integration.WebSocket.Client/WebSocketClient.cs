@@ -32,7 +32,7 @@ using LionWeb.Protocol.Delta.Message;
 
 namespace LionWeb.Integration.WebSocket.Client;
 
-public class WebSocketClient(string name) : IDeltaClientConnector
+public class WebSocketClient : IDeltaClientConnector
 {
     public const int BUFFER_SIZE = 0x10000;
 
@@ -57,8 +57,13 @@ public class WebSocketClient(string name) : IDeltaClientConnector
         Log($"{name}: tasks: {string.Join(",", tasks)}");
 
         var webSocketClient = new WebSocketClient(name);
-        var partition = webSocketClient.GetPartition(partitionType);
-        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", partition, webSocketClient);
+        IPartitionInstance partition = partitionType switch
+        {
+            nameof(Geometry) => new Geometry("a"),
+            nameof(LinkTestConcept) => new LinkTestConcept("a"),
+            nameof(DataTypeTestConcept) => new  DataTypeTestConcept("a"),
+            _ => new Geometry("a")
+        };
         var forest = new Forest();
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocketClient);
 
@@ -210,39 +215,41 @@ public class WebSocketClient(string name) : IDeltaClientConnector
                     ((LinkTestConcept)partition).InsertContainment_1_n(1,[((LinkTestConcept)partition).Containment_0_n[^1]]);
                     lionWeb.WaitForReceived(1);
                     break;
+                default:
+                    throw new ArgumentException($"Can't execute task {task}");
             }
         }
-        
+
         Console.ReadLine();
     }
 
-    private IPartitionInstance GetPartition(string partitionType)
-    {
-        return partitionType switch
-        {
-            "LinkTestConcept" => new LinkTestConcept("a"),
-            "DataTypeTestConcept" => new DataTypeTestConcept("a"),
-            "Geometry" => new Geometry("a"),
-            _ =>  throw new ArgumentException("Invalid partition type specified.")
-        };
-    }
-    private readonly EventToDeltaCommandMapper _mapper =
-        new(new PartitionEventToDeltaCommandMapper(new CommandIdProvider(), _lionWebVersion));
+    private readonly NotificationToDeltaCommandMapper _mapper;
 
-    private async Task SignOn(LionWebTestClient lionWeb) => 
+    public WebSocketClient(string name)
+    {
+        _name = name;
+        var commandIdProvider = new CommandIdProvider();
+        _mapper = new(
+            new PartitionNotificationToDeltaCommandMapper(commandIdProvider, _lionWebVersion),
+            new ForestNotificationToDeltaCommandMapper(commandIdProvider, _lionWebVersion)
+        );
+    }
+
+    private async Task SignOn(LionWebTestClient lionWeb) =>
         await lionWeb.SignOn();
 
 
-    private async Task SignOff(LionWebTestClient lionWeb) => 
+    private async Task SignOff(LionWebTestClient lionWeb) =>
         await lionWeb.SignOff();
 
     private int nextQueryId = 0;
 
     private string QueryId() =>
-        $"{name}-{nextQueryId++}";
+        $"{_name}-{nextQueryId++}";
 
     private readonly DeltaSerializer _deltaSerializer = new();
     private readonly ClientWebSocket _clientWebSocket = new ClientWebSocket();
+    private readonly string _name;
 
     /// <inheritdoc />
     public event EventHandler<IDeltaContent>? ReceiveFromRepository;
@@ -254,7 +261,7 @@ public class WebSocketClient(string name) : IDeltaClientConnector
     {
         await _clientWebSocket.ConnectAsync(new Uri(serverUri), CancellationToken.None);
 
-        Log($"{name}: {ClientStartedMessage} Connected to the server: {serverUri}");
+        Log($"{_name}: {ClientStartedMessage} Connected to the server: {serverUri}");
 
         Task.Run(async () =>
         {
