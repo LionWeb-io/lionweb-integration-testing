@@ -67,7 +67,7 @@ public class WebSocketClient : IDeltaClientConnector
         var forest = new Forest();
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocketClient);
 
-        if (!tasks.Contains(Tasks.Partition))
+        if (!tasks.Contains(Tasks.AddPartition))
             forest.AddPartitions([partition]);
 
         await webSocketClient.ConnectToServer(serverIp, serverPort);
@@ -207,7 +207,7 @@ public class WebSocketClient : IDeltaClientConnector
                     ((LinkTestConcept)partition).Containment_1 = ((LinkTestConcept)partition).Containment_0_1!;
                     lionWeb.WaitForReceived(1);
                     break;
-                case Tasks.Partition:
+                case Tasks.AddPartition:
                     forest.AddPartitions([new LinkTestConcept("partition")]);
                     lionWeb.WaitForReceived(1);
                     break;

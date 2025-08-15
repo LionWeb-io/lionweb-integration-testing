@@ -117,7 +117,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.Partition);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition);
         StartClient("B", typeof(LinkTestConcept), Tasks.SignOn);
 
         WaitForSent(3);
