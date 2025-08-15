@@ -163,9 +163,9 @@ public class WebSocketServer : IDeltaRepositoryConnector
 
     private static IDeltaContent UpdateSequenceNumber(IDeltaContent content, IClientInfo clientInfo)
     {
-        if (content is IDeltaEvent ev)
+        if (content is IDeltaEvent deltaEvent)
         {
-            ev.SequenceNumber = clientInfo.IncrementAndGetSequenceNumber();
+            deltaEvent.SequenceNumber = clientInfo.IncrementAndGetSequenceNumber();
         }
 
         return content;

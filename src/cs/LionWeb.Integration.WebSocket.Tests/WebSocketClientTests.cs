@@ -111,9 +111,8 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         WaitForReceived(1);
         
         var bPartition = bForest.Partitions.First() as Geometry;
-        
         Assert.That(bPartition, Is.Not.Null);
-        
+
         bPartition.Documentation = new Documentation("documentation");
         Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
 

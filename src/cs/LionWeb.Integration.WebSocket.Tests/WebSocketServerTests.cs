@@ -81,10 +81,9 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         // We miss the following concept in TestLanguage: a concept with a containment which has a property 
         
         var serverPartition = new Geometry("a");
-        // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
-        // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         var serverForest = new Forest();
         serverForest.AddPartitions([serverPartition]);
+        
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
