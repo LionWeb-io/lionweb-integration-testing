@@ -47,7 +47,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     {
         Trace.Listeners.Add(new ConsoleTraceListener());
 
-        Debug.WriteLine($"server args: {string.Join(", ", args)}");
+        Log($"server args: {string.Join(", ", args)}");
 
         var port = args.Length > 0
             ? int.Parse(args[0])
@@ -104,7 +104,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     public WebSocketServer(LionWebVersions lionWebVersion)
     {
         LionWebVersion = lionWebVersion;
-        _mapper = new(new PartitionEventToDeltaEventMapper(new ExceptionParticipationIdProvider(), lionWebVersion));
+        var exceptionParticipationIdProvider = new ExceptionParticipationIdProvider();
         _mapper = new(
             new PartitionNotificationToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion),
             new ForestNotificationToDeltaEventMapper(exceptionParticipationIdProvider, lionWebVersion)
