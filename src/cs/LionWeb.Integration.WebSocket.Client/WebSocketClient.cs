@@ -32,7 +32,7 @@ namespace LionWeb.Integration.WebSocket.Client;
 
 public class WebSocketClient : IDeltaClientConnector
 {
-    public const int BUFFER_SIZE = 0x10000;
+    private const int BufferSize = 0x10000;
 
     public const string ClientStartedMessage = "Client started.";
 
@@ -236,11 +236,6 @@ public class WebSocketClient : IDeltaClientConnector
     private async Task SignOff(LionWebTestClient lionWeb) =>
         await lionWeb.SignOff();
 
-    private int nextQueryId = 0;
-
-    private string QueryId() =>
-        $"{_name}-{nextQueryId++}";
-
     private readonly DeltaSerializer _deltaSerializer = new();
     private readonly ClientWebSocket _clientWebSocket = new ClientWebSocket();
     private readonly string _name;
@@ -260,7 +255,7 @@ public class WebSocketClient : IDeltaClientConnector
         Task.Run(async () =>
         {
             // Receive messages from the server
-            byte[] receiveBuffer = new byte[BUFFER_SIZE];
+            byte[] receiveBuffer = new byte[BufferSize];
             while (_clientWebSocket.State == WebSocketState.Open)
             {
                 WebSocketReceiveResult result =

@@ -36,7 +36,7 @@ namespace LionWeb.Integration.WebSocket.Server;
 
 public class WebSocketServer : IDeltaRepositoryConnector
 {
-    private const int BUFFER_SIZE = 0x10000;
+    private const int BufferSize = 0x10000;
     public const string ServerStartedMessage = "Server started.";
 
     private static string IpAddress { get; set; } = "localhost";
@@ -106,7 +106,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     }
 
     /// <inheritdoc />
-    public event EventHandler<IMessageContext<IDeltaContent>> ReceiveFromClient;
+    public event EventHandler<IMessageContext<IDeltaContent>>? ReceiveFromClient;
 
     public void StartServer(string ipAddress, int port)
     {
@@ -196,7 +196,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
         Log($"WebSocket connection accepted: {context.Request.RemoteEndPoint}");
 
         // Handle incoming messages
-        byte[] buffer = new byte[BUFFER_SIZE];
+        byte[] buffer = new byte[BufferSize];
         while (socket.State == WebSocketState.Open)
         {
             WebSocketReceiveResult result =
