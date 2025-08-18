@@ -50,12 +50,12 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
         Console.WriteLine("StartServer()");
         if (_serverProcess == ServerProcesses.LionWebServer)
         {
-            var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var trigger);
+            var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var trigger, out var errorTrigger);
             _externalProcessRunner.StartProcess(
                 "node",
                 process.StartInfo.WorkingDirectory,
                 process.StartInfo.Arguments,
-                "Server is running"
+                "Server is running",
                 "ERROR"
             );
         }
