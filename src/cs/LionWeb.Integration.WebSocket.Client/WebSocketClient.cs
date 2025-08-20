@@ -26,15 +26,13 @@ using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Client;
-using LionWeb.Protocol.Delta.Client.Forest;
-using LionWeb.Protocol.Delta.Client.Partition;
 using LionWeb.Protocol.Delta.Message;
 
 namespace LionWeb.Integration.WebSocket.Client;
 
 public class WebSocketClient : IDeltaClientConnector
 {
-    public const int BUFFER_SIZE = 0x10000;
+    private const int BufferSize = 0x10000;
 
     public const string ClientStartedMessage = "Client started.";
 
@@ -228,11 +226,7 @@ public class WebSocketClient : IDeltaClientConnector
     public WebSocketClient(string name)
     {
         _name = name;
-        var commandIdProvider = new CommandIdProvider();
-        _mapper = new(
-            new PartitionNotificationToDeltaCommandMapper(commandIdProvider, _lionWebVersion),
-            new ForestNotificationToDeltaCommandMapper(commandIdProvider, _lionWebVersion)
-        );
+        _mapper = new(new CommandIdProvider(), _lionWebVersion);
     }
 
     private async Task SignOn(LionWebTestClient lionWeb) =>
@@ -241,11 +235,6 @@ public class WebSocketClient : IDeltaClientConnector
 
     private async Task SignOff(LionWebTestClient lionWeb) =>
         await lionWeb.SignOff();
-
-    private int nextQueryId = 0;
-
-    private string QueryId() =>
-        $"{_name}-{nextQueryId++}";
 
     private readonly DeltaSerializer _deltaSerializer = new();
     private readonly ClientWebSocket _clientWebSocket = new ClientWebSocket();
@@ -266,7 +255,7 @@ public class WebSocketClient : IDeltaClientConnector
         Task.Run(async () =>
         {
             // Receive messages from the server
-            byte[] receiveBuffer = new byte[BUFFER_SIZE];
+            byte[] receiveBuffer = new byte[BufferSize];
             while (_clientWebSocket.State == WebSocketState.Open)
             {
                 WebSocketReceiveResult result =

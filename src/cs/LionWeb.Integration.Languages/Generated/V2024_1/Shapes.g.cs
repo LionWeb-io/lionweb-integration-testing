@@ -2,6 +2,9 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable SuggestVarOrType_SimpleTypes
 // ReSharper disable SuggestVarOrType_Elsewhere
+
+using LionWeb.Core.Notification.Handler;
+
 #pragma warning disable 1591
 #nullable enable
 namespace LionWeb.Integration.Languages.Generated.V2024_1.Shapes.M2;
