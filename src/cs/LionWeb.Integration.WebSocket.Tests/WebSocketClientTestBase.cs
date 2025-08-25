@@ -24,6 +24,7 @@ using LionWeb.Protocol.Delta.Client;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
+[TestFixture(ServerProcesses.LionWebServer)]
 [TestFixture(ServerProcesses.CSharp)]
 // [TestFixture(ServerProcesses.OtherCSharp)]
 public abstract class WebSocketClientTestBase : WebSocketTestBase
@@ -47,7 +48,6 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     public void StartServer()
     {
         Console.WriteLine("StartServer()");
-
         var process = _serverProcess.Create(Port, AdditionalServerParameters(), out var readyTrigger,
             out var errorTrigger);
         _externalProcessRunner.StartProcess(process, readyTrigger, errorTrigger);
