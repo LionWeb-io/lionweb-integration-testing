@@ -11,6 +11,7 @@ using LionWeb.Core.M3;
 using LionWeb.Core.Notification;
 using LionWeb.Core.Notification.Partition;
 using LionWeb.Core.Notification.Partition.Emitter;
+using LionWeb.Core.Notification.Pipe;
 using LionWeb.Core.Utilities;
 using LionWeb.Core.VersionSpecific.V2025_1;
 using System;
@@ -1429,13 +1430,13 @@ public partial class Geometry : ConceptInstanceBase, IPartitionInstance<INode>
 
 	public Geometry(string id) : base(id)
 	{
-		_notificationHandler = new PartitionNotificationHandler(this);
+		_notificationSender = new PartitionNotificationProducer(this);
 	}
 
 	/// <inheritdoc/>
         public override Concept GetConcept() => ShapesLanguage.Instance.Geometry;
-	private readonly IPartitionNotificationHandler _notificationHandler;
-	public IPartitionNotificationHandler? GetNotificationHandler() => _notificationHandler;
+	private readonly INotificationSender? _notificationSender;
+	public INotificationSender? GetNotificationSender() => _notificationSender;
 	/// <inheritdoc/>
         protected override bool GetInternal(Feature? feature, out object? result)
 	{
@@ -2293,13 +2294,13 @@ public partial class ReferenceGeometry : ConceptInstanceBase, IPartitionInstance
 
 	public ReferenceGeometry(string id) : base(id)
 	{
-		_notificationHandler = new PartitionNotificationHandler(this);
+		_notificationSender = new PartitionNotificationProducer(this);
 	}
 
 	/// <inheritdoc/>
         public override Concept GetConcept() => ShapesLanguage.Instance.ReferenceGeometry;
-	private readonly IPartitionNotificationHandler _notificationHandler;
-	public IPartitionNotificationHandler? GetNotificationHandler() => _notificationHandler;
+	private readonly INotificationSender? _notificationSender;
+	public INotificationSender? GetNotificationSender() => _notificationSender;
 	/// <inheritdoc/>
         protected override bool GetInternal(Feature? feature, out object? result)
 	{
