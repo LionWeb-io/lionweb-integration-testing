@@ -66,13 +66,12 @@ public static class ClientProcessesExtensions
         result.StartInfo.FileName = "node";
         // Note: the following line means that it's assumed that
         //  1) the lionweb-typescript repo is located right next to the lionweb-integration-testing repo,
-        //  2) that the latter repo has been checked out on the delta-protocol-impl branch,
-        //  3) and that it's been built entirely successfully.
+        //  2) and that it's been built entirely successfully.
         result.StartInfo.WorkingDirectory =
-            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-typescript/packages/deltas-websocket";
+            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-typescript/packages/delta-protocol-test-cli";
         // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
         // (hence 7x ../)
-        result.StartInfo.Arguments = $"dist/cli/client.js {port} {clientId} {string.Join(",", tasks)}";
+        result.StartInfo.Arguments = $"dist/cli-client.js {port} {clientId} {string.Join(",", tasks)}";
         result.StartInfo.UseShellExecute = false;
         trigger = "LionWeb delta protocol client";
         errorTrigger = "Error";
