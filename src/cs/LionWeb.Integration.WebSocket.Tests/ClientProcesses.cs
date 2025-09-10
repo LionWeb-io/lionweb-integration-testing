@@ -32,7 +32,7 @@ public static class ClientProcessesExtensions
         IEnumerable<string> tasks, out string readyTrigger, out string errorTrigger) => process switch
     {
         ClientProcesses.CSharp => CSharpClient(name, partitionType, port, tasks, out readyTrigger, out errorTrigger),
-        ClientProcesses.Ts => TsClient(name, port, tasks, out readyTrigger, out errorTrigger),
+        ClientProcesses.Ts => TsClient(name, partitionType, port, tasks, out readyTrigger, out errorTrigger),
         _ => throw new ArgumentOutOfRangeException(nameof(process), process, null)
     };
 
@@ -59,7 +59,7 @@ public static class ClientProcessesExtensions
         return result;
     }
 
-    private static Process TsClient(string clientId, int port, IEnumerable<string> tasks, out string trigger,
+    private static Process TsClient(string clientId, string partitionType, int port, IEnumerable<string> tasks, out string trigger,
         out string errorTrigger)
     {
         var result = new Process();
@@ -71,7 +71,7 @@ public static class ClientProcessesExtensions
             $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-typescript/packages/delta-protocol-test-cli";
         // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
         // (hence 7x ../)
-        result.StartInfo.Arguments = $"dist/cli-client.js {port} {clientId} {string.Join(",", tasks)}";
+        result.StartInfo.Arguments = $"dist/cli-client.js {port} {clientId} {partitionType} {string.Join(",", tasks)}";
         result.StartInfo.UseShellExecute = false;
         trigger = "LionWeb delta protocol client";
         errorTrigger = "Error";
