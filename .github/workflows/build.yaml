@@ -2,6 +2,9 @@ name: LionWeb integration tests
 
 on: [push, pull_request, workflow_dispatch]
 
+env:
+  NuGetDirectory: ${{github.workspace}}/nuget
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -33,6 +36,10 @@ jobs:
           LIONWEB_PAT: ${{ secrets.LIONWEB_PAT }}
       - name: Run Deno integration tests
         run: ./test.sh
+
+      - name: Install lionweb/delta-protocol-test-cli
+        run: npx --no-install -y --package=@lionweb/delta-protocol-test-cli@0.7.0-beta.13
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
 
