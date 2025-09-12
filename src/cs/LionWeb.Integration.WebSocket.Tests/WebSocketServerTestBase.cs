@@ -24,6 +24,8 @@ using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
+[TestFixture(ClientProcesses.CSharp)]
+[TestFixture(ClientProcesses.Ts)]
 public abstract class WebSocketServerTestBase : WebSocketTestBase
 {
     private readonly ClientProcesses[] _clientProcesses;
