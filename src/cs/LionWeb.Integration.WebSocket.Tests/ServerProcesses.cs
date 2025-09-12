@@ -26,7 +26,6 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public enum ServerProcesses
 {
     CSharp,
-    OtherCSharp,
     LionWebServer // The server from the lionweb-server project
 }
 
@@ -36,8 +35,6 @@ public static class ServerProcessesExtensions
         out string readyTrigger, out string errorTrigger) => process switch
     {
         ServerProcesses.CSharp => CSharpServer(port, additionalServerParameters, out readyTrigger,
-            out errorTrigger),
-        ServerProcesses.OtherCSharp => CSharpServer(port, additionalServerParameters, out readyTrigger,
             out errorTrigger),
         ServerProcesses.LionWebServer => LionWebServer(port, additionalServerParameters, out readyTrigger,
             out errorTrigger),
