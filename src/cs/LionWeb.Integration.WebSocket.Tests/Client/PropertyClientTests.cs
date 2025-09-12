@@ -40,7 +40,7 @@ public class PropertyClientTests(ServerProcesses serverProcess)
         aPartition = new("partition");
         aForest.AddPartitions([aPartition]);
         WaitForReceived();
-        bPartition = (DataTypeTestConcept)aForest.Partitions.First();
+        bPartition = (DataTypeTestConcept)bForest.Partitions.First();
     }
 
     /// <inheritdoc />
