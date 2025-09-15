@@ -29,4 +29,11 @@ sealed class AssemblyConfigurationAttribute(string key, string value) : Attribut
     {
         return $"{nameof(Key)}: {Key}, {nameof(Value)}: {Value}";
     }
+
+    public static string Get(string key) => typeof(AssemblyConfigurationAttribute)
+        .Assembly
+        .GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false)
+        .OfType<AssemblyConfigurationAttribute>()
+        .FirstOrDefault(cfg => cfg.Key == key)
+        ?.Value ?? throw new ArgumentException($"Missing configuration attribute {key}");
 }

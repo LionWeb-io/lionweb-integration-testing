@@ -10,6 +10,10 @@
         <_Parameter1>LionWebTsVersion</_Parameter1>
         <_Parameter2>$(LionWebTsVersion)</_Parameter2>
       </AssemblyAttribute>
+      <AssemblyAttribute Include="LionWeb.Integration.WebSocket.Tests.AssemblyConfigurationAttribute">
+        <_Parameter1>Configuration</_Parameter1>
+        <_Parameter2>$(Configuration)</_Parameter2>
+      </AssemblyAttribute>
     </ItemGroup>
 
     <ItemGroup>

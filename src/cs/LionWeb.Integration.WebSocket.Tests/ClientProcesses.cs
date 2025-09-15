@@ -37,6 +37,8 @@ public static class ClientProcessesExtensions
         _ => throw new ArgumentOutOfRangeException(nameof(process), process, null)
     };
 
+    #region CSharpClient
+
     private static Process CSharpClient(string name, string partitionType, int port, IEnumerable<string> tasks,
         out string readyTrigger, out string errorTrigger)
     {
@@ -47,6 +49,7 @@ public static class ClientProcessesExtensions
         result.StartInfo.Arguments = $"""
                                       run
                                       --no-build
+                                      --configuration {Configuration}
                                       --
                                       {name}
                                       {WebSocketTestBase.IpAddress}
@@ -59,6 +62,10 @@ public static class ClientProcessesExtensions
         errorTrigger = "Error";
         return result;
     }
+    
+    internal static string Configuration => AssemblyConfigurationAttribute.Get("Configuration");
+
+    #endregion
 
     #region TypeScript client
 
@@ -130,13 +137,7 @@ public static class ClientProcessesExtensions
         return result;
     }
 
-    internal static string TsDeltaCliVersion =>
-        typeof(ClientProcesses)
-            .Assembly
-            .GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false)
-            .OfType<AssemblyConfigurationAttribute>()
-            .First(cfg => cfg.Key == "LionWebTsVersion")
-            .Value;
+    internal static string TsDeltaCliVersion => AssemblyConfigurationAttribute.Get("LionWebTsVersion");
 
     #endregion
 }
