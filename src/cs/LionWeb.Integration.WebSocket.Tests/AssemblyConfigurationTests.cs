@@ -30,6 +30,8 @@ public class AssemblyConfigurationTests
             Console.WriteLine($"{env}");
         }
 
+        Assert.That(tsDeltaCliVersion, Is.EqualTo("xxx"));
+
         Assert.That(tsDeltaCliVersion, Is.Not.Null);
     }
 

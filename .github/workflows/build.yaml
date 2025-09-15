@@ -39,7 +39,7 @@ jobs:
         run: ./test.sh
 
       - name: Install lionweb/delta-protocol-test-cli
-        run: npx --no-install -y --package=@lionweb/delta-protocol-test-cli@$TS_DELTA_CLI_VERSION
+        run: npx --no-install -y --package=@lionweb/delta-protocol-test-cli@${{ TS_DELTA_CLI_VERSION }}
 
       - name: Test all C# projects
         run: dotnet test --configuration Release --logger trx ./src/cs/LionWeb.Integration.WebSocket.Tests/
