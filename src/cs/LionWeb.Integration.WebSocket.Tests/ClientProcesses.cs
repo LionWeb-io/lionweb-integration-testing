@@ -83,10 +83,12 @@ public static class ClientProcessesExtensions
         // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
         // (hence 7x ../)
         // result.StartInfo.Arguments = $"dist/cli/client.js {port} {clientId} {string.Join(",", tasks)}";
-        result.StartInfo.Arguments = $"{argumentPrefix}--package=@lionweb/delta-protocol-test-cli@0.7.0-beta.13 cli-client {port} {clientId} {partitionType} {string.Join(",", tasks)}";
+        result.StartInfo.Arguments = $"{argumentPrefix}--package=@lionweb/delta-protocol-test-cli@{TsDeltaCliVersion} cli-client {port} {clientId} {partitionType} {string.Join(",", tasks)}";
         result.StartInfo.UseShellExecute = false;
         trigger = "LionWeb delta protocol client";
         errorTrigger = "Error";
         return result;
     }
+
+    private static string TsDeltaCliVersion => Environment.GetEnvironmentVariable("TS_DELTA_CLI_VERSION");
 }
