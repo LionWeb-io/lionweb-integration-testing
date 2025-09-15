@@ -60,10 +60,19 @@ public static class ClientProcessesExtensions
         return result;
     }
 
+    /// <remarks>
+    /// This method assumes that
+    /// <list type="number">
+    /// <item>environment variable <see cref="TsDeltaCliVersionEnvironmentVariable"/> is set.</item>
+    /// <item><c>npx --package=@lionweb/delta-protocol-test-cli@{TsDeltaCliVersion}</c> executes successfully and within the timeout.
+    ///     Execute it once before running tests to make sure everything is already downloaded and cached locally.</item>
+    /// </list>
+    /// </remarks>
     private static Process TsClient(string clientId, string partitionType, int port, IEnumerable<string> tasks,
         out string trigger,
         out string errorTrigger)
     {
+        // On Windows, we need to call `powershell npx` instead of `npx`.
         string fileName = "npx";
         string argumentPrefix = "";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -71,24 +80,25 @@ public static class ClientProcessesExtensions
             fileName = "powershell";
             argumentPrefix = "npx ";
         }
-        
+
         var result = new Process();
         result.StartInfo.FileName = fileName;
-        // Note: the following line means that it's assumed that
-        //  1) the lionweb-typescript repo is located right next to the lionweb-integration-testing repo,
-        //  2) that the latter repo has been checked out on the delta-protocol-impl branch,
-        //  3) and that it's been built entirely successfully.
-        // result.StartInfo.WorkingDirectory =
-        //     $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-typescript/packages/deltas-websocket";
-        // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
-        // (hence 7x ../)
-        // result.StartInfo.Arguments = $"dist/cli/client.js {port} {clientId} {string.Join(",", tasks)}";
-        result.StartInfo.Arguments = $"{argumentPrefix}--package=@lionweb/delta-protocol-test-cli@{TsDeltaCliVersion} cli-client {port} {clientId} {partitionType} {string.Join(",", tasks)}";
+        result.StartInfo.Arguments =
+            $"{argumentPrefix}--package=@lionweb/delta-protocol-test-cli@{TsDeltaCliVersion} cli-client {port} {clientId} {partitionType} {string.Join(",", tasks)}";
         result.StartInfo.UseShellExecute = false;
         trigger = "LionWeb delta protocol client";
         errorTrigger = "Error";
         return result;
     }
 
-    private static string TsDeltaCliVersion => Environment.GetEnvironmentVariable("TS_DELTA_CLI_VERSION");
+    private const string TsDeltaCliVersionEnvironmentVariable = "TS_DELTA_CLI_VERSION";
+
+    /// <remarks>
+    /// There's a
+    /// <a href="https://www.jetbrains.com/help/rider/Reference__Options__Tools__Unit_Testing__Test_Runner.html#environment-variables">special place</a>
+    /// for setting test environment variables in Rider. 
+    /// </remarks>
+    private static string TsDeltaCliVersion =>
+        Environment.GetEnvironmentVariable(TsDeltaCliVersionEnvironmentVariable) ??
+        throw new ArgumentException($"environment variable {TsDeltaCliVersionEnvironmentVariable} not set");
 }
