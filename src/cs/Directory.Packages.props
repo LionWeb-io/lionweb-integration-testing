@@ -6,7 +6,12 @@ SPDX-License-Identifier: Apache-2.0
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <LionWebVersion>0.3.0-rc.8</LionWebVersion>
+    <LionWebCSharpVersion>0.3.0-rc.8</LionWebCSharpVersion>
+    <LionWebTsVersion>0.7.0-beta.13</LionWebTsVersion>  
+    <UseLionWebPackages>true</UseLionWebPackages>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='DEBUG'">
+    <UseLionWebPackages>false</UseLionWebPackages>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="MinVer" Version="6.0.0" />
@@ -19,9 +24,9 @@ SPDX-License-Identifier: Apache-2.0
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="LionWeb-CSharp" Version="$(LionWebVersion)"/>
-    <PackageVersion Include="LionWeb-CSharp-Generator" Version="$(LionWebVersion)"/>
-    <PackageVersion Include="LionWeb-CSharp-Protocol-Delta" Version="$(LionWebVersion)"/>
+    <PackageVersion Include="LionWeb-CSharp" Version="$(LionWebCSharpVersion)"/>
+    <PackageVersion Include="LionWeb-CSharp-Generator" Version="$(LionWebCSharpVersion)"/>
+    <PackageVersion Include="LionWeb-CSharp-Protocol-Delta" Version="$(LionWebCSharpVersion)"/>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.0" PrivateAssets="All" />
   </ItemGroup>
 </Project>

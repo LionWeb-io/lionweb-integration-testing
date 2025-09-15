@@ -10,15 +10,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-<!--      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />-->
-<!--      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj" />-->
-<!--      <ProjectReference Include="..\..\..\..\lionweb-csharp\test\LionWeb.Protocol.Delta.Test\LionWeb.Protocol.Delta.Test.csproj" />-->
       <ProjectReference Include="..\LionWeb.Integration.Languages\LionWeb.Integration.Languages.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="$(UseLionWebPackages)">
       <PackageReference Include="LionWeb-CSharp" />
       <PackageReference Include="LionWeb-CSharp-Protocol-Delta" />
     </ItemGroup>
 
+    <ItemGroup Condition="! $(UseLionWebPackages)">
+      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />
+      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj" />
+    </ItemGroup>
 </Project>

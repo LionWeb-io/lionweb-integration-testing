@@ -7,14 +7,18 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <ItemGroup><!--      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />-->
-<!--      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj" />-->
-    
-      <PackageReference Include="LionWeb-CSharp" />
+    <ItemGroup>
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Generated\" />
     </ItemGroup>
 
+    <ItemGroup Condition="$(UseLionWebPackages)">
+        <PackageReference Include="LionWeb-CSharp" />
+    </ItemGroup>
+
+    <ItemGroup Condition="! $(UseLionWebPackages)">
+      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />
+    </ItemGroup>
 </Project>

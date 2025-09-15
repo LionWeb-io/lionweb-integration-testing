@@ -4,7 +4,6 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   NuGetDirectory: ${{github.workspace}}/nuget
-  TS_DELTA_CLI_VERSION: 0.7.0-beta.13
 
 jobs:
   test:
@@ -42,7 +41,7 @@ jobs:
         run: npx --no-install -y --package=@lionweb/delta-protocol-test-cli@$TS_DELTA_CLI_VERSION
 
       - name: Test all C# projects
-        run: dotnet test -l trx ./src/cs/LionWeb.Integration.WebSocket.Tests/
+        run: dotnet test --configuration Release --logger trx ./src/cs/LionWeb.Integration.WebSocket.Tests/
 
       - name: Publish C# Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
