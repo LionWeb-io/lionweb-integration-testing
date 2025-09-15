@@ -11,12 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\languages\shapes.2023.1.json">
-        <Link>languages\shapes.2023.1.json</Link>
-      </Content>
-      <Content Include="..\..\languages\shapes.2024.1.json">
-        <Link>languages\shapes.2024.1.json</Link>
-      </Content>
       <Content Include="..\..\languages\testLanguage.2023.1.json">
         <Link>languages\testLanguage.2023.1.json</Link>
       </Content>

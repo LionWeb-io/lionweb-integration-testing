@@ -20,7 +20,7 @@ using System.Text.Json;
 using LionWeb.Core.M1;
 using LionWeb.Core.Notification;
 using LionWeb.Core.Serialization;
-using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
+using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Message;
@@ -105,28 +105,28 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         bForest = new Forest();
         bClient = await ConnectWebSocket(bForest, "B");
         
-        var aPartition = new Geometry("a");
+        var aPartition = new LinkTestConcept("a");
         aForest.AddPartitions([aPartition]);
 
         WaitForReceived(1);
         
-        var bPartition = bForest.Partitions.First() as Geometry;
+        var bPartition = bForest.Partitions.First() as LinkTestConcept;
         Assert.That(bPartition, Is.Not.Null);
 
-        bPartition.Documentation = new Documentation("documentation");
-        Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
+        bPartition!.Containment_0_1 = new LinkTestConcept("containment_0_1");
+        Debug.WriteLine($"clientB Containment_0_1 {bPartition.Containment_0_1.PrintIdentity()}");
 
         WaitForReceived(1);
 
-        Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
-        aPartition.Documentation.Text = "hello there";
+        Debug.WriteLine($"clientA Containment_0_1 {aPartition.Containment_0_1!.PrintIdentity()}");
+        aPartition.Containment_0_1!.Name = "hello there";
 
         WaitForReceived(1);
 
-        Debug.WriteLine($"clientA Documentation {aPartition.Documentation.PrintIdentity()}");
-        Debug.WriteLine($"clientB Documentation {bPartition.Documentation.PrintIdentity()}");
+        Debug.WriteLine($"clientA Containment_0_1 {aPartition.Containment_0_1.PrintIdentity()}");
+        Debug.WriteLine($"clientB Containment_0_1 {bPartition.Containment_0_1.PrintIdentity()}");
 
-        bPartition.Documentation.Text = "bye there";
+        bPartition.Containment_0_1.Name = "bye there";
         WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
