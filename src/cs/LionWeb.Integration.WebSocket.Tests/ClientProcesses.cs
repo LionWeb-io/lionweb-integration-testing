@@ -59,7 +59,10 @@ public static class ClientProcessesExtensions
                                       """.ReplaceLineEndings(" ");
         result.StartInfo.UseShellExecute = false;
         readyTrigger = WebSocketClient.ClientStartedMessage;
-        errorTrigger = "Error";
+        errorTrigger = "Exception";
+
+        Console.WriteLine($"CSharptClient arguments: {result.StartInfo.Arguments}");
+        
         return result;
     }
     

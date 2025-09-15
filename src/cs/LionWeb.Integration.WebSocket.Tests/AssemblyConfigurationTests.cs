@@ -25,13 +25,6 @@ public class AssemblyConfigurationTests
         var tsDeltaCliVersion = ClientProcessesExtensions.TsDeltaCliVersion;
         Console.WriteLine(tsDeltaCliVersion);
 
-        foreach (var env in Environment.GetEnvironmentVariables())
-        {
-            Console.WriteLine($"{env}");
-        }
-
-        Assert.That(tsDeltaCliVersion, Is.EqualTo("xxx"));
-
         Assert.That(tsDeltaCliVersion, Is.Not.Null);
     }
 
