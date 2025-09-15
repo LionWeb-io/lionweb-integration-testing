@@ -20,8 +20,24 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public class AssemblyConfigurationTests
 {
     [Test]
-    public void TsDeltaCliVersion() => Assert.That(ClientProcessesExtensions.TsDeltaCliVersion, Is.Not.Null);
-    
+    public void TsDeltaCliVersion()
+    {
+        var tsDeltaCliVersion = ClientProcessesExtensions.TsDeltaCliVersion;
+        Console.WriteLine(tsDeltaCliVersion);
+
+        foreach (var env in Environment.GetEnvironmentVariables())
+        {
+            Console.WriteLine($"{env}");
+        }
+
+        Assert.That(tsDeltaCliVersion, Is.Not.Null);
+    }
+
     [Test]
-    public void Configuration() => Assert.That(ClientProcessesExtensions.Configuration, Is.Not.Null);
+    public void Configuration()
+    {
+        var configuration = ClientProcessesExtensions.Configuration;
+        Console.WriteLine(configuration);
+        Assert.That(configuration, Is.Not.Null);
+    }
 }
