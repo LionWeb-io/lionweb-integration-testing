@@ -18,7 +18,6 @@
 using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Core.Utilities;
-using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 
 namespace LionWeb.Integration.WebSocket.Tests;
@@ -36,7 +35,7 @@ public abstract class WebSocketTestBase
     protected WebSocketTestBase(LionWebVersions? lionWebVersion = null, List<Language>? languages = null)
     {
         _lionWebVersion = lionWebVersion ?? LionWebVersions.v2023_1;
-        _languages = languages ?? [ShapesLanguage.Instance, TestLanguageLanguage.Instance];
+        _languages = languages ?? [TestLanguageLanguage.Instance];
         _languages.AddRange([_lionWebVersion.BuiltIns, _lionWebVersion.LionCore]);
     }
 

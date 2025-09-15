@@ -19,7 +19,6 @@ using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Core.Notification;
-using LionWeb.Integration.Languages.Generated.V2023_1.Shapes.M2;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Integration.WebSocket.Server;
@@ -38,7 +37,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new Geometry("a");
+        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         serverForest.AddPartitions([serverPartition]);
@@ -56,7 +55,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new Geometry("a");
+        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
         Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
         serverForest.AddPartitions([serverPartition]);
@@ -76,11 +75,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        // TODO:
-        // Add a new concept to TestLanguage and replace Geometry language with TestLanguage language
-        // We miss the following concept in TestLanguage: a concept with a containment which has a property 
-        
-        var serverPartition = new Geometry("a");
+        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
         serverForest.AddPartitions([serverPartition]);
         
@@ -88,16 +83,16 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn,Tasks.Wait,Tasks.SetDocsText);
-        StartClient("B", serverPartition.GetType(), Tasks.SignOn,Tasks.AddDocs);
+        StartClient("A", serverPartition.GetType(), Tasks.SignOn,Tasks.Wait,Tasks.AddName_Containment_0_1);
+        StartClient("B", serverPartition.GetType(), Tasks.SignOn,Tasks.AddContainment_0_1);
 
         WaitForSent(4);
 
-        AssertEquals(new Geometry("g")
+        AssertEquals(new LinkTestConcept("g")
         {
-            Documentation = new Documentation("d")
+            Containment_0_1 = new LinkTestConcept("containment_0_1")
             {
-                Text = "hello there"
+                Name = "my name"
             }
         }, serverPartition);
     }
@@ -108,7 +103,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
         _webSocketServer.StartServer(IpAddress, Port);
 
-        var serverPartition = new Geometry("a");
+        var serverPartition = new LinkTestConcept("a");
         // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
         // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         var serverForest = new Forest();
