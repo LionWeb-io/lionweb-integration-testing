@@ -132,7 +132,7 @@ public static class ClientProcessesExtensions
         else
         {
             result.StartInfo.FileName = "npx";
-            result.StartInfo.Arguments = $"${npxArg} ${cmdLine}";
+            result.StartInfo.Arguments = $"{npxArg} {cmdLine}";
         }
 
         return result;
