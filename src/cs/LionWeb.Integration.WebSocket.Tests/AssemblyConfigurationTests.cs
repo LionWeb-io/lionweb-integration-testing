@@ -31,7 +31,7 @@ public class AssemblyConfigurationTests
     [Test]
     public void Configuration()
     {
-        var configuration = ClientProcessesExtensions.Configuration;
+        var configuration = AssemblyConfigurationAttribute.Configuration;
         Console.WriteLine(configuration);
         Assert.That(configuration, Is.Not.Null);
     }

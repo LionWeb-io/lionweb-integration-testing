@@ -52,12 +52,16 @@ public static class ServerProcessesExtensions
         result.StartInfo.Arguments = $"""
                                       run
                                       --no-build
+                                      --configuration {AssemblyConfigurationAttribute.Configuration}
                                       {port}
                                       {additionalServerParameters}
                                       """.ReplaceLineEndings(" ");
         result.StartInfo.UseShellExecute = false;
         readyTrigger = WebSocketServer.ServerStartedMessage;
-        errorTrigger = "Error";
+        errorTrigger = "Exception";
+
+        Console.WriteLine($"CSharpServer arguments: {result.StartInfo.Arguments}");
+        
         return result;
     }
 

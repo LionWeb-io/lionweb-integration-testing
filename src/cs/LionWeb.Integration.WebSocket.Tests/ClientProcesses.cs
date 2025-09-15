@@ -49,7 +49,7 @@ public static class ClientProcessesExtensions
         result.StartInfo.Arguments = $"""
                                       run
                                       --no-build
-                                      --configuration {Configuration}
+                                      --configuration {AssemblyConfigurationAttribute.Configuration}
                                       --
                                       {name}
                                       {WebSocketTestBase.IpAddress}
@@ -61,12 +61,10 @@ public static class ClientProcessesExtensions
         readyTrigger = WebSocketClient.ClientStartedMessage;
         errorTrigger = "Exception";
 
-        Console.WriteLine($"CSharptClient arguments: {result.StartInfo.Arguments}");
+        Console.WriteLine($"CSharpClient arguments: {result.StartInfo.Arguments}");
         
         return result;
     }
-    
-    internal static string Configuration => AssemblyConfigurationAttribute.Get("Configuration");
 
     #endregion
 

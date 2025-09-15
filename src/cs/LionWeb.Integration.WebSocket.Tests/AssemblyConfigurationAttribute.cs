@@ -36,4 +36,6 @@ sealed class AssemblyConfigurationAttribute(string key, string value) : Attribut
         .OfType<AssemblyConfigurationAttribute>()
         .FirstOrDefault(cfg => cfg.Key == key)
         ?.Value ?? throw new ArgumentException($"Missing configuration attribute {key}");
+    
+    public static string Configuration => Get("Configuration");
 }
