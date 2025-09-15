@@ -4,6 +4,7 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   NuGetDirectory: ${{github.workspace}}/nuget
+  TS_DELTA_CLI_VERSION: 0.7.0-beta.13
 
 jobs:
   test:
