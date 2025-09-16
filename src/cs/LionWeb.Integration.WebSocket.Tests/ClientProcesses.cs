@@ -121,7 +121,7 @@ public static class ClientProcessesExtensions
     private static Process TsNpxPackageClient(string cmdLine)
     {
         var result = new Process();
-        var npxArg = $"--package=@lionweb/delta-protocol-test-cli@{TsDeltaCliVersion} cli-client";
+        var npxArg = $"-y --package=@lionweb/delta-protocol-test-cli@{TsDeltaCliVersion} cli-client";
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -144,7 +144,7 @@ public static class ClientProcessesExtensions
     {
 // Accesses `<DefineConstants>USE_LION_WEB_PACKAGES</DefineConstants>` from .csproj 
 #if USE_LION_WEB_PACKAGES
-        return TsNpxPackageClient("-y");
+        return TsNpxPackageClient("");
 
 #else
         return null;
