@@ -4,7 +4,6 @@ on: [push, workflow_dispatch]
 
 env:
   NuGetDirectory: ${{github.workspace}}/nuget
-  TS_DELTA_CLI_VERSION: 0.7.0-beta.13
 
 jobs:
   test:
@@ -37,9 +36,6 @@ jobs:
           LIONWEB_PAT: ${{ secrets.LIONWEB_PAT }}
       - name: Run Deno integration tests
         run: ./test.sh
-
-      - name: Install lionweb/delta-protocol-test-cli
-        run: npx --no-install -y --package=@lionweb/delta-protocol-test-cli@${{ env.TS_DELTA_CLI_VERSION }}
 
       - name: Test all C# projects
         run: dotnet test --configuration Release --logger trx ./src/cs/LionWeb.Integration.WebSocket.Tests/

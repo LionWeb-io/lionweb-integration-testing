@@ -33,6 +33,11 @@ public class SetupTrace
     public void StartTest()
     {
         Trace.Listeners.Add(new ConsoleTraceListener());
+        var process = ClientProcessesExtensions.SetUpTsClient();
+        if (process == null)
+            return;
+        Assert.That(process.Start(), Is.True, process.ToString);
+        Assert.That(process.WaitForExit(TestTimeout), Is.True, process.ToString);
     }
 
     [OneTimeTearDown]

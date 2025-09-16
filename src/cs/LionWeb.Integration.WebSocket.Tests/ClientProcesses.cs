@@ -140,5 +140,17 @@ public static class ClientProcessesExtensions
 
     internal static string TsDeltaCliVersion => AssemblyConfigurationAttribute.Get("LionWebTsVersion");
 
+    internal static Process? SetUpTsClient()
+    {
+// Accesses `<DefineConstants>USE_LION_WEB_PACKAGES</DefineConstants>` from .csproj 
+#if USE_LION_WEB_PACKAGES
+        return TsNpxPackageClient("-y");
+
+#else
+        return null;
+#endif
+
+    }
+    
     #endregion
 }
