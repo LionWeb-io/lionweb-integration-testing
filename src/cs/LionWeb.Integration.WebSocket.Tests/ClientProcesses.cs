@@ -102,10 +102,10 @@ public static class ClientProcessesExtensions
         var result = new Process();
         result.StartInfo.FileName = "node";
         result.StartInfo.WorkingDirectory =
-            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-typescript/packages/deltas-websocket";
+            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-typescript/packages/delta-protocol-test-cli";
         // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
         // (hence 7x ../)
-        result.StartInfo.Arguments = $"dist/cli/client.js {cmdLine}";
+        result.StartInfo.Arguments = $"dist/cli-client.js {cmdLine}";
 
         return result;
     }
