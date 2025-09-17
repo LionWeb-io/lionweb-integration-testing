@@ -33,6 +33,11 @@ public class SetupTrace
     public void StartTest()
     {
         Trace.Listeners.Add(new ConsoleTraceListener());
+    }
+
+    [OneTimeSetUp]
+    public void SetUpTsClient()
+    {
         var process = ClientProcessesExtensions.SetUpTsClient();
         if (process == null)
             return;
