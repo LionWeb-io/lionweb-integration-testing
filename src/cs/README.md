@@ -15,22 +15,21 @@ The main use case for this C# solution is testing the C# implementations against
 Thus, in **Client** tests the _system under test_ is the C# client, connecting to different server implementations.
 Respectively, in **Server** tests the C# server connects to different client implementations.
 
-In both cases, we configure the different "foreign" implementations by `TestFixture` attributes (curtesy of NUnit).
+In both cases, we configure the different "foreign" implementations by `TestFixture` attributes — courtesy of NUnit.
 
 ### How to add a new "foreign" implementation
-
 All Server tests inherit from `WebSocketServerTestBase`, thus they also inherit `TestFixture` attributes.
 For each "foreign" client to test against, we have one literal in enum `ClientProcesses`, and a corresponding `TestFixture(ClientProcesses.<foreignClientLiteral>)` attribute on `WebSocketServerTestBase`.
 We also need a corresponding entry in `ClientProcessesExtensions.Create()`'s `switch`.
-This sets up an os process to start the "foreign" client.
+This sets up an OS process to start the "foreign" client.
 
-Note: We deliberately use external processes for all clients, including the C# one.
+Note: we deliberately use external processes for all clients, including the C# one.
 This guarantees no interference between server and client, and enables implementations in different languages.
 
-Client tests work exactly the same -- we put `TestFixture(ServerProcesses.<foreignServerLiteral>)` attributes on `WebSocketClientTestBase` and use `ServerProcessesExtensions.Create()` to set up the "foreign" server process.
+Client tests work exactly the same — we put `TestFixture(ServerProcesses.<foreignServerLiteral>)` attributes on `WebSocketClientTestBase` and use `ServerProcessesExtensions.Create()` to set up the "foreign" server process.
 
 ### How to distinguish scenarios
-When setting up the process of the "foreign" implementation, we need to distinguish which scenario we're running in (see next section for a description of the scenarios).
+When setting up the process of the "foreign" implementation, we need to distinguish which scenario we're running in: see next section for a description of the scenarios.
 
 We use preprocessor directives to distinguish the scenarios:
 
@@ -46,9 +45,9 @@ We use preprocessor directives to distinguish the scenarios:
 ## How to run different Scenarios
 
 ### Using "foreign" implementations from packages
-In this scenario, we use released versions of "foreign" implementations, retrieved from their respective package infrastructure (e.g. nuget, npm, maven, ...).
+In this scenario, we use released versions of "foreign" implementations, retrieved from their respective package infrastructure (e.g. NuGet, NPM, Maven, ...).
 
-We select this scenario by building this C# solution with `Release` Configuration, e.g. 
+We select this scenario by building this C# solution with `Release` configuration, e.g. 
 
 ```shell
 dotnet test --configuration Release
@@ -97,26 +96,31 @@ static string TsDeltaCliVersion => AssemblyConfigurationAttribute.Get("LionWebTs
 In this scenario, we use implementations from locally present directories.
 The implementations need to be prepared in their own way (e.g. compiled, bundled, ...) -- out of scope of this document.
 
-We select this scenario by building this C# solution with `Debug` Configuration, e.g.
+We select this scenario by building this C# solution with `Debug` configuration, e.g.
 
 ```shell
 dotnet test --configuration Debug
 ```
 
-We assume the local implementation is present in a directory relative to this git root.
+We assume the local implementation is present in a directory relative to this Git root.
 When preparing the process (<a href="#Test structure">as described</a>), assume the current directory is `<gitroot>/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/netX.Y`.
+
+> ***NOTE***: When using an IDE, you have to set the configuration through the IDE itself to `Release` or `Debug` itself in order to run unit tests with "foreign", respectively, local implementations.
+> 
+> E.g. in Rider, this is done through the Properties of this C# solution, by setting *all* entries of the "Configuration and Platform" column to "Release | AnyCPU" or "Debug | AnyCPU".
+> This typically necessitates a rebuild of the entire solution (because of the use of compiler directives).
 
 ## Currently supported "foreign" implementations
 
 ### Servers
 
-* `CSharp`:: Implementation in `LionWeb.Integration.WebSocket.Server` in this git repository.  
+* `CSharp`:: Implementation in `LionWeb.Integration.WebSocket.Server` in this Git repository.  
   Uses either `LionWeb-CSharp` / `LionWeb-CSharp-Protocol-Delta` nuget packages in version `LionWebCSharpVersion` (_package_ scenario) or directory `<gitroot>/../lionweb-csharp` (_local directories_ scenario).
 * `LionWebServer`:: <a href="https://github.com/LionWeb-io/lionweb-server">lionweb-server</a>.  
   Does not support _package_ scenario yet, thus disabled.
 
 ### Clients
-* `CSharp`:: Implementation in `LionWeb.Integration.WebSocket.Client` in this git repository.  
+* `CSharp`:: Implementation in `LionWeb.Integration.WebSocket.Client` in this Git repository.  
   Uses either `LionWeb-CSharp` / `LionWeb-CSharp-Protocol-Delta` nuget packages (_package_ scenario) or directory `<gitroot>/../lionweb-csharp` (_local directories_ scenario).
 * `Ts`:: <a href="https://github.com/LionWeb-io/lionweb-typescript">lionweb-typescript</a>.  
   Uses either `lionweb/delta-protocol-test-cli` npm package in version `TS_DELTA_CLI_VERSION` (_package_ scenario) or directory `<gitroot>/../lionweb-typescript/packages/delta-protocol-test-cli` (_local directories_ scenario).
