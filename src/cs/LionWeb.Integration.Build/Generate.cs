@@ -26,14 +26,12 @@ foreach (LionWebVersions lionWebVersion in LionWebVersions.AllPureVersions)
 {
     Console.WriteLine($"\n### LionWeb specification version: {lionWebVersion}\n");
     
-    var shapesLanguage = DeserializeExternalLanguage(lionWebVersion, "shapes").First();
     var testLanguage = DeserializeExternalLanguage(lionWebVersion, "testLanguage").First();
 
     var lionWebVersionDirectory = "V" + lionWebVersion.VersionString.Replace('.', '_');
     string prefix = $"LionWeb.Integration.Languages.Generated.{lionWebVersionDirectory}";
     List<Names> names =
     [
-        new(shapesLanguage, $"{prefix}.Shapes.M2"),
         new(testLanguage, $"{prefix}.TestLanguage.M2")
     ];
 
