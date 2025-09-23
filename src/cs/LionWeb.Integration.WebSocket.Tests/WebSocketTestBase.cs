@@ -25,6 +25,7 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public abstract class WebSocketTestBase
 {
     public const string IpAddress = "localhost";
+    public const RepositoryId RepositoryId = "myRepo";
     protected int Port => NextPort;
     private static int NextPort = 40000;
     protected static readonly ExternalProcessRunner _externalProcessRunner = new();

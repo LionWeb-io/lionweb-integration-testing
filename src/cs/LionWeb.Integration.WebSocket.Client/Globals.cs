@@ -15,5 +15,4 @@
 // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // SPDX-License-Identifier: Apache-2.0
 
-global using NUnit.Framework;
 global using RepositoryId = string;

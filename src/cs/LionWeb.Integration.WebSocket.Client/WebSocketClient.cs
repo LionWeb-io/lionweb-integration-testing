@@ -50,8 +50,9 @@ public class WebSocketClient : IDeltaClientConnector
         int serverPort = int.Parse(args[2]);
         string partitionType = args[3];
         var tasks = args[4].Split(",").Select(s => Enum.Parse<Tasks>(s)).ToList();
+        var repositoryId = "myRepo";
 
-        Log($"Starting client {name} to connect to {serverIp}:{serverPort}");
+        Log($"Starting client {name} to connect to {serverIp}:{serverPort}@{repositoryId}");
         Log($"{name}: tasks: {string.Join(",", tasks)}");
 
         var webSocketClient = new WebSocketClient(name);
@@ -77,7 +78,7 @@ public class WebSocketClient : IDeltaClientConnector
             switch (task, partition)
             {
                 case (Tasks.SignOn, _):
-                    await webSocketClient.SignOn(lionWeb);
+                    await webSocketClient.SignOn(lionWeb, repositoryId);
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.SignOff, _):
@@ -227,8 +228,8 @@ public class WebSocketClient : IDeltaClientConnector
         _mapper = new(new CommandIdProvider(), _lionWebVersion);
     }
 
-    private async Task SignOn(LionWebTestClient lionWeb) =>
-        await lionWeb.SignOn();
+    private async Task SignOn(LionWebTestClient lionWeb, RepositoryId repositoryId) =>
+        await lionWeb.SignOn(repositoryId);
 
 
     private async Task SignOff(LionWebTestClient lionWeb) =>
