@@ -36,10 +36,10 @@ jobs:
           LIONWEB_PAT: ${{ secrets.LIONWEB_PAT }}
       - name: Run Deno integration tests
         run: ./test.sh
-
+      - name: Build all C# projects
+        run: dotnet build --configuration Release ./src/cs/LionWeb.Integration.WebSocket.Tests/
       - name: Test all C# projects
         run: dotnet test --configuration Release --logger trx ./src/cs/LionWeb.Integration.WebSocket.Tests/
-
       - name: Publish C# Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
