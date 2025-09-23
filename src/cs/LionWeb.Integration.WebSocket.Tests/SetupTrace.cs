@@ -23,12 +23,10 @@ namespace LionWeb.Integration.WebSocket.Tests;
 /// <remarks>Inspired by https://docs.nunit.org/articles/nunit/technical-notes/usage/Trace-and-Debug-Output.html</remarks>
 [SetUpFixture]
 // Timeout is deprecated, but the alternative CancelAfter doesn't work in our context. 
-[Timeout(TestTimeout)]
+[Timeout(6000)]
 [NonParallelizable]
 public class SetupTrace
 {
-    private const int TestTimeout = 20000;
-
     [OneTimeSetUp]
     public void StartTest()
     {
@@ -36,13 +34,14 @@ public class SetupTrace
     }
 
     [OneTimeSetUp]
+    [Timeout(20000)]
     public void SetUpTsClient()
     {
         var process = ClientProcessesExtensions.SetUpTsClient();
         if (process == null)
             return;
         Assert.That(process.Start(), Is.True, process.ToString);
-        Assert.That(process.WaitForExit(TestTimeout), Is.True, process.ToString);
+        Assert.That(process.WaitForExit(18000), Is.True, process.ToString);
     }
 
     [OneTimeTearDown]
