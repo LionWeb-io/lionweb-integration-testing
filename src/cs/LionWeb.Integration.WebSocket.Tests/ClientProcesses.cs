@@ -15,6 +15,8 @@
 // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // SPDX-License-Identifier: Apache-2.0
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using LionWeb.Integration.WebSocket.Client;
@@ -42,11 +44,11 @@ public static class ClientProcessesExtensions
     private static Process CSharpClient(string name, string partitionType, int port, IEnumerable<string> tasks,
         out string readyTrigger, out string errorTrigger)
     {
-        var result = new Process();
-        result.StartInfo.FileName = "dotnet";
-        result.StartInfo.WorkingDirectory =
+        var process = new Process();
+        process.StartInfo.FileName = "dotnet";
+        process.StartInfo.WorkingDirectory =
             $"{Directory.GetCurrentDirectory()}/../../../../LionWeb.Integration.WebSocket.Client";
-        result.StartInfo.Arguments = $"""
+        process.StartInfo.Arguments = $"""
                                       run
                                       --no-build
                                       --configuration {AssemblyConfigurationAttribute.Configuration}
@@ -57,11 +59,11 @@ public static class ClientProcessesExtensions
                                       {partitionType}
                                       {string.Join(",", tasks)}
                                       """.ReplaceLineEndings(" ");
-        result.StartInfo.UseShellExecute = false;
+        process.StartInfo.UseShellExecute = false;
         readyTrigger = WebSocketClient.ClientStartedMessage;
         errorTrigger = "Exception";
         
-        return result;
+        return process;
     }
 
     #endregion
@@ -76,15 +78,15 @@ public static class ClientProcessesExtensions
 
 // Accesses `<DefineConstants>USE_LION_WEB_PACKAGES</DefineConstants>` from .csproj 
 #if USE_LION_WEB_PACKAGES
-        var result = TsNpxPackageClient(cmdLine);
+        var process = TsNpxClientPackage(cmdLine);
 #else
-        var result = TsRelativeDirectoryClient(cmdLine);
+        var process = TsRelativeDirectoryClient(cmdLine);
 #endif
 
-        result.StartInfo.UseShellExecute = false;
+        process.StartInfo.UseShellExecute = false;
         trigger = "LionWeb delta protocol client";
         errorTrigger = "Error";
-        return result;
+        return process;
     }
 
     /// <remarks>
@@ -97,53 +99,48 @@ public static class ClientProcessesExtensions
     /// </remarks>
     private static Process TsRelativeDirectoryClient(string cmdLine)
     {
-        var result = new Process();
-        result.StartInfo.FileName = "node";
-        result.StartInfo.WorkingDirectory =
+        var process = new Process();
+        process.StartInfo.FileName = "node";
+        process.StartInfo.WorkingDirectory =
             $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-typescript/packages/delta-protocol-test-cli";
         // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
         // (hence 7x ../)
-        result.StartInfo.Arguments = $"dist/cli-client.js {cmdLine}";
+        process.StartInfo.Arguments = $"dist/cli-client.js {cmdLine}";
 
-        return result;
+        return process;
+    }
+
+    private static Process CreateNodeUtilityProcess(params string[] arguments)
+    {
+        var process = new Process();
+        var effectiveArguments = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? ["powershell", ..arguments]   // on Windows, we need to call `powershell npx` instead of `npx`
+            : arguments;
+        process.StartInfo.FileName = effectiveArguments[0];
+        process.StartInfo.Arguments = string.Join(" ", effectiveArguments[1..]);
+        return process;
     }
 
     /// <remarks>
     /// This method assumes that
     /// <list type="number">
     /// <item><i>Directory.Packages.props</i> property <c>LionWebTsVersion</c> is set.</item>
-    /// <item><c>npx --package=@lionweb/delta-protocol-test-cli@{TsDeltaCliVersion}</c> executes successfully and within the timeout.
-    ///     Execute it once before running tests to make sure everything is already downloaded and cached locally.</item>
+    /// <item>the <c>@lionweb/delta-protocol-test-cli</c> NPM package has been downloaded and cached locally.</item>
     /// </list>
     /// </remarks>
-    private static Process TsNpxPackageClient(string cmdLine)
-    {
-        var result = new Process();
-        var npxArg = $"-y --package=@lionweb/delta-protocol-test-cli@{TsDeltaCliVersion} cli-client";
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            // On Windows, we need to call `powershell npx` instead of `npx`.
-            result.StartInfo.FileName = "powershell";
-            result.StartInfo.Arguments = $"npx {npxArg} {cmdLine}";
-        }
-        else
-        {
-            result.StartInfo.FileName = "npx";
-            result.StartInfo.Arguments = $"{npxArg} {cmdLine}";
-        }
-
-        return result;
-    }
+    private static Process TsNpxClientPackage(string cmdLine)
+        => CreateNodeUtilityProcess("npx", "cli-client", cmdLine);
 
     internal static string TsDeltaCliVersion => AssemblyConfigurationAttribute.Get("LionWebTsVersion");
+
+    internal static Process TsInstallClientPackage()
+        => CreateNodeUtilityProcess("npm", "install", $"@lionweb/delta-protocol-test-cli@{TsDeltaCliVersion}");
 
     internal static Process? SetUpTsClient()
     {
 // Accesses `<DefineConstants>USE_LION_WEB_PACKAGES</DefineConstants>` from .csproj 
 #if USE_LION_WEB_PACKAGES
-        return TsNpxPackageClient("");
-
+        return TsInstallClientPackage();
 #else
         return null;
 #endif
