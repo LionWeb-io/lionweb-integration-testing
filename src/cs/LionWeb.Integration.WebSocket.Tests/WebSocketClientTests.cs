@@ -100,10 +100,10 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
     public async Task Partition()
     {
         aForest = new Forest();
-        aClient = await ConnectWebSocket(aForest, "A");
+        aClient = await ConnectWebSocket(aForest, "A", RepositoryId);
 
         bForest = new Forest();
-        bClient = await ConnectWebSocket(bForest, "B");
+        bClient = await ConnectWebSocket(bForest, "B", RepositoryId);
         
         var aPartition = new LinkTestConcept("a");
         aForest.AddPartitions([aPartition]);

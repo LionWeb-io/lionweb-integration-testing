@@ -32,10 +32,10 @@ public abstract class LinkClientTestBase(ServerProcesses serverProcess)
     public void ConnectToServer()
     {
         aForest = new Forest();
-        aClient = ConnectWebSocket(aForest, "A").Result;
+        aClient = ConnectWebSocket(aForest, "A", RepositoryId).Result;
 
         bForest = new Forest();
-        bClient = ConnectWebSocket(bForest, "B").Result;
+        bClient = ConnectWebSocket(bForest, "B", RepositoryId).Result;
 
         aPartition = new("partition");
         aForest.AddPartitions([aPartition]);
