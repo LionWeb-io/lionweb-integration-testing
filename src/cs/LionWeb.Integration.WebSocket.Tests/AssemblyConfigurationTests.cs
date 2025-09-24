@@ -15,17 +15,19 @@
 // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // SPDX-License-Identifier: Apache-2.0
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 namespace LionWeb.Integration.WebSocket.Tests;
 
 public class AssemblyConfigurationTests
 {
     [Test]
-    public void TsDeltaCliVersion()
+    public void LionWebTsVersion()
     {
-        var tsDeltaCliVersion = ClientProcessesExtensions.TsDeltaCliVersion;
-        Console.WriteLine(tsDeltaCliVersion);
+        var lionWebTsVersion = TsClientProcessesExtensions.LionWebTsVersion;
+        Console.WriteLine($"LionWeb TS packages version: {lionWebTsVersion}");
 
-        Assert.That(tsDeltaCliVersion, Is.Not.Null);
+        Assert.That(lionWebTsVersion, Is.Not.Null);
     }
 
     [Test]
@@ -33,6 +35,7 @@ public class AssemblyConfigurationTests
     {
         var configuration = AssemblyConfigurationAttribute.Configuration;
         Console.WriteLine(configuration);
+
         Assert.That(configuration, Is.Not.Null);
     }
 }
