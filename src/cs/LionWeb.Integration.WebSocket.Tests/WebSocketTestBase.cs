@@ -49,14 +49,14 @@ public abstract class WebSocketTestBase
     [SetUp]
     public void CleanOutLeftoverProcesses()
     {
-        _externalProcessRunner.Cleanup();
+        _externalProcessRunner.StopAllProcesses();
     }
 
     [TearDown]
     [OneTimeTearDown]
     public void StopProcesses()
     {
-        _externalProcessRunner.Cleanup();
+        _externalProcessRunner.StopAllProcesses();
     }
 
     protected void AssertEquals(INode? a, INode? b) =>

@@ -71,12 +71,12 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     {
         long aMessageCount = aClient.WaitCount += numberOfMessages;
         long bMessageCount = bClient.WaitCount += numberOfMessages;
-        while (!_externalProcessRunner.ShouldCancel && aClient.MessageCount < aMessageCount || bClient.MessageCount < bMessageCount)
+        while (!_externalProcessRunner.ErrorTriggerEncountered && aClient.MessageCount < aMessageCount || bClient.MessageCount < bMessageCount)
         {
             Thread.Sleep(LionWebTestClient._sleepInterval);
         }
 
-        if (_externalProcessRunner.ShouldCancel)
+        if (_externalProcessRunner.ErrorTriggerEncountered)
             Assert.Fail("repo failure");
     }
 }

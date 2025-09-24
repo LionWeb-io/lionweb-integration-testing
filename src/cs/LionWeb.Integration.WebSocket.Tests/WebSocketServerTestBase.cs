@@ -68,12 +68,12 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
     protected void WaitForSent(int numberOfMessages = 1)
     {
         long messageCount = lionWebServer.WaitSentCount += numberOfMessages;
-        while (!_externalProcessRunner.ShouldCancel && lionWebServer.MessageSentCount < messageCount)
+        while (!_externalProcessRunner.ErrorTriggerEncountered && lionWebServer.MessageSentCount < messageCount)
         {
             Thread.Sleep(LionWebTestClient._sleepInterval);
         }
 
-        if (_externalProcessRunner.ShouldCancel)
+        if (_externalProcessRunner.ErrorTriggerEncountered)
             Assert.Fail("client failure");
     }
 }
