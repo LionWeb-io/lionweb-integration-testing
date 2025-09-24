@@ -6,7 +6,6 @@ using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Tests.Server;
 
-[TestFixture(ClientProcesses.CSharp)]
 public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : WebSocketServerTestBase(clientProcesses)
 {
     /// <summary>

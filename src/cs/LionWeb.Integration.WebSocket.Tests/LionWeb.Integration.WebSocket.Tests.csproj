@@ -2,7 +2,19 @@
     <PropertyGroup>
         <RootNamespace>LionWeb.Integration.WebSocket.Tests</RootNamespace>
         <IsTestProject>true</IsTestProject>
+        <DefineConstants Condition="$(UseLionWebPackages)">USE_LION_WEB_PACKAGES</DefineConstants>
     </PropertyGroup>
+
+    <ItemGroup>
+      <AssemblyAttribute Include="LionWeb.Integration.WebSocket.Tests.AssemblyConfigurationAttribute">
+        <_Parameter1>LionWebTsVersion</_Parameter1>
+        <_Parameter2>$(TS_DELTA_CLI_VERSION)</_Parameter2>
+      </AssemblyAttribute>
+      <AssemblyAttribute Include="LionWeb.Integration.WebSocket.Tests.AssemblyConfigurationAttribute">
+        <_Parameter1>Configuration</_Parameter1>
+        <_Parameter2>$(Configuration)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk">
@@ -14,6 +26,9 @@
         <PackageReference Include="NUnit">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="NUnit3TestAdapter">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="coverlet.collector">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,12 +36,18 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />
-      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj" />
-      <ProjectReference Include="..\..\..\..\lionweb-csharp\test\LionWeb.Protocol.Delta.Test\LionWeb.Protocol.Delta.Test.csproj" />
       <ProjectReference Include="..\LionWeb.Integration.Languages\LionWeb.Integration.Languages.csproj" />
       <ProjectReference Include="..\LionWeb.Integration.WebSocket.Client\LionWeb.Integration.WebSocket.Client.csproj" />
       <ProjectReference Include="..\LionWeb.Integration.WebSocket.Server\LionWeb.Integration.WebSocket.Server.csproj" />
     </ItemGroup>
 
+    <ItemGroup Condition="$(UseLionWebPackages)">
+      <PackageReference Include="LionWeb-CSharp" />
+      <PackageReference Include="LionWeb-CSharp-Protocol-Delta" />
+    </ItemGroup>
+    
+    <ItemGroup Condition="! $(UseLionWebPackages)">
+      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />
+      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj" />
+    </ItemGroup>
 </Project>

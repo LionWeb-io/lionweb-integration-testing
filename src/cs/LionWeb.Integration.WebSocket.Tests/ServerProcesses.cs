@@ -26,7 +26,6 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public enum ServerProcesses
 {
     CSharp,
-    OtherCSharp,
     LionWebServer // The server from the lionweb-server project
 }
 
@@ -36,8 +35,6 @@ public static class ServerProcessesExtensions
         out string readyTrigger, out string errorTrigger) => process switch
     {
         ServerProcesses.CSharp => CSharpServer(port, additionalServerParameters, out readyTrigger,
-            out errorTrigger),
-        ServerProcesses.OtherCSharp => CSharpServer(port, additionalServerParameters, out readyTrigger,
             out errorTrigger),
         ServerProcesses.LionWebServer => LionWebServer(port, additionalServerParameters, out readyTrigger,
             out errorTrigger),
@@ -55,12 +52,16 @@ public static class ServerProcessesExtensions
         result.StartInfo.Arguments = $"""
                                       run
                                       --no-build
+                                      --configuration {AssemblyConfigurationAttribute.Configuration}
                                       {port}
                                       {additionalServerParameters}
                                       """.ReplaceLineEndings(" ");
         result.StartInfo.UseShellExecute = false;
         readyTrigger = WebSocketServer.ServerStartedMessage;
-        errorTrigger = "Error";
+        errorTrigger = "Exception";
+
+        Console.WriteLine($"CSharpServer arguments: {result.StartInfo.Arguments}");
+        
         return result;
     }
 

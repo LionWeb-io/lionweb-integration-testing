@@ -7,7 +7,6 @@ using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests.Server;
 
-[TestFixture(ClientProcesses.CSharp)]
 public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : WebSocketServerTestBase(clientProcesses)
 {
     /// <summary>

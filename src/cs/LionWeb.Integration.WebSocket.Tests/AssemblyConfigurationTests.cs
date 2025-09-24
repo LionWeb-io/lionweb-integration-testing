@@ -1,4 +1,4 @@
-// Copyright 2024 TRUMPF Laser GmbH
+﻿// Copyright 2024 TRUMPF Laser GmbH
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,23 +17,25 @@
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-using System.Diagnostics;
-
 namespace LionWeb.Integration.WebSocket.Tests;
 
-public enum ClientProcesses
+public class AssemblyConfigurationTests
 {
-    CSharp,
-    Ts
-}
-
-public static class ClientProcessesExtensions
-{
-    public static Process Create(this ClientProcesses process, string name, string partitionType, int port,
-        IEnumerable<string> tasks, out string readyTrigger, out string errorTrigger) => process switch
+    [Test]
+    public void LionWebTsVersion()
     {
-        ClientProcesses.CSharp => CSharpClientProcessesExtensions.CSharpClient(name, partitionType, port, tasks, out readyTrigger, out errorTrigger),
-        ClientProcesses.Ts => TsClientProcessesExtensions.TsClient(name, partitionType, port, tasks, out readyTrigger, out errorTrigger),
-        _ => throw new ArgumentOutOfRangeException(nameof(process), process, null)
-    };
+        var lionWebTsVersion = TsClientProcessesExtensions.LionWebTsVersion;
+        Console.WriteLine($"LionWeb TS packages version: {lionWebTsVersion}");
+
+        Assert.That(lionWebTsVersion, Is.Not.Null);
+    }
+
+    [Test]
+    public void Configuration()
+    {
+        var configuration = AssemblyConfigurationAttribute.Configuration;
+        Console.WriteLine(configuration);
+
+        Assert.That(configuration, Is.Not.Null);
+    }
 }
