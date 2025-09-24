@@ -50,12 +50,12 @@ public class RunNodeTests
             "Error"
         );
         
-        Assert.That(_externalProcessRunner.ShouldCancel);
+        Assert.That(_externalProcessRunner.ErrorTriggerEncountered);
     }
 
     [TearDown]
     public void StopClients()
     {
-        _externalProcessRunner.Cleanup();
+        _externalProcessRunner.StopAllProcesses();
     }
 }

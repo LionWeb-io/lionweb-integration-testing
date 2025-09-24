@@ -25,18 +25,18 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public class ExternalProcessRunner
 {
     private readonly List<Process> _processes = [];
-    public bool ShouldCancel { get; private set; }
+
+    /// <summary>
+    /// A flag that indicates whether the process has produced an error trigger on stderr.
+    /// </summary>
+    public bool ErrorTriggerEncountered { get; private set; }
 
     /// <summary>
     /// Starts a process (that can be stopped later using <see cref="StopAllProcesses"/>)
     /// from the specified working directory, using the specified executable and arguments.
-    /// A process is considered *started* if the specified trigger is encountered on the stdout.
+    /// A process is considered *started* if the specified ready trigger is encountered on the stdout.
+    /// (The specified error trigger – to be encountered on stderr – currently has no practical value.)
     /// </summary>
-    /// <param name="executable"></param>
-    /// <param name="workingDirectory"></param>
-    /// <param name="arguments"></param>
-    /// <param name="readyTrigger"></param>
-    /// <param name="errorTrigger"></param>
     public void StartProcess(string executable, string workingDirectory, string arguments, string readyTrigger,
         string errorTrigger)
     {
@@ -50,6 +50,11 @@ public class ExternalProcessRunner
         StartProcess(process, readyTrigger, errorTrigger);
     }
 
+    /// <summary>
+    /// Starts the given process <i>that's assumed to not have been started yet</i>,
+    /// and considered that process *started* if the specified trigger is encountered on the stdout.
+    /// (The specified error trigger – to be encountered on stderr – currently has no practical value.)
+    /// </summary>
     public void StartProcess(Process process, string readyTrigger, string errorTrigger)
     {
         process.StartInfo.RedirectStandardInput = true;
@@ -73,7 +78,7 @@ public class ExternalProcessRunner
             Console.Error.WriteLine(args.Data);
 
             if (args.Data?.Contains(errorTrigger) ?? false)
-                ShouldCancel = true;
+                ErrorTriggerEncountered = true;
         };
 
         Assert.That(process.Start());
@@ -90,16 +95,10 @@ public class ExternalProcessRunner
         Assert.That(!process.HasExited);
     }
 
-    public void Cleanup()
-    {
-        ShouldCancel = false;
-        StopAllProcesses();
-    }
-
     /// <summary>
     /// Stops (/kills) all external processes that have been started using <see cref="StartProcess"/>.
     /// </summary>
-    private void StopAllProcesses()
+    public void StopAllProcesses()
     {
         foreach (var process in _processes)
         {
