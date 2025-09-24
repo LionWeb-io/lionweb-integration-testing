@@ -15,6 +15,9 @@
 // // SPDX-FileCopyrightText: 2024 TRUMPF Laser GmbH
 // // SPDX-License-Identifier: Apache-2.0
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+// ReSharper disable InconsistentNaming
+
 namespace LionWeb.Integration.WebSocket.Client;
 
 public enum Tasks

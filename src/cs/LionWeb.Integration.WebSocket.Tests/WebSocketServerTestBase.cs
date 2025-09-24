@@ -48,7 +48,7 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
     private Process NextProcess(string name, Type partitionType, Tasks[] tasks, out string readyTrigger,
         out string errorTrigger) =>
         _clientProcesses[nextClientProcess++ % _clientProcesses.Length]
-            .Create(name, partitionType.Name, Port, tasks.Select(t => Enum.GetName(t)), out readyTrigger, out errorTrigger);
+            .Create(name, partitionType.Name, Port, tasks.Select(Enum.GetName), out readyTrigger, out errorTrigger);
 
     protected void StartClient(string name, Type partitionType, params Tasks[] tasks)
     {

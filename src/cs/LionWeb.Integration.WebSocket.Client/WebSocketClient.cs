@@ -194,6 +194,7 @@ public class WebSocketClient : IDeltaClientConnector
                     break;
                 case (Tasks.MoveChildInSameContainment, LinkTestConcept p):
                     p.InsertContainment_0_n(0, [p.Containment_0_n[^1]]);
+                    // Note: this is effectively a move rather than an insert — hence the name of the task.
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.MoveChildFromOtherContainment_Single, LinkTestConcept p):
