@@ -35,7 +35,7 @@ public class ExternalProcessRunner
     /// Starts a process (that can be stopped later using <see cref="StopAllProcesses"/>)
     /// from the specified working directory, using the specified executable and arguments.
     /// A process is considered *started* if the specified ready trigger is encountered on the stdout.
-    /// (The specified error trigger – to be encountered on stderr – currently has no practical value.)
+    /// If the specified error trigger is encountered on stderr, the <see cref="ErrorTriggerEncountered"/> flag is set to `true`.
     /// </summary>
     public void StartProcess(string executable, string workingDirectory, string arguments, string readyTrigger,
         string errorTrigger)
@@ -51,9 +51,10 @@ public class ExternalProcessRunner
     }
 
     /// <summary>
-    /// Starts the given process <i>that's assumed to not have been started yet</i>,
+    /// Starts the given process *that's assumed to not have been started yet*,
     /// and considered that process *started* if the specified trigger is encountered on the stdout.
-    /// (The specified error trigger – to be encountered on stderr – currently has no practical value.)
+    /// If the specified error trigger is encountered on stderr, the <see cref="ErrorTriggerEncountered"/> flag is set to `true`.
+    /// The process can be stopped later using <see cref="StopAllProcesses"/>.
     /// </summary>
     public void StartProcess(Process process, string readyTrigger, string errorTrigger)
     {
