@@ -87,7 +87,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     private readonly DeltaSerializer _deltaSerializer = new();
     private readonly NotificationToDeltaEventMapper _mapper;
 
-    private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = [];
+    private readonly ConcurrentDictionary<IClientInfo, System.Net.WebSockets.WebSocket> _knownClients = new(IClientInfo.IdentityComparer);
     private int _nextParticipationId = 0;
 
     private HttpListener? _listener;
@@ -138,7 +138,7 @@ public class WebSocketServer : IDeltaRepositoryConnector
     }
 
     /// <inheritdoc />
-    public async Task SendToAllClients(IDeltaContent content)
+    public async Task SendToAllClients(IDeltaContent content, HashSet<NodeId> affectedPartitions)
     {
         foreach ((var clientInfo, System.Net.WebSockets.WebSocket socket) in _knownClients)
         {
