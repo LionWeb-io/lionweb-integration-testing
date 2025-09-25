@@ -65,7 +65,7 @@ Example:
   <PropertyGroup>
     ...
     <!-- Can be overwritten by environment variable TS_DELTA_CLI_VERSION -->
-    <TS_DELTA_CLI_VERSION Condition="'$(TS_DELTA_CLI_VERSION)' == ''">0.7.0-beta.14</TS_DELTA_CLI_VERSION>
+    <TS_DELTA_CLI_VERSION Condition="'$(TS_DELTA_CLI_VERSION)' == ''">0.7.0</TS_DELTA_CLI_VERSION>
   </PropertyGroup>
   ...
 </Project>
