@@ -111,7 +111,8 @@
           "commandId": "cmdId"
         }
       ],
-      "sequenceNumber": 124
+      "sequenceNumber": 124,
+      "protocolMessages": []
     },
     {
       "messageKind": "Error",
