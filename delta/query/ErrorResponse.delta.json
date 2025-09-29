@@ -1,0 +1,18 @@
+{
+  "messageKind": "ErrorResponse",
+  "errorCode": "myErrorCode",
+  "message": "something is not right",
+  "queryId": "q1",
+  "protocolMessages": [
+    {
+      "kind": "msgKind",
+      "message": "Human message",
+      "data": [
+        {
+          "key": "dataKey",
+          "value": "dataValue"
+        }
+      ]
+    }
+  ]
+}

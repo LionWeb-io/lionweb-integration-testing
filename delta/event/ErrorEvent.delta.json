@@ -1,5 +1,5 @@
 {
-  "messageKind": "Error",
+  "messageKind": "ErrorEvent",
   "errorCode": "myErrorCode",
   "message": "something is not right",
   "originCommands": [
