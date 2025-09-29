@@ -124,7 +124,8 @@
           "commandId": "cmdId"
         }
       ],
-      "sequenceNumber": 125
+      "sequenceNumber": 125,
+      "protocolMessages": []
     }
   ],
   "protocolMessages": [
