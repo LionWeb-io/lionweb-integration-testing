@@ -59,10 +59,12 @@
           },
           "index": 3,
           "deletedChild": "a",
-          "commandId": "cmdId2"
+          "commandId": "cmdId2",
+          "protocolMessages": []
         }
       ],
-      "commandId": "cmdId3"
+      "commandId": "cmdId3",
+      "protocolMessages": []
     }
   ],
   "commandId": "cmdId4",

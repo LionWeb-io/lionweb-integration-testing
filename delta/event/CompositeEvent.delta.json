@@ -111,10 +111,11 @@
           "commandId": "cmdId"
         }
       ],
-      "sequenceNumber": 124
+      "sequenceNumber": 124,
+      "protocolMessages": []
     },
     {
-      "messageKind": "Error",
+      "messageKind": "ErrorEvent",
       "errorCode": "myErrorCode",
       "message": "something is not right",
       "originCommands": [
@@ -123,7 +124,8 @@
           "commandId": "cmdId"
         }
       ],
-      "sequenceNumber": 125
+      "sequenceNumber": 125,
+      "protocolMessages": []
     }
   ],
   "protocolMessages": [
