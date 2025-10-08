@@ -1,7 +1,6 @@
 ﻿using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Client;
-using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Tests.Server;
@@ -14,23 +13,21 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
     [Test]
     public void AddAnnotation()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
         lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddAnnotation);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotation);
 
-        WaitForSent(2);
+        WaitForSent(3);
 
         var expected = new LinkTestConcept("a");
         expected.AddAnnotations([new TestAnnotation("annotation")]);
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -40,21 +37,19 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
     [Test]
     public void DeleteAnnotation()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
         lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddAnnotation, Tasks.DeleteAnnotation);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotation, Tasks.DeleteAnnotation);
 
-        WaitForSent(3);
+        WaitForSent(4);
 
         var expected = new LinkTestConcept("a");
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -64,21 +59,18 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
     [Test]
     public void MoveAnnotationFromOtherParent()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
         lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1,
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
             Tasks.AddAnnotation_to_Containment_0_1,
             Tasks.MoveAnnotationFromOtherParent);
 
-        WaitForSent(4);
+        WaitForSent(5);
 
         var expected = new LinkTestConcept("a")
         {
@@ -86,6 +78,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         };
         expected.AddAnnotations([new TestAnnotation("annotation")]);
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -95,23 +88,21 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
     [Test]
     public void MoveAnnotationInSameParent()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
         lionWebServer =
-            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddAnnotations, Tasks.MoveAnnotationInSameParent);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotations, Tasks.MoveAnnotationInSameParent);
 
         WaitForSent(4);
 
         var expected = new LinkTestConcept("a");
         expected.AddAnnotations([new TestAnnotation("annotation1"), new TestAnnotation("annotation0")]);
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 }

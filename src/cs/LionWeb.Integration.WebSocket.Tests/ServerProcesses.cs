@@ -19,7 +19,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using LionWeb.Integration.WebSocket.Server;
+using LionWeb.WebSocket;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
@@ -61,13 +61,15 @@ public static class ServerProcessesExtensions
         errorTrigger = "Exception";
 
         Console.WriteLine($"CSharpServer arguments: {result.StartInfo.Arguments}");
-        
+
         return result;
     }
 
-    private static Process LionWebServer(int port, string additionalServerParameters, out string readyTrigger, out string errorTrigger)
+    private static Process LionWebServer(int port, string additionalServerParameters, out string readyTrigger,
+        out string errorTrigger)
     {
-        string serverConfig = $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json"; 
+        string serverConfig =
+            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
         string serverDir = $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-server/packages/server";
         // Read config file
         JsonNode configJson = ReadJsonFromFile(serverDir + "/" + "server-config.json");
@@ -79,13 +81,14 @@ public static class ServerProcessesExtensions
         var result = new Process();
         result.StartInfo.FileName = "node";
         result.StartInfo.WorkingDirectory = serverDir;
-        result.StartInfo.Arguments = "./dist/server.js --run --config ../../../lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
+        result.StartInfo.Arguments =
+            "./dist/server.js --run --config ../../../lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
         result.StartInfo.UseShellExecute = false;
         readyTrigger = "Server is running";
         errorTrigger = "Error";
         return result;
     }
-    
+
     // Method to write data to a JSON file
     private static void WriteJsonToFile(string filePath, JsonNode node)
     {
