@@ -15,13 +15,11 @@
 // SPDX-FileCopyrightText: 2025 LionWeb Project
 // SPDX-License-Identifier: Apache-2.0
 
-using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M1;
-using LionWeb.Core.Notification;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Client;
-using LionWeb.Integration.WebSocket.Server;
+using LionWeb.Integration.WebSocket.Tests.Server;
 using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Tests;
@@ -34,17 +32,14 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
     [Test]
     public void SignIn_1()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
+            _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(),Tasks.SignOn);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn);
 
         WaitForSent(1);
     }
@@ -52,18 +47,15 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
     [Test]
     public void SignIn_2()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
+            _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(),Tasks.SignOn);
-        StartClient("B", serverPartition.GetType(), Tasks.SignOn);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn);
+        StartClient("B", typeof(LinkTestConcept), Tasks.SignOn);
 
         WaitForSent(2);
     }
@@ -72,22 +64,19 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
     [Test]
     public void Model()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
-        
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
+            _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn,Tasks.Wait,Tasks.AddName_Containment_0_1);
-        StartClient("B", serverPartition.GetType(), Tasks.SignOn,Tasks.AddContainment_0_1);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.SubscribeToChangingPartitions, Tasks.Wait, Tasks.Wait, Tasks.AddName_Containment_0_1);
+        StartClient("B", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1);
 
-        WaitForSent(4);
+        WaitForSent(6);
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(new LinkTestConcept("g")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1")
@@ -96,20 +85,16 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
             }
         }, serverPartition);
     }
-    
+
     [Test]
     public void Partition()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
-        // var serverPartition = new DynamicPartitionInstance("a", ShapesLanguage.Instance.Geometry);
-        // var serverPartition = new LenientPartition("a", webSocketServer.LionWebVersion.BuiltIns.Node);
         var serverForest = new Forest();
-        Debug.WriteLine($"Server partition: {serverPartition.PrintIdentity()}");
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
+            _webSocketServer.Connector);
 
         StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition);
         StartClient("B", typeof(LinkTestConcept), Tasks.SignOn);
@@ -118,7 +103,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
 
         AssertEquals(
             (INode)new LinkTestConcept("partition"),
-            (INode)serverForest.Partitions.Except([serverPartition]).First()
+            (INode)serverForest.Partitions.First()
         );
     }
 }

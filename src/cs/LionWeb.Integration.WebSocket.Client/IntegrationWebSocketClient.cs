@@ -16,26 +16,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
-using System.Net.WebSockets;
-using System.Text;
 using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Core.M2;
 using LionWeb.Core.M3;
-using LionWeb.Core.Notification;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
-using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Client;
-using LionWeb.Protocol.Delta.Message;
+using LionWeb.WebSocket;
 
 namespace LionWeb.Integration.WebSocket.Client;
 
-public class WebSocketClient : IDeltaClientConnector
+public class IntegrationWebSocketClient
 {
-    private const int BufferSize = 0x10000;
-
-    public const string ClientStartedMessage = "Client started.";
-
     private static readonly IVersion2023_1 _lionWebVersion = LionWebVersions.v2023_1;
 
     private static readonly List<Language> _languages =
@@ -55,7 +47,7 @@ public class WebSocketClient : IDeltaClientConnector
         Log($"Starting client {name} to connect to {serverIp}:{serverPort}@{repositoryId}");
         Log($"{name}: tasks: {string.Join(",", tasks)}");
 
-        var webSocketClient = new WebSocketClient(name);
+        var webSocketClient = new WebSocketClient(name, _lionWebVersion);
         IPartitionInstance partition = _languages
             .SelectMany(l => l.Entities)
             .OfType<Concept>()
@@ -64,32 +56,34 @@ public class WebSocketClient : IDeltaClientConnector
             .Select(c => (IPartitionInstance)c.GetLanguage().GetFactory().CreateNode("a", c))
             .First();
         Log($"{name}: partition: {partition.GetClassifier()}");
-        
-        var forest = new Forest();
-        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocketClient);
 
-        if (!tasks.Contains(Tasks.AddPartition))
-            forest.AddPartitions([partition]);
+        var forest = new Forest();
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest,
+            webSocketClient.Connector);
 
         await webSocketClient.ConnectToServer(serverIp, serverPort);
 
         foreach (var task in tasks)
         {
-            switch (task, partition)
+            switch (task, forest.Partitions.FirstOrDefault())
             {
                 case (Tasks.SignOn, _):
-                    await webSocketClient.SignOn(lionWeb, repositoryId);
+                    await lionWeb.SignOn(repositoryId);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case (Tasks.SubscribeToChangingPartitions, _):
+                    await lionWeb.SubscribeToChangingPartitions(true, true, true);
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.SignOff, _):
-                    await webSocketClient.SignOff(lionWeb);
+                    await lionWeb.SignOff();
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.Wait, _):
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.AddPartition, _):
-                    forest.AddPartitions([new LinkTestConcept("partition")]);
+                    forest.AddPartitions([partition]);
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.AddStringValue_0_1, DataTypeTestConcept p):
@@ -169,15 +163,24 @@ public class WebSocketClient : IDeltaClientConnector
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.AddContainment_0_n, LinkTestConcept p):
-                    p.AddContainment_0_n([new LinkTestConcept("containment_0_n_child0"), new LinkTestConcept("containment_0_n_child1")]);
+                    p.AddContainment_0_n([
+                        new LinkTestConcept("containment_0_n_child0"), new LinkTestConcept("containment_0_n_child1")
+                    ]);
                     lionWeb.WaitForReceived(2);
                     break;
                 case (Tasks.AddContainment_0_n_Containment_0_n, LinkTestConcept p):
-                    p.AddContainment_0_n([new LinkTestConcept("containment_0_n_child0") {Containment_0_n = [new LinkTestConcept("containment_0_n_containment_0_n_child0")] }]);
+                    p.AddContainment_0_n([
+                        new LinkTestConcept("containment_0_n_child0")
+                        {
+                            Containment_0_n = [new LinkTestConcept("containment_0_n_containment_0_n_child0")]
+                        }
+                    ]);
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.AddContainment_1_n, LinkTestConcept p):
-                    p.AddContainment_1_n([new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_1_n_child1")]);
+                    p.AddContainment_1_n([
+                        new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_1_n_child1")
+                    ]);
                     lionWeb.WaitForReceived(2);
                     break;
                 case (Tasks.MoveAndReplaceChildFromOtherContainment_Single, LinkTestConcept p):
@@ -202,7 +205,7 @@ public class WebSocketClient : IDeltaClientConnector
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.MoveChildFromOtherContainment_Multiple, LinkTestConcept p):
-                    p.InsertContainment_1_n(1,[p.Containment_0_n[^1].Containment_0_n[0]]);
+                    p.InsertContainment_1_n(1, [p.Containment_0_n[^1].Containment_0_n[0]]);
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.MoveChildFromOtherContainmentInSameParent_Single, LinkTestConcept p):
@@ -210,7 +213,7 @@ public class WebSocketClient : IDeltaClientConnector
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.MoveChildFromOtherContainmentInSameParent_Multiple, LinkTestConcept p):
-                    p.InsertContainment_1_n(1,[p.Containment_0_n[^1]]);
+                    p.InsertContainment_1_n(1, [p.Containment_0_n[^1]]);
                     lionWeb.WaitForReceived(1);
                     break;
                 default:
@@ -220,70 +223,6 @@ public class WebSocketClient : IDeltaClientConnector
 
         Console.ReadLine();
     }
-
-    private readonly NotificationToDeltaCommandMapper _mapper;
-
-    public WebSocketClient(string name)
-    {
-        _name = name;
-        _mapper = new(new CommandIdProvider(), _lionWebVersion);
-    }
-
-    private async Task SignOn(LionWebTestClient lionWeb, RepositoryId repositoryId) =>
-        await lionWeb.SignOn(repositoryId);
-
-
-    private async Task SignOff(LionWebTestClient lionWeb) =>
-        await lionWeb.SignOff();
-
-    private readonly DeltaSerializer _deltaSerializer = new();
-    private readonly ClientWebSocket _clientWebSocket = new ClientWebSocket();
-    private readonly string _name;
-
-    /// <inheritdoc />
-    public event EventHandler<IDeltaContent>? ReceiveFromRepository;
-
-    public async Task ConnectToServer(string ipAddress, int port) =>
-        await ConnectToServer($"ws://{ipAddress}:{port}");
-
-    public async Task ConnectToServer(string serverUri)
-    {
-        await _clientWebSocket.ConnectAsync(new Uri(serverUri), CancellationToken.None);
-
-        Log($"{_name}: {ClientStartedMessage} Connected to the server: {serverUri}");
-
-        Task.Run(async () =>
-        {
-            // Receive messages from the server
-            byte[] receiveBuffer = new byte[BufferSize];
-            while (_clientWebSocket.State == WebSocketState.Open)
-            {
-                WebSocketReceiveResult result =
-                    await _clientWebSocket.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
-                if (result.MessageType == WebSocketMessageType.Text)
-                {
-                    string receivedMessage = Encoding.UTF8.GetString(receiveBuffer, 0, result.Count);
-                    // Log($"XXClient: received message: {receivedMessage}");
-                    var deserialized = _deltaSerializer.Deserialize<IDeltaContent>(receivedMessage);
-                    // do NOT await
-                    Task.Run(() => ReceiveFromRepository?.Invoke(this, deserialized));
-                    // Log($"XXClient: processed message: {receivedMessage}");
-                }
-            }
-        });
-    }
-
-    /// <inheritdoc />
-    public async Task SendToRepository(IDeltaContent content) =>
-        await Send(_deltaSerializer.Serialize(content));
-
-    public async Task Send(string msg) =>
-        await _clientWebSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(msg)), WebSocketMessageType.Text,
-            true, CancellationToken.None);
-
-    /// <inheritdoc />
-    public IDeltaContent Convert(INotification notification)
-        => _mapper.Map(notification);
 
     private static void Log(string message, bool header = false) =>
         Console.WriteLine(header

@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <LionWebCSharpVersion>0.3.0-rc.10</LionWebCSharpVersion>
+    <LionWebCSharpVersion>0.4.0-alpha.1</LionWebCSharpVersion>
     <!-- Can be overwritten by environment variable TS_DELTA_CLI_VERSION -->
     <TS_DELTA_CLI_VERSION Condition="'$(TS_DELTA_CLI_VERSION)' == ''">0.7.2</TS_DELTA_CLI_VERSION>
     <UseLionWebPackages>true</UseLionWebPackages>
@@ -29,6 +29,7 @@ SPDX-License-Identifier: Apache-2.0
     <PackageVersion Include="LionWeb-CSharp-Generator" Version="$(LionWebCSharpVersion)"/>
     <PackageVersion Include="LionWeb-CSharp-Protocol-Delta" Version="$(LionWebCSharpVersion)"/>
     <PackageVersion Include="LionWeb-CSharp-Generator-MpsSpecific" Version="$(LionWebCSharpVersion)"/>
+    <PackageVersion Include="LionWeb-CSharp-WebSocket" Version="$(LionWebCSharpVersion)"/>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.0" PrivateAssets="All" />
   </ItemGroup>
 </Project>

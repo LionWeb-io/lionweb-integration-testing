@@ -55,5 +55,6 @@ public enum Tasks
     MoveChildFromOtherContainment_Multiple,
     MoveChildFromOtherContainmentInSameParent_Single,
     AddPartition,
-    MoveChildFromOtherContainmentInSameParent_Multiple
+    MoveChildFromOtherContainmentInSameParent_Multiple,
+    SubscribeToChangingPartitions
 }
