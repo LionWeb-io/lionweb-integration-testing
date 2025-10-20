@@ -62,7 +62,7 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
 
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn(repositoryId);
-        await lionWeb.SubscribeToChangingPartitions(true, true, true);
+        await lionWeb.SubscribeToChangingPartitions(creation: true, deletion: true, partitions: true);
 
         lionWeb.WaitForReceived(2);
         return lionWeb;
@@ -72,8 +72,12 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     {
         long aMessageCount = aClient.WaitCount += numberOfMessages;
         long bMessageCount = bClient.WaitCount += numberOfMessages;
-        while (!_externalProcessRunner.ErrorTriggerEncountered && aClient.MessageCount < aMessageCount ||
-               bClient.MessageCount < bMessageCount)
+        
+        var noErrorEncountered = !_externalProcessRunner.ErrorTriggerEncountered;
+        var aClientMessageMissing = aClient.MessageCount < aMessageCount;
+        var bClientMessageMissing = bClient.MessageCount < bMessageCount;
+        
+        while (noErrorEncountered && (aClientMessageMissing || bClientMessageMissing))
         {
             Thread.Sleep(LionWebTestClient._sleepInterval);
         }
