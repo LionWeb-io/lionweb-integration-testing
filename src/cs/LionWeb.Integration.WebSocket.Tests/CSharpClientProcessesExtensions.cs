@@ -18,7 +18,7 @@
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 using System.Diagnostics;
-using LionWeb.Integration.WebSocket.Client;
+using LionWeb.WebSocket;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
@@ -45,7 +45,7 @@ public static class CSharpClientProcessesExtensions
         process.StartInfo.UseShellExecute = false;
         readyTrigger = WebSocketClient.ClientStartedMessage;
         errorTrigger = "Exception";
-        
+
         return process;
     }
 }

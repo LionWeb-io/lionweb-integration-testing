@@ -17,9 +17,9 @@
 
 using System.Diagnostics;
 using LionWeb.Integration.WebSocket.Client;
-using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Repository;
+using LionWeb.WebSocket;
 using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
@@ -62,14 +62,15 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
     [OneTimeTearDown]
     public void StopServer()
     {
-        _webSocketServer.Stop();
     }
 
     protected void WaitForSent(int numberOfMessages = 1)
     {
         long messageCount = lionWebServer.WaitSentCount += numberOfMessages;
+        Console.WriteLine($"xxxxx WaitSentCount: {lionWebServer.WaitSentCount} MessageSentCount {lionWebServer.MessageSentCount}");
         while (!_externalProcessRunner.ErrorTriggerEncountered && lionWebServer.MessageSentCount < messageCount)
         {
+            Console.WriteLine($"yyy messageCount: {messageCount} MessageSentCount {lionWebServer.MessageSentCount}");
             Thread.Sleep(LionWebTestClient._sleepInterval);
         }
 
