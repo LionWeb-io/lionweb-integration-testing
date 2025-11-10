@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <LionWebCSharpVersion>0.3.0-rc.10</LionWebCSharpVersion>
     <!-- Can be overwritten by environment variable TS_DELTA_CLI_VERSION -->
-    <TS_DELTA_CLI_VERSION Condition="'$(TS_DELTA_CLI_VERSION)' == ''">0.7.1</TS_DELTA_CLI_VERSION>
+    <TS_DELTA_CLI_VERSION Condition="'$(TS_DELTA_CLI_VERSION)' == ''">0.7.2</TS_DELTA_CLI_VERSION>
     <UseLionWebPackages>true</UseLionWebPackages>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='DEBUG'">
