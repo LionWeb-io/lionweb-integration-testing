@@ -1446,8 +1446,8 @@
           },
           "targets": [
             {
-              "resolveInfo": "Node",
-              "reference": "LionCore-builtins-Node"
+              "resolveInfo": "LionWeb.LionCore_builtins.Node",
+              "reference": null
             }
           ]
         },
