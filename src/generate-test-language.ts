@@ -10,13 +10,16 @@ import { LionWebJsonChunk } from "lionweb-json"
 import { StringsMapper } from "lionweb-ts-utils"
 import { generatePlantUmlForLanguage, languageAsText } from "lionweb-utilities"
 
+
+// configure a convenient factory for producing a Language:
 const keyAndIdMapper: StringsMapper = (...names: string[]) =>
     names.length === 1
         ? names[0]
         : names.slice(1).join("-")
-
 const factory = new LanguageFactory("TestLanguage", "0", keyAndIdMapper, keyAndIdMapper)
 
+
+// generate an enumeration with the given name, and literals named `literal1`, `literal2`, and `literal3`:
 const generateTestEnumeration = (name: string): Enumeration => {
     const enumeration = factory.enumeration(name)
     enumeration.havingLiterals(...(
@@ -24,11 +27,14 @@ const generateTestEnumeration = (name: string): Enumeration => {
     ))
     return enumeration
 }
+// generate two test enumerations:
 const TestEnumeration = generateTestEnumeration("TestEnumeration")
 generateTestEnumeration("SecondTestEnumeration")
 
+
+// generate a `DataTypeTestConcept` concept with boolean-, integer-, string-, and TestEnumeration-typed properties, both required and optional:
 const {booleanDataType, integerDataType, stringDataType} = builtinPrimitives
-const DataTypeTestConcept = factory.concept("DataTypeTestConcept", false).isPartition()
+const DataTypeTestConcept = factory.concept("DataTypeTestConcept", false)
 ;[false, true].forEach((optional) => {
     ;[["boolean", booleanDataType], ["integer", integerDataType], ["string", stringDataType], ["enum", TestEnumeration]].forEach(
         ([typeName, dataType]) => {
@@ -40,7 +46,9 @@ const DataTypeTestConcept = factory.concept("DataTypeTestConcept", false).isPart
     )
 })
 
-const LinkTestConcept = factory.concept("LinkTestConcept", false).implementing(builtinClassifiers.inamed).isPartition()
+
+// generate a `LinkTestConcept` concept with containments and references in all cardinalities:
+const LinkTestConcept = factory.concept("LinkTestConcept", false).implementing(builtinClassifiers.inamed)
 type LinkType = "containment" | "reference"
 const linkTypes: LinkType[] = ["containment", "reference"]
 linkTypes.forEach((linkType) => {
@@ -60,18 +68,33 @@ linkTypes.forEach((linkType) => {
     })
 })
 
+
+// generate a test annotation:
 factory.annotation("TestAnnotation").annotating(builtinClassifiers.node)
+
+
+// generate a test partition:
+const TestPartition = factory.concept("TestPartition", false).isPartition()
+factory.containment(TestPartition, "linkTestConcept").ofType(LinkTestConcept).isOptional()
+factory.containment(TestPartition, "dataTypeTestConcept").ofType(DataTypeTestConcept).isOptional()
+
 
 const testLanguage = factory.language
 
 const languagesPath = "src/languages"
+const jsonAsText = (json: unknown) => JSON.stringify(json, null, 2) // TODO  2 -> 4 for consistency
+
+
+// persist a textualization and a PlantUML graph of the language:
 await Deno.writeTextFile(`${languagesPath}/testLanguage.txt`, languageAsText(testLanguage))
 await Deno.writeTextFile(`${languagesPath}/testLanguage.puml`, generatePlantUmlForLanguage(testLanguage))
-const serializedTestLanguage = serializeLanguages(testLanguage)
 
-const jsonAsText = (json: unknown) => JSON.stringify(json, null, 2)
+
+// serialize in 2023.1 format (and persist):
+const serializedTestLanguage = serializeLanguages(testLanguage)
 await Deno.writeTextFile(`${languagesPath}/testLanguage.2023.1.json`, jsonAsText(serializedTestLanguage))
 
+// function to set all "version" fields in the given serialization chunk to the specified version:
 const setVersion = (chunkJson: LionWebJsonChunk, version: string) => {
     chunkJson.serializationFormatVersion = version
     chunkJson.languages.forEach((usedLanguage) => { usedLanguage.version = version })
@@ -83,8 +106,9 @@ const setVersion = (chunkJson: LionWebJsonChunk, version: string) => {
     })
 }
 
-setVersion(serializedTestLanguage, "2024.1")
 
+// modify version for 2024.1 version, modify reference objects to comply with the specification, and persist:
+setVersion(serializedTestLanguage, "2024.1")
 const oldPrefix = "LionCore-builtins-"
 serializedTestLanguage.nodes.forEach(({ references }) => {
     references.forEach(({ targets }) => {
@@ -96,9 +120,11 @@ serializedTestLanguage.nodes.forEach(({ references }) => {
         })
     })
 })
-
 await Deno.writeTextFile(`${languagesPath}/testLanguage.2024.1.json`, jsonAsText(serializedTestLanguage))
 
+
+// modify version for 2025.1 version, and persist:
 setVersion(serializedTestLanguage, "2025.1")
+// Note: reference objects were already modified to comply with the specification in the previous step!
 await Deno.writeTextFile(`${languagesPath}/testLanguage.2025.1.json`, jsonAsText(serializedTestLanguage))
 
