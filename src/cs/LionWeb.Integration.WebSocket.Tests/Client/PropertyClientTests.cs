@@ -51,9 +51,11 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     public void AddProperty()
     {
         aPartition.StringValue_0_1 = "new property";
+        AssertEquals(aPartition, bPartition);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition == bPartition, "Partitions are different");
     }
 
     [Test]
