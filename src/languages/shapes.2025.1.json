@@ -124,7 +124,8 @@
                         "id-r",
                         "id-center"
                     ]
-                }      ],
+                }
+            ],
             "references": [
                 {
                     "reference": {
