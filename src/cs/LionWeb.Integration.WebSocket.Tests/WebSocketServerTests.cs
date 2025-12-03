@@ -77,7 +77,7 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         WaitForSent(6);
 
         var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
-        AssertEquals(new LinkTestConcept("g")
+        AssertEquals(new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1")
             {
