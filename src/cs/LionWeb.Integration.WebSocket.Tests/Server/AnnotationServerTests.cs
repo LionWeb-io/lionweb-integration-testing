@@ -97,7 +97,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotations, Tasks.MoveAnnotationInSameParent);
 
-        WaitForSent(4);
+        WaitForSent(5);
 
         var expected = new LinkTestConcept("partition");
         expected.AddAnnotations([new TestAnnotation("annotation1"), new TestAnnotation("annotation0")]);
