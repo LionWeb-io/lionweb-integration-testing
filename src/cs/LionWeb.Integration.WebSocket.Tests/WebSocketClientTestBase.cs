@@ -72,12 +72,13 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
     {
         long aMessageCount = aClient.WaitCount += numberOfMessages;
         long bMessageCount = bClient.WaitCount += numberOfMessages;
-        
-        var noErrorEncountered = !_externalProcessRunner.ErrorTriggerEncountered;
-        var aClientMessageMissing = aClient.MessageCount < aMessageCount;
-        var bClientMessageMissing = bClient.MessageCount < bMessageCount;
-        
-        while (noErrorEncountered && (aClientMessageMissing || bClientMessageMissing))
+
+        while (!_externalProcessRunner.ErrorTriggerEncountered
+               && (
+                   aClient.MessageCount < aMessageCount
+                   || bClient.MessageCount < bMessageCount
+               )
+              )
         {
             Thread.Sleep(LionWebTestClient._sleepInterval);
         }
