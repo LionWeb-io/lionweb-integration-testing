@@ -62,6 +62,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Replaces the child node with a new one in the partition.
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void ReplaceChild()
     {
         _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
@@ -141,6 +142,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node from a single containment to another. Both containments have different parents.
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Single()
     {
         _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
