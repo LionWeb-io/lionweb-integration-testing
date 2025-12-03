@@ -65,11 +65,13 @@ Example:
   <PropertyGroup>
     ...
     <!-- Can be overwritten by environment variable TS_DELTA_CLI_VERSION -->
-    <TS_DELTA_CLI_VERSION Condition="'$(TS_DELTA_CLI_VERSION)' == ''">0.7.2</TS_DELTA_CLI_VERSION>
+    <TS_DELTA_CLI_VERSION Condition="'$(TS_DELTA_CLI_VERSION)' == ''">x.y.z</TS_DELTA_CLI_VERSION>
   </PropertyGroup>
   ...
 </Project>
 ```
+
+where `x.y.z` is the NPM version for the LionWeb TypeScript packages.
 
 We need the following setting in `LionWeb.Integration.WebSocket.Tests.csproj` to smuggle the value into the runtime:
 
