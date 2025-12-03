@@ -24,7 +24,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         WaitForSent(3);
 
-        var expected = new DataTypeTestConcept("a")
+        var expected = new DataTypeTestConcept("partition")
         {
             StringValue_0_1 = "new property"
         };
@@ -50,7 +50,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         WaitForSent(4);
 
-        var expected = new DataTypeTestConcept("a")
+        var expected = new DataTypeTestConcept("partition")
         {
             StringValue_0_1 = "changed property"
         };
@@ -77,7 +77,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         WaitForSent(4);
 
-        var expected = new DataTypeTestConcept("a")
+        var expected = new DataTypeTestConcept("partition")
         {
             StringValue_0_1 = null
         };

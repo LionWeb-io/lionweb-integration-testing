@@ -24,7 +24,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(3);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1")
         };
@@ -48,7 +48,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(4);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = null
         };
@@ -74,7 +74,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(4);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("substitute")
         };
@@ -100,7 +100,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(5);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1"),
             Containment_1 = new LinkTestConcept("containment_0_1_containment_0_1")
@@ -127,7 +127,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(6);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
             Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0"), new LinkTestConcept("containment_1_n_child1")]
@@ -154,7 +154,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(7);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1"),
             Containment_1 = new LinkTestConcept("containment_1")
@@ -184,7 +184,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(6);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
             Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0")]
@@ -210,7 +210,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(4);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_1 = new LinkTestConcept("containment_0_1")
         };
@@ -237,7 +237,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(5);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_1 = new LinkTestConcept("containment_0_1")
         };
@@ -263,7 +263,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(7);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
             Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_child1"), new LinkTestConcept("containment_1_n_child1")]
@@ -290,7 +290,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         WaitForSent(5);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_n = [new LinkTestConcept("containment_0_n_child1"), new LinkTestConcept("containment_0_n_child0")],
         };

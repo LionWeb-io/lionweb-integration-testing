@@ -24,7 +24,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         WaitForSent(4);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1"),
         };
@@ -51,7 +51,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         WaitForSent(5);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1"),
         };
@@ -77,7 +77,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         WaitForSent(6);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1"),
             Containment_1 = new LinkTestConcept("containment_1")

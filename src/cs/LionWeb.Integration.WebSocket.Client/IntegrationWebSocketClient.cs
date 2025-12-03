@@ -53,7 +53,7 @@ public class IntegrationWebSocketClient
             .OfType<Concept>()
             .Where(c => c.Partition)
             .Where(c => c.Name == partitionType)
-            .Select(c => (IPartitionInstance)c.GetLanguage().GetFactory().CreateNode("a", c))
+            .Select(c => (IPartitionInstance)c.GetLanguage().GetFactory().CreateNode("partition", c))
             .First();
         Log($"{name}: partition: {partition.GetClassifier()}");
 

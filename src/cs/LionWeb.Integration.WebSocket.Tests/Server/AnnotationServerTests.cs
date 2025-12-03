@@ -24,7 +24,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         WaitForSent(3);
 
-        var expected = new LinkTestConcept("a");
+        var expected = new LinkTestConcept("partition");
         expected.AddAnnotations([new TestAnnotation("annotation")]);
 
         var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
@@ -48,7 +48,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         WaitForSent(4);
 
-        var expected = new LinkTestConcept("a");
+        var expected = new LinkTestConcept("partition");
         var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
@@ -72,7 +72,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         WaitForSent(5);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1")
         };
@@ -99,7 +99,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         WaitForSent(4);
 
-        var expected = new LinkTestConcept("a");
+        var expected = new LinkTestConcept("partition");
         expected.AddAnnotations([new TestAnnotation("annotation1"), new TestAnnotation("annotation0")]);
 
         var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
