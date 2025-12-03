@@ -42,7 +42,7 @@ We use preprocessor directives to distinguish the scenarios:
 #endif
 ```
 
-## How to run different Scenarios
+## How to run different scenarios
 
 ### Using "foreign" implementations from packages
 In this scenario, we use released versions of "foreign" implementations, retrieved from their respective package infrastructure (e.g. NuGet, NPM, Maven, ...).
@@ -115,12 +115,25 @@ When preparing the process (<a href="#Test structure">as described</a>), assume 
 ### Servers
 
 * `CSharp`:: Implementation in `LionWeb.Integration.WebSocket.Server` in this Git repository.  
-  Uses either `LionWeb-CSharp` / `LionWeb-CSharp-Protocol-Delta` nuget packages in version `LionWebCSharpVersion` (_package_ scenario) or directory `<gitroot>/../lionweb-csharp` (_local directories_ scenario).
+  Uses either `LionWeb-CSharp` / `LionWeb-CSharp-Protocol-Delta` NuGet packages in version `LionWebCSharpVersion` (_package_ scenario) or directory `<gitroot>/../lionweb-csharp` (_local directories_ scenario).
 * `LionWebServer`:: <a href="https://github.com/LionWeb-io/lionweb-server">lionweb-server</a>.  
   Does not support _package_ scenario yet, thus disabled.
 
 ### Clients
 * `CSharp`:: Implementation in `LionWeb.Integration.WebSocket.Client` in this Git repository.  
-  Uses either `LionWeb-CSharp` / `LionWeb-CSharp-Protocol-Delta` nuget packages (_package_ scenario) or directory `<gitroot>/../lionweb-csharp` (_local directories_ scenario).
+  Uses either `LionWeb-CSharp` / `LionWeb-CSharp-Protocol-Delta` NuGet packages (_package_ scenario) or directory `<gitroot>/../lionweb-csharp` (_local directories_ scenario).
 * `Ts`:: <a href="https://github.com/LionWeb-io/lionweb-typescript">lionweb-typescript</a>.  
   Uses either `lionweb/delta-protocol-test-cli` npm package in version `TS_DELTA_CLI_VERSION` (_package_ scenario) or directory `<gitroot>/../lionweb-typescript/packages/delta-protocol-test-cli` (_local directories_ scenario).
+
+## How to generate the sources for the language implementations
+
+In the `LionWeb.Integration.Build` project, run
+
+```shell
+dotnet run Generate.cs
+```
+
+This generates the source code for the C# implementation of the test language in `<gitroot>/src/languages` into the `LionWeb.Integration.Languages` project.
+This test language comes in three LionWeb versions: `2023.1`, `2024.1`, `2025.1`.
+The generated source code is found in the `Generated/V<LionWeb version>` directories.
+*Note* that the generation is not triggered automatically, so whenever the contents of `<gitroot>/src/languages` change, you need to rerun this command.
