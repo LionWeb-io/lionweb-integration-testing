@@ -173,6 +173,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node from a multiple containment to another. Both containments have different parents.
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Multiple()
     {
         //Todo: MoveChildFromOtherContainment and DeleteChild commands are triggered

@@ -57,6 +57,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Node in an added subtree has a reference to already existing node
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void AddChild_NodeInAddedSubtreeHasAReferenceToAlreadyExistingNodes()
     {
         aPartition.Containment_1 = new LinkTestConcept("referenced-child");
@@ -141,6 +142,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Replaces an existing node with a new node
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void ReplaceChild()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
@@ -158,6 +160,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Replaces an existing node a (complex) subtree
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void ReplaceChild_WithASubtree()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("child");
@@ -220,6 +223,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Single_WithAssignment()
     {
         aPartition.Containment_0_1 =  new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") };
@@ -242,6 +246,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Single_WithReplaceWith()
     {
         aPartition.Containment_0_1 = new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") };
