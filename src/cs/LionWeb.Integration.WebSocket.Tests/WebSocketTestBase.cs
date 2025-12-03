@@ -19,6 +19,7 @@ using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Core.Utilities;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
@@ -64,8 +65,49 @@ public abstract class WebSocketTestBase
 
     protected void AssertEquals(IEnumerable<INode?> a, IEnumerable<INode?> b)
     {
-        List<IDifference> differences = new Comparer(a.ToList(), b.ToList()).Compare().ToList();
+        List<IDifference> differences = new IdenticalIdComparer(a.ToList(), b.ToList()).Compare().ToList();
         Assert.That(differences.Count == 0,
             differences.DescribeAll(new() { LeftDescription = "a", RightDescription = "b" }));
+    }
+}
+
+internal class IdenticalIdComparer : Comparer
+{
+    public IdenticalIdComparer(IList<INode?> left, IList<INode?> right) : base(left, right)
+    {
+    }
+
+    protected override List<IDifference> CompareNode(IReadableNode? leftOwner, IReadableNode? left, Link? containment, IReadableNode? rightOwner,
+        IReadableNode? right)
+    {
+        var result = base.CompareNode(leftOwner, left, containment, rightOwner, right);
+        if (left is not null && right is not null && left.GetId() != right.GetId())
+        {
+            result.Insert(0, new NodeIdDifference(left, right));
+        }
+        return result;
+    }
+}
+
+public record NodeIdDifference(IReadableNode Left, IReadableNode Right) : DifferenceBase
+{
+    protected override string Describe() => 
+        $"Node id: {LeftDescription()}: {Left.GetId()} {NC(Left)} vs. {RightDescription()}: {Right.GetId()} {NC(Right)}";
+}
+
+public class IdenticalIdComparerTests
+{
+    [Test]
+    public void Same()
+    {
+        var differences = new IdenticalIdComparer([new LinkTestConcept("a")], [new LinkTestConcept("a")]).Compare();
+        ClassicAssert.IsEmpty(differences);
+    }
+    
+    [Test]
+    public void Different()
+    {
+        var differences = new IdenticalIdComparer([new LinkTestConcept("a")], [new LinkTestConcept("b")]).Compare();
+        ClassicAssert.IsNotEmpty(differences);
     }
 }
