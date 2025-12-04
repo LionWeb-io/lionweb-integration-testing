@@ -24,9 +24,9 @@ namespace LionWeb.Integration.WebSocket.Tests.Client;
 public class PropertyClientTests(ServerProcesses serverProcess)
     : WebSocketClientTestBase(serverProcess, LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
 {
-    private DataTypeTestConcept aPartition;
+    private DataTypeTestConcept aPartition = null!;
 
-    private DataTypeTestConcept bPartition;
+    private DataTypeTestConcept bPartition = null!;
 
     [SetUp]
     public void ConnectToServer()

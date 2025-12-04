@@ -29,12 +29,11 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public abstract class WebSocketClientTestBase : WebSocketTestBase
 {
     private readonly ServerProcesses _serverProcess;
-    private Process _process;
 
-    protected IForest aForest;
-    protected LionWebTestClient aClient;
-    protected IForest bForest;
-    protected LionWebTestClient bClient;
+    protected IForest aForest = null!;
+    protected LionWebTestClient aClient = null!;
+    protected IForest bForest = null!;
+    protected LionWebTestClient bClient = null!;
 
     protected WebSocketClientTestBase(ServerProcesses serverProcess, LionWebVersions? lionWebVersion = null,
         List<Language>? languages = null) : base(lionWebVersion, languages)
