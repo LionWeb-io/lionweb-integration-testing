@@ -30,7 +30,7 @@ language TestLanguage
                 literal2
                 literal3
 
-        annotation TestAnnotation
+        annotation TestAnnotation implements INamed
             annotates: Node
 
         enumeration TestEnumeration
@@ -39,9 +39,9 @@ language TestLanguage
                 literal2
                 literal3
 
-        <<partition>> concept TestPartition
+        <<partition>> concept TestPartition implements INamed
             features (↓name):
-                dataTypeTestConcept: DataTypeTestConcept?
-                linkTestConcept: LinkTestConcept?
+                data: DataTypeTestConcept?
+                links: LinkTestConcept[0..*]
 
 

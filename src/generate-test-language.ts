@@ -70,13 +70,13 @@ linkTypes.forEach((linkType) => {
 
 
 // generate a test annotation:
-factory.annotation("TestAnnotation").annotating(builtinClassifiers.node)
+factory.annotation("TestAnnotation").annotating(builtinClassifiers.node).implementing(builtinClassifiers.inamed)
 
 
 // generate a test partition:
-const TestPartition = factory.concept("TestPartition", false).isPartition()
-factory.containment(TestPartition, "linkTestConcept").ofType(LinkTestConcept).isOptional()
-factory.containment(TestPartition, "dataTypeTestConcept").ofType(DataTypeTestConcept).isOptional()
+const TestPartition = factory.concept("TestPartition", false).implementing(builtinClassifiers.inamed).isPartition()
+factory.containment(TestPartition, "links").ofType(LinkTestConcept).isOptional().isMultiple()
+factory.containment(TestPartition, "data").ofType(DataTypeTestConcept).isOptional()
 
 
 const testLanguage = factory.language

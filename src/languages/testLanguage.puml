@@ -23,7 +23,7 @@ enum SecondTestEnumeration {
   literal3
 }
 
-annotation TestAnnotation
+annotation TestAnnotation implements INamed
 TestAnnotation ..# Node : <i>annotates</i>
 
 enum TestEnumeration {
@@ -32,7 +32,7 @@ enum TestEnumeration {
   literal3
 }
 
-class TestPartition <<partition>>
+class TestPartition <<partition>> implements INamed
 
 
 
@@ -50,7 +50,7 @@ LinkTestConcept "*" --> "*" LinkTestConcept: reference_1_n
 
 
 
-TestPartition "1" o--> "0..1" LinkTestConcept: linkTestConcept
-TestPartition "1" o--> "0..1" DataTypeTestConcept: dataTypeTestConcept
+TestPartition "1" o--> "*" LinkTestConcept: links
+TestPartition "1" o--> "0..1" DataTypeTestConcept: data
 
 @enduml
