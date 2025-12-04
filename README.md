@@ -2,6 +2,7 @@
 
 Automated tests that check that the other repos within the [LionWeb GitHub](https://github.com/LionWeb-io) integrate well and consistently with each other.
 The definition of “well” in the previous sentences is not very broad — effectively it means: the build runs green.
+With “build” we mean the [GitHub Action](https://github.com/LionWeb-io/lionweb-integration-testing/actions/workflows/build.yaml).
 
 Note that this repository serves as a **“canary in a coal mine”**: if its build turns red, it means there's a mismatch(/incompatibility) between either an implementation and the specification (and/or between implementations).
 That also means that modifications and additions to this repository – in the form of PRs – might turn the build red when run on the PR's branch.
@@ -25,6 +26,22 @@ The build – in the form of a GitHub Action name “LionWeb integration tests�
 The automated tests in the cloned repositories are **not** run.
 
 And remember: a green build is not a guarantee for the absence of bugs (or presence of quality), but a red build is definitely a guarantee that you need to look at something.
+
+Note also that the build sometimes fails during the “Test all C# projects” part, with something like the following in the output:
+
+```text
+  Error Message:
+   System.Net.HttpListenerException : Address already in use
+  Stack Trace:
+     at System.Net.HttpEndPointManager.GetEPListener(String host, Int32 port, HttpListener listener, Boolean secure)
+   at System.Net.HttpEndPointManager.AddPrefixInternal(String p, HttpListener listener)
+   at System.Net.HttpEndPointManager.AddListener(HttpListener listener)
+   at System.Net.HttpListener.Start()
+   at LionWeb.WebSocket.WebSocketServer.StartServer(String ipAddress, Int32 port)
+```
+
+If this happens, then just rerun the job: usually the job succeeds the next time.
+*Why* this happens is unclear to us, as we do take pains to assign each C# WebSocket server its own, unique port number.
 
 
 ## Installation requirements
