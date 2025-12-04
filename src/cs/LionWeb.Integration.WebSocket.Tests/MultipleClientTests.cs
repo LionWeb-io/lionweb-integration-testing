@@ -38,8 +38,8 @@ public class MultipleClientTests(params ClientProcesses[] clientProcesses) : Web
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
             _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn);
-        StartClient("B", typeof(TestPartition), Tasks.SignOn);
+        StartClient("A", Tasks.SignOn);
+        StartClient("B", Tasks.SignOn);
 
         WaitForSent(2);
     }
@@ -55,8 +55,8 @@ public class MultipleClientTests(params ClientProcesses[] clientProcesses) : Web
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
             _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.SubscribeToChangingPartitions, Tasks.Wait, Tasks.Wait, Tasks.AddName_Containment_0_1);
-        StartClient("B", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1);
+        StartClient("A", Tasks.SignOn, Tasks.SubscribeToChangingPartitions, Tasks.Wait, Tasks.Wait, Tasks.AddName_Containment_0_1);
+        StartClient("B", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1);
 
         WaitForSent(6);
 
@@ -90,8 +90,8 @@ public class MultipleClientTests(params ClientProcesses[] clientProcesses) : Web
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
             _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition);
-        StartClient("B", typeof(TestPartition), Tasks.SignOn);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition);
+        StartClient("B", Tasks.SignOn);
 
         WaitForSent(3);
 

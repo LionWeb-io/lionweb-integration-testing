@@ -20,7 +20,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
             _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddStringValue_0_1);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddStringValue_0_1);
 
         WaitForSent(3);
 
@@ -53,7 +53,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
             _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddStringValue_0_1, Tasks.SetStringValue_0_1);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddStringValue_0_1, Tasks.SetStringValue_0_1);
 
         WaitForSent(4);
 
@@ -87,7 +87,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
             _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddStringValue_0_1,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddStringValue_0_1,
             Tasks.DeleteStringValue_0_1);
 
         WaitForSent(4);

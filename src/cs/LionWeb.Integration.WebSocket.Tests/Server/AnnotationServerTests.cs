@@ -20,7 +20,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotation);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotation);
 
         WaitForSent(3);
 
@@ -52,7 +52,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotation, Tasks.DeleteAnnotation);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotation, Tasks.DeleteAnnotation);
 
         WaitForSent(4);
 
@@ -82,7 +82,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
             Tasks.AddAnnotation_to_Containment_0_1,
             Tasks.MoveAnnotationFromOtherParent);
 
@@ -118,7 +118,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         lionWebServer =
             new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotations, Tasks.MoveAnnotationInSameParent);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotations, Tasks.MoveAnnotationInSameParent);
 
         WaitForSent(5);
 

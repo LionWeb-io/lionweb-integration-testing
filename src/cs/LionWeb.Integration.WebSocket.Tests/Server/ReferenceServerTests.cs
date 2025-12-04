@@ -19,7 +19,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
             Tasks.AddReference_0_1_to_Containment_0_1);
 
         WaitForSent(4);
@@ -53,7 +53,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
             Tasks.AddReference_0_1_to_Containment_0_1, Tasks.DeleteReference_0_1);
 
         WaitForSent(5);
@@ -86,7 +86,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
             Tasks.AddReference_0_1_to_Containment_0_1, Tasks.AddReference_0_1_to_Containment_1);
 
         WaitForSent(6);
