@@ -18,7 +18,6 @@
 using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M1;
-using LionWeb.Core.M2;
 using LionWeb.Core.M3;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta.Client;
@@ -40,24 +39,16 @@ public class IntegrationWebSocketClient
         string name = args[0];
         string serverIp = args[1];
         int serverPort = int.Parse(args[2]);
-        string partitionType = args[3];
         var tasks = args[4].Split(",").Select(s => Enum.Parse<Tasks>(s)).ToList();
         var repositoryId = "myRepo";
 
         Log($"Starting client {name} to connect to {serverIp}:{serverPort}@{repositoryId}");
         Log($"{name}: tasks: {string.Join(",", tasks)}");
 
-        var webSocketClient = new WebSocketClient(name, _lionWebVersion);
-        IPartitionInstance partition = _languages
-            .SelectMany(l => l.Entities)
-            .OfType<Concept>()
-            .Where(c => c.Partition)
-            .Where(c => c.Name == partitionType)
-            .Select(c => (IPartitionInstance)c.GetLanguage().GetFactory().CreateNode("partition", c))
-            .First();
-        Log($"{name}: partition: {partition.GetClassifier()}");
-
         var forest = new Forest();
+
+        var webSocketClient = new WebSocketClient(name, _lionWebVersion);
+        
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest,
             webSocketClient.Connector);
 
@@ -65,111 +56,119 @@ public class IntegrationWebSocketClient
 
         foreach (var task in tasks)
         {
-            switch (task, forest.Partitions.FirstOrDefault())
+            TestPartition partition = forest.Partitions.FirstOrDefault() as TestPartition;
+            switch (task)
             {
-                case (Tasks.SignOn, _):
+                case Tasks.SignOn:
                     await lionWeb.SignOn(repositoryId);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.SubscribeToChangingPartitions, _):
+                case Tasks.SubscribeToChangingPartitions:
                     await lionWeb.SubscribeToChangingPartitions(true, true, true);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.SignOff, _):
+                case Tasks.SignOff:
                     await lionWeb.SignOff();
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.Wait, _):
+                case Tasks.Wait:
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddPartition, _):
-                    forest.AddPartitions([partition]);
+                case Tasks.AddPartition:
+                    forest.AddPartitions([new TestPartition("partition")
+                    {
+                        Data = new DataTypeTestConcept("data"),
+                        Links =
+                        [
+                            new LinkTestConcept("link")
+                        ]
+                    }]);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddStringValue_0_1, TestPartition p):
-                    p.Data.StringValue_0_1 = "new property";
+                case Tasks.AddStringValue_0_1:
+                    partition.Data.StringValue_0_1 = "new property";
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.SetStringValue_0_1, TestPartition p):
-                    p.Data.StringValue_0_1 = "changed property";
+                case Tasks.SetStringValue_0_1:
+                    partition.Data.StringValue_0_1 = "changed property";
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.DeleteStringValue_0_1, TestPartition p):
-                    p.Data.StringValue_0_1 = null;
+                case Tasks.DeleteStringValue_0_1:
+                    partition.Data.StringValue_0_1 = null;
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddName_Containment_0_1, TestPartition p):
-                    p.Links[0].Name = "my name";
+                case Tasks.AddName_Containment_0_1:
+                    partition.Links[0].Containment_0_1.Name = "my name";
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddAnnotation, TestPartition p):
-                    p.AddAnnotations([new TestAnnotation("annotation")]);
+                case Tasks.AddAnnotation:
+                    partition.AddAnnotations([new TestAnnotation("annotation")]);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddAnnotations, TestPartition p):
-                    p.AddAnnotations([new TestAnnotation("annotation0"), new TestAnnotation("annotation1")]);
+                case Tasks.AddAnnotations:
+                    partition.AddAnnotations([new TestAnnotation("annotation0"), new TestAnnotation("annotation1")]);
                     lionWeb.WaitForReceived(2);
                     break;
-                case (Tasks.AddAnnotation_to_Containment_0_1, TestPartition p):
-                    p.Links[0].Containment_0_1!.AddAnnotations([new TestAnnotation("annotation")]);
+                case Tasks.AddAnnotation_to_Containment_0_1:
+                    partition.Links[0].Containment_0_1!.AddAnnotations([new TestAnnotation("annotation")]);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.DeleteAnnotation, TestPartition p):
-                    p.RemoveAnnotations(p.GetAnnotations());
+                case Tasks.DeleteAnnotation:
+                    partition.RemoveAnnotations(partition.GetAnnotations());
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.MoveAnnotationInSameParent, TestPartition p):
-                    p.InsertAnnotations(0, [p.GetAnnotations()[^1]]);
+                case Tasks.MoveAnnotationInSameParent:
+                    partition.InsertAnnotations(0, [partition.GetAnnotations()[^1]]);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.MoveAnnotationFromOtherParent, TestPartition p):
-                    p.AddAnnotations(p.Links[0].Containment_0_1!.GetAnnotations());
+                case Tasks.MoveAnnotationFromOtherParent:
+                    partition.AddAnnotations(partition.Links[0].Containment_0_1!.GetAnnotations());
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddReference_0_1_to_Containment_0_1, TestPartition p):
-                    p.Links[0].Reference_0_1 = p.Links[0].Containment_0_1;
+                case Tasks.AddReference_0_1_to_Containment_0_1:
+                    partition.Links[0].Reference_0_1 = partition.Links[0].Containment_0_1;
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddReference_0_1_to_Containment_1, TestPartition p):
-                    p.Links[0].Reference_0_1 = p.Links[0].Containment_1;
+                case Tasks.AddReference_0_1_to_Containment_1:
+                    partition.Links[0].Reference_0_1 = partition.Links[0].Containment_1;
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.DeleteReference_0_1, TestPartition p):
-                    p.Links[0].Reference_0_1 = null;
+                case Tasks.DeleteReference_0_1:
+                    partition.Links[0].Reference_0_1 = null;
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddContainment_0_1, TestPartition p):
-                    p.Links[0].Containment_0_1 = new LinkTestConcept("containment_0_1");
+                case Tasks.AddContainment_0_1:
+                    partition.Links[0].Containment_0_1 = new LinkTestConcept("containment_0_1");
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddContainment_1, TestPartition p):
-                    p.Links[0].Containment_1 = new LinkTestConcept("containment_1");
+                case Tasks.AddContainment_1:
+                    partition.Links[0].Containment_1 = new LinkTestConcept("containment_1");
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.ReplaceContainment_0_1, TestPartition p):
-                    p.Links[0].Containment_0_1!.ReplaceWith(new LinkTestConcept("substitute"));
+                case Tasks.ReplaceContainment_0_1:
+                    partition.Links[0].Containment_0_1!.ReplaceWith(new LinkTestConcept("substitute"));
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.DeleteContainment_0_1, TestPartition p):
-                    p.Links[0].Containment_0_1 = null;
+                case Tasks.DeleteContainment_0_1:
+                    partition.Links[0].Containment_0_1 = null;
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddContainment_0_1_Containment_0_1, TestPartition p):
-                    p.Links[0].Containment_0_1!.Containment_0_1 = new LinkTestConcept("containment_0_1_containment_0_1");
+                case Tasks.AddContainment_0_1_Containment_0_1:
+                    partition.Links[0].Containment_0_1!.Containment_0_1 = new LinkTestConcept("containment_0_1_containment_0_1");
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddContainment_1_Containment_0_1, TestPartition p):
-                    p.Links[0].Containment_1.Containment_0_1 = new LinkTestConcept("containment_1_containment_0_1");
+                case Tasks.AddContainment_1_Containment_0_1:
+                    partition.Links[0].Containment_1.Containment_0_1 = new LinkTestConcept("containment_1_containment_0_1");
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddContainment_0_n, TestPartition p):
-                    p.Links[0].AddContainment_0_n([
+                case Tasks.AddContainment_0_n:
+                    partition.Links[0].AddContainment_0_n([
                         new LinkTestConcept("containment_0_n_child0"), new LinkTestConcept("containment_0_n_child1")
                     ]);
                     lionWeb.WaitForReceived(2);
                     break;
-                case (Tasks.AddContainment_0_n_Containment_0_n, TestPartition p):
-                    p.Links[0].AddContainment_0_n([
+                case Tasks.AddContainment_0_n_Containment_0_n:
+                    partition.Links[0].AddContainment_0_n([
                         new LinkTestConcept("containment_0_n_child0")
                         {
                             Containment_0_n = [new LinkTestConcept("containment_0_n_containment_0_n_child0")]
@@ -177,43 +176,43 @@ public class IntegrationWebSocketClient
                     ]);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.AddContainment_1_n, TestPartition p):
-                    p.Links[0].AddContainment_1_n([
+                case Tasks.AddContainment_1_n:
+                    partition.Links[0].AddContainment_1_n([
                         new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_1_n_child1")
                     ]);
                     lionWeb.WaitForReceived(2);
                     break;
-                case (Tasks.MoveAndReplaceChildFromOtherContainment_Single, TestPartition p):
-                    p.Links[0].Containment_1.Containment_0_1!.ReplaceWith(p.Links[0].Containment_0_1!.Containment_0_1!);
+                case Tasks.MoveAndReplaceChildFromOtherContainment_Single:
+                    partition.Links[0].Containment_1.Containment_0_1!.ReplaceWith(partition.Links[0].Containment_0_1!.Containment_0_1!);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Single, TestPartition p):
-                    p.Links[0].Containment_1.ReplaceWith(p.Links[0].Containment_0_1!);
+                case Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Single:
+                    partition.Links[0].Containment_1.ReplaceWith(partition.Links[0].Containment_0_1!);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.MoveAndReplaceChildFromOtherContainment_Multiple, TestPartition p):
-                    p.Links[0].Containment_1_n[^1].ReplaceWith(p.Links[0].Containment_0_n[^1].Containment_0_n[^1]);
+                case Tasks.MoveAndReplaceChildFromOtherContainment_Multiple:
+                    partition.Links[0].Containment_1_n[^1].ReplaceWith(partition.Links[0].Containment_0_n[^1].Containment_0_n[^1]);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.MoveChildInSameContainment, TestPartition p):
-                    p.Links[0].InsertContainment_0_n(0, [p.Links[0].Containment_0_n[^1]]);
+                case Tasks.MoveChildInSameContainment:
+                    partition.Links[0].InsertContainment_0_n(0, [partition.Links[0].Containment_0_n[^1]]);
                     // Note: this is effectively a move rather than an insert — hence the name of the task.
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.MoveChildFromOtherContainment_Single, TestPartition p):
-                    p.Links[0].Containment_1 = p.Links[0].Containment_0_1!.Containment_0_1!;
+                case Tasks.MoveChildFromOtherContainment_Single:
+                    partition.Links[0].Containment_1 = partition.Links[0].Containment_0_1!.Containment_0_1!;
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.MoveChildFromOtherContainment_Multiple, TestPartition p):
-                    p.Links[0].InsertContainment_1_n(1, [p.Links[0].Containment_0_n[^1].Containment_0_n[0]]);
+                case Tasks.MoveChildFromOtherContainment_Multiple:
+                    partition.Links[0].InsertContainment_1_n(1, [partition.Links[0].Containment_0_n[^1].Containment_0_n[0]]);
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.MoveChildFromOtherContainmentInSameParent_Single, TestPartition p):
-                    p.Links[0].Containment_1 = p.Links[0].Containment_0_1!;
+                case Tasks.MoveChildFromOtherContainmentInSameParent_Single:
+                    partition.Links[0].Containment_1 = partition.Links[0].Containment_0_1!;
                     lionWeb.WaitForReceived(1);
                     break;
-                case (Tasks.MoveChildFromOtherContainmentInSameParent_Multiple, TestPartition p):
-                    p.Links[0].InsertContainment_1_n(1, [p.Links[0].Containment_0_n[^1]]);
+                case Tasks.MoveChildFromOtherContainmentInSameParent_Multiple:
+                    partition.Links[0].InsertContainment_1_n(1, [partition.Links[0].Containment_0_n[^1]]);
                     lionWeb.WaitForReceived(1);
                     break;
                 default:

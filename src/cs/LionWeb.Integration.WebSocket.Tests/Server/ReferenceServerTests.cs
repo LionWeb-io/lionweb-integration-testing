@@ -19,18 +19,25 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
+        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
             Tasks.AddReference_0_1_to_Containment_0_1);
 
         WaitForSent(4);
 
-        var expected = new LinkTestConcept("partition")
+        var expected = new TestPartition("partition")
         {
-            Containment_0_1 = new LinkTestConcept("containment_0_1"),
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_0_1 = new LinkTestConcept("containment_0_1"),
+                }
+            ]
         };
-        expected.Reference_0_1 = expected.Containment_0_1;
+        expected.Links[0].Reference_0_1 = expected.Links[0].Containment_0_1;
 
-        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -46,17 +53,24 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
+        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
             Tasks.AddReference_0_1_to_Containment_0_1, Tasks.DeleteReference_0_1);
 
         WaitForSent(5);
 
-        var expected = new LinkTestConcept("partition")
+        var expected = new TestPartition("partition")
         {
-            Containment_0_1 = new LinkTestConcept("containment_0_1"),
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_0_1 = new LinkTestConcept("containment_0_1"),
+                }
+            ]
         };
 
-        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -72,19 +86,27 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
+        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
             Tasks.AddReference_0_1_to_Containment_0_1, Tasks.AddReference_0_1_to_Containment_1);
 
         WaitForSent(6);
 
-        var expected = new LinkTestConcept("partition")
+        var expected = new TestPartition("partition")
         {
-            Containment_0_1 = new LinkTestConcept("containment_0_1"),
-            Containment_1 = new LinkTestConcept("containment_1")
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                { 
+                    Containment_0_1 = new LinkTestConcept("containment_0_1"),
+                    Containment_1 = new LinkTestConcept("containment_1")
+                }
+            ]
+           
         };
-        expected.Reference_0_1 = expected.Containment_1;
+        expected.Links[0].Reference_0_1 = expected.Links[0].Containment_1;
 
-        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 }
