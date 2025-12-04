@@ -47,7 +47,7 @@ public class RunNodeTests
             // (hence 3x ../)
             "node-program-with-error.js",
             "started",
-            "Error"
+            "RunNodeProgram_With_Error"
         );
         
         Assert.That(_externalProcessRunner.ErrorTriggerEncountered);
