@@ -67,10 +67,10 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
     protected void WaitForSent(int numberOfMessages = 1)
     {
         long messageCount = lionWebServer.WaitSentCount += numberOfMessages;
-        Console.WriteLine($"xxxxx WaitSentCount: {lionWebServer.WaitSentCount} MessageSentCount {lionWebServer.MessageSentCount}");
+        Console.WriteLine($"WaitSentCount: {lionWebServer.WaitSentCount} MessageSentCount {lionWebServer.MessageSentCount}");
         while (!_externalProcessRunner.ErrorTriggerEncountered && lionWebServer.MessageSentCount < messageCount)
         {
-            Console.WriteLine($"yyy messageCount: {messageCount} MessageSentCount {lionWebServer.MessageSentCount}");
+            Console.WriteLine($"messageCount: {messageCount} MessageSentCount {lionWebServer.MessageSentCount}");
             Thread.Sleep(LionWebTestClient._sleepInterval);
         }
 
