@@ -19,7 +19,6 @@
 
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
@@ -29,7 +28,7 @@ public static class TsClientProcessesExtensions
         out string readyTrigger,
         out string errorTrigger)
     {
-        var cmdLine = $"{port} {clientId} {nameof(TestPartition)} {string.Join(",", tasks)}";
+        var cmdLine = $"{port} {clientId} {string.Join(",", tasks)}";
 
 // Accesses `<DefineConstants>USE_LION_WEB_PACKAGES</DefineConstants>` from .csproj 
 #if USE_LION_WEB_PACKAGES
