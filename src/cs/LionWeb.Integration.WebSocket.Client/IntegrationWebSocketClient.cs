@@ -138,7 +138,7 @@ public class IntegrationWebSocketClient
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.AddContainment_0_1:
-                    partition.Links[0].Containment_0_1 = new LinkTestConcept("containment_0_1") { Name = "default name" };
+                    partition.Links[0].Containment_0_1 = new LinkTestConcept("containment_0_1");
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.AddContainment_1:
