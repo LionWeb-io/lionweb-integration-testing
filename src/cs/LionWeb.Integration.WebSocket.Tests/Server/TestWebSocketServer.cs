@@ -25,6 +25,6 @@ internal class TestWebSocketServer : WebSocketServer
     public TestWebSocketServer(LionWebVersions lionWebVersion, int port) : base(lionWebVersion)
     {
         StartServer(WebSocketTestBase.IpAddress, port);
-        Console.WriteLine($"Server started on port {port}.");
+        Console.Error.WriteLine($"Server started on port {port}.");
     }
 }
