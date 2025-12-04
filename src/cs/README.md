@@ -53,6 +53,16 @@ We select this scenario by building this C# solution with `Release` configuratio
 dotnet test --configuration Release
 ```
 
+Don't be alarmed by the message “A total of 1 test files matched the specified pattern.” on `stdout` — this is a peculiarity of the chosen test setup.
+Despite this message, all tests will be executed.
+The last line on `stdout` should read something like the following:
+
+```text
+Passed!  - Failed:     0, Passed:    77, Skipped:    17, Total:    94, Duration: 1 m 7 s - LionWeb.Integration.WebSocket.Tests.dll (net8.0)
+```
+
+You can also ignore a message starting with “This is an "error"[...]” on `stderr`: this is part of checking that starting Node.js processes inside C# tests works.
+
 If needed, we use methods in `SetupTrace` (attributed with `[OneTimeSetUp]`) to download the "foreign" implementation.
 Their versions should be configured in `Directory.Packages.props`, and can be overridden with environment variables.
 
@@ -111,6 +121,16 @@ When preparing the process (<a href="#Test structure">as described</a>), assume 
 > 
 > E.g. in Rider, this is done through the Properties of this C# solution, by setting *all* entries of the "Configuration and Platform" column to "Release | AnyCPU" or "Debug | AnyCPU".
 > This typically necessitates a rebuild of the entire solution (because of the use of compiler directives).
+
+The [`run-tests.sh`](./run-tests.sh) script builds all relevant sources and runs the tests for a certain configuration — either `Release` (which is the default), or `Debug`.
+It also mimicks what happens in the [configured GitHub Action](https://github.com/LionWeb-io/lionweb-integration-testing/actions/workflows/build.yaml) as much as possible.
+Execute this script as follows
+
+```shell
+./run-tests.sh [optional configuration identifier; default=Release]
+```
+
+The script outputs `stdout` into a file `logs/test-<configuration ID>.log`.
 
 ## Currently supported "foreign" implementations
 

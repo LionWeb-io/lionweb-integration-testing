@@ -18,15 +18,16 @@
 using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+// ReSharper disable InconsistentNaming
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
 public abstract class LinkClientTestBase(ServerProcesses serverProcess)
     : WebSocketClientTestBase(serverProcess, LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
 {
-    protected LinkTestConcept aPartition;
+    protected LinkTestConcept aPartition = null!;
 
-    protected LinkTestConcept bPartition;
+    protected LinkTestConcept bPartition = null!;
 
     [SetUp]
     public void ConnectToServer()
@@ -40,7 +41,7 @@ public abstract class LinkClientTestBase(ServerProcesses serverProcess)
         aPartition = new("partition");
         aForest.AddPartitions([aPartition]);
         WaitForReceived();
-        while ((bPartition = (LinkTestConcept)bForest.Partitions.FirstOrDefault()) == null)
+        while ((bPartition = ((LinkTestConcept?)bForest.Partitions.FirstOrDefault())!) == null)
             Thread.Sleep(100);
     }
 

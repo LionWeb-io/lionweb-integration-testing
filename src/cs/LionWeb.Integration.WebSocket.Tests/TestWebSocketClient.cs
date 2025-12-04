@@ -22,5 +22,5 @@ namespace LionWeb.Integration.WebSocket.Tests;
 
 internal class TestWebSocketClient(string name, LionWebVersions lionWebVersion) : WebSocketClient(name, lionWebVersion)
 {
-    public Task Send(string msg) => base.Send(msg);
+    public new Task Send(string msg) => base.Send(msg);
 }

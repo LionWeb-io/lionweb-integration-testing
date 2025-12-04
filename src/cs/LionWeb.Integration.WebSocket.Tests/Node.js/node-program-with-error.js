@@ -17,6 +17,7 @@
 
 setTimeout(() => {
     console.log("started (press Ctrl-C to exit)")
-    console.error("Error occurred!");
+    const scriptName = __filename.substring(__filename.lastIndexOf("/") + 1)
+    console.error(`This is an "error" printed to stderr by the ${scriptName} program as part of the RunNodeProgram_With_Error unit test — please ignore!`);
     setInterval(() => {}, 1 << 25)  // leave on "forever" (=9h19m14s)
 }, 300)

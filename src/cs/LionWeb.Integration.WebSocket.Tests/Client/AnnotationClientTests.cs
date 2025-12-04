@@ -69,7 +69,7 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.AddAnnotations(bPartition.Containment_0_1.GetAnnotations());
+        bPartition.AddAnnotations(bPartition.Containment_0_1!.GetAnnotations());
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);

@@ -21,6 +21,7 @@ using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Repository;
 using LionWeb.WebSocket;
 using NUnit.Framework.Legacy;
+// ReSharper disable InconsistentNaming
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
@@ -29,9 +30,9 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public abstract class WebSocketServerTestBase : WebSocketTestBase
 {
     private readonly ClientProcesses[] _clientProcesses;
-    private int nextClientProcess;
-    protected WebSocketServer _webSocketServer;
-    protected LionWebTestRepository lionWebServer;
+    private int _nextClientProcess;
+    protected WebSocketServer _webSocketServer = null!;
+    protected LionWebTestRepository lionWebServer = null!;
 
     protected WebSocketServerTestBase(params ClientProcesses[] clientProcesses) : base(null, null)
     {
@@ -42,13 +43,13 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
     [SetUp]
     public void ResetClientProcessCount()
     {
-        nextClientProcess = 0;
+        _nextClientProcess = 0;
     }
 
     private Process NextProcess(string name, Type partitionType, Tasks[] tasks, out string readyTrigger,
         out string errorTrigger) =>
-        _clientProcesses[nextClientProcess++ % _clientProcesses.Length]
-            .Create(name, partitionType.Name, Port, tasks.Select(Enum.GetName), out readyTrigger, out errorTrigger);
+        _clientProcesses[_nextClientProcess++ % _clientProcesses.Length]
+            .Create(name, partitionType.Name, Port, tasks.Select(Enum.GetName)!, out readyTrigger, out errorTrigger);
 
     protected void StartClient(string name, Type partitionType, params Tasks[] tasks)
     {
@@ -67,10 +68,10 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
     protected void WaitForSent(int numberOfMessages = 1)
     {
         long messageCount = lionWebServer.WaitSentCount += numberOfMessages;
-        Console.WriteLine($"xxxxx WaitSentCount: {lionWebServer.WaitSentCount} MessageSentCount {lionWebServer.MessageSentCount}");
+        Console.WriteLine($"WaitSentCount: {lionWebServer.WaitSentCount} MessageSentCount {lionWebServer.MessageSentCount}");
         while (!_externalProcessRunner.ErrorTriggerEncountered && lionWebServer.MessageSentCount < messageCount)
         {
-            Console.WriteLine($"yyy messageCount: {messageCount} MessageSentCount {lionWebServer.MessageSentCount}");
+            Console.WriteLine($"messageCount: {messageCount} MessageSentCount {lionWebServer.MessageSentCount}");
             Thread.Sleep(LionWebTestClient._sleepInterval);
         }
 
