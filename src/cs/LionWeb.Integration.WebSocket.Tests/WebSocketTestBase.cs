@@ -27,11 +27,8 @@ public abstract class WebSocketTestBase
 {
     public const string IpAddress = "localhost";
     public const RepositoryId RepositoryId = "myRepo";
-
     protected int Port => NextPort;
     private static int NextPort = 40000;
-    private static Random random = new Random();
-
     protected static readonly ExternalProcessRunner _externalProcessRunner = new();
 
     protected readonly LionWebVersions _lionWebVersion;
@@ -47,7 +44,7 @@ public abstract class WebSocketTestBase
     [SetUp]
     public void SetPort()
     {
-        NextPort += 1 + random.Next(15);
+        NextPort++;
     }
 
     [SetUp]
