@@ -46,15 +46,7 @@ public class IntegrationWebSocketClient
         Log($"{name}: tasks: {string.Join(",", tasks)}");
 
         var forest = new Forest();
-        var partition = new TestPartition("partition")
-        {
-            Data = new DataTypeTestConcept("data"),
-            Links =
-            [
-                new LinkTestConcept("link")
-            ]
-        };
-        
+
         var webSocketClient = new WebSocketClient(name, _lionWebVersion);
         
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest,
@@ -64,6 +56,7 @@ public class IntegrationWebSocketClient
 
         foreach (var task in tasks)
         {
+            TestPartition partition = forest.Partitions.FirstOrDefault() as TestPartition;
             switch (task)
             {
                 case Tasks.SignOn:
@@ -82,7 +75,14 @@ public class IntegrationWebSocketClient
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.AddPartition:
-                    forest.AddPartitions([partition]);
+                    forest.AddPartitions([new TestPartition("partition")
+                    {
+                        Data = new DataTypeTestConcept("data"),
+                        Links =
+                        [
+                            new LinkTestConcept("link")
+                        ]
+                    }]);
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.AddStringValue_0_1:
@@ -98,7 +98,7 @@ public class IntegrationWebSocketClient
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.AddName_Containment_0_1:
-                    partition.Links[0].Name = "my name";
+                    partition.Links[0].Containment_0_1.Name = "my name";
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.AddAnnotation:
@@ -138,7 +138,7 @@ public class IntegrationWebSocketClient
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.AddContainment_0_1:
-                    partition.Links[0].Containment_0_1 = new LinkTestConcept("containment_0_1");
+                    partition.Links[0].Containment_0_1 = new LinkTestConcept("containment_0_1") { Name = "default name" };
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.AddContainment_1:
