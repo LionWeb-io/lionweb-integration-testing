@@ -20,7 +20,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1);
 
         WaitForSent(3);
 
@@ -51,7 +51,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.DeleteContainment_0_1);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.DeleteContainment_0_1);
 
         WaitForSent(4);
 
@@ -85,7 +85,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.ReplaceContainment_0_1);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.ReplaceContainment_0_1);
 
         WaitForSent(4);
 
@@ -117,7 +117,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
             Tasks.MoveChildFromOtherContainment_Single);
 
         WaitForSent(5);
@@ -152,7 +152,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n,
             Tasks.MoveChildFromOtherContainment_Multiple);
 
         WaitForSent(6);
@@ -188,7 +188,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
             Tasks.AddContainment_1, Tasks.AddContainment_1_Containment_0_1, Tasks.MoveAndReplaceChildFromOtherContainment_Single);
 
         WaitForSent(7);
@@ -227,7 +227,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromOtherContainment_Multiple);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromOtherContainment_Multiple);
 
         WaitForSent(6);
 
@@ -260,7 +260,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.MoveChildFromOtherContainmentInSameParent_Single);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.MoveChildFromOtherContainmentInSameParent_Single);
 
         WaitForSent(4);
 
@@ -293,7 +293,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
             Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Single);
 
         WaitForSent(5);
@@ -326,7 +326,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_1_n,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_1_n,
             Tasks.MoveChildFromOtherContainmentInSameParent_Multiple);
 
         WaitForSent(7);
@@ -360,7 +360,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", typeof(TestPartition), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
             Tasks.MoveChildInSameContainment);
 
         WaitForSent(5);

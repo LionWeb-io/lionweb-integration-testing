@@ -39,7 +39,7 @@ public class IntegrationWebSocketClient
         string name = args[0];
         string serverIp = args[1];
         int serverPort = int.Parse(args[2]);
-        var tasks = args[4].Split(",").Select(s => Enum.Parse<Tasks>(s)).ToList();
+        var tasks = args[3].Split(",").Select(s => Enum.Parse<Tasks>(s)).ToList();
         var repositoryId = "myRepo";
 
         Log($"Starting client {name} to connect to {serverIp}:{serverPort}@{repositoryId}");

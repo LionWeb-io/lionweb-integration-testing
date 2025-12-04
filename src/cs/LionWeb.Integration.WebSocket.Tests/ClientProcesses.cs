@@ -29,11 +29,11 @@ public enum ClientProcesses
 
 public static class ClientProcessesExtensions
 {
-    public static Process Create(this ClientProcesses process, string name, string partitionType, int port,
+    public static Process Create(this ClientProcesses process, string name, int port,
         IEnumerable<string> tasks, out string readyTrigger, out string errorTrigger) => process switch
     {
-        ClientProcesses.CSharp => CSharpClientProcessesExtensions.CSharpClient(name, partitionType, port, tasks, out readyTrigger, out errorTrigger),
-        ClientProcesses.Ts => TsClientProcessesExtensions.TsClient(name, partitionType, port, tasks, out readyTrigger, out errorTrigger),
+        ClientProcesses.CSharp => CSharpClientProcessesExtensions.CSharpClient(name, port, tasks, out readyTrigger, out errorTrigger),
+        ClientProcesses.Ts => TsClientProcessesExtensions.TsClient(name, port, tasks, out readyTrigger, out errorTrigger),
         _ => throw new ArgumentOutOfRangeException(nameof(process), process, null)
     };
 }
