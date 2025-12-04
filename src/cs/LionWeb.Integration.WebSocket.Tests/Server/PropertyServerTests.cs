@@ -1,7 +1,6 @@
 ﻿using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Client;
-using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Tests.Server;
@@ -14,24 +13,23 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
     [Test]
     public void AddProperty()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new DataTypeTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
+            _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(),Tasks.SignOn, Tasks.AddStringValue_0_1);
+        StartClient("A", typeof(DataTypeTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddStringValue_0_1);
 
-        WaitForSent(2);  
+        WaitForSent(3);
 
-        var expected = new DataTypeTestConcept("a")
+        var expected = new DataTypeTestConcept("partition")
         {
             StringValue_0_1 = "new property"
         };
 
+        var serverPartition = (DataTypeTestConcept)serverForest.Partitions.Last();
         AssertEquals(expected, serverPartition);
     }
 
@@ -41,24 +39,23 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
     [Test]
     public void ChangeProperty()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new DataTypeTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
+            _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(),Tasks.SignOn, Tasks.AddStringValue_0_1, Tasks.SetStringValue_0_1);
+        StartClient("A", typeof(DataTypeTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddStringValue_0_1, Tasks.SetStringValue_0_1);
 
-        WaitForSent(3);  
+        WaitForSent(4);
 
-        var expected = new DataTypeTestConcept("a")
+        var expected = new DataTypeTestConcept("partition")
         {
             StringValue_0_1 = "changed property"
         };
 
+        var serverPartition = (DataTypeTestConcept)serverForest.Partitions.Last();
         AssertEquals(expected, serverPartition);
     }
 
@@ -68,24 +65,24 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
     [Test]
     public void DeleteProperty()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new DataTypeTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
+            _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(),Tasks.SignOn, Tasks.AddStringValue_0_1, Tasks.DeleteStringValue_0_1);
+        StartClient("A", typeof(DataTypeTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddStringValue_0_1,
+            Tasks.DeleteStringValue_0_1);
 
-        WaitForSent(3);  
+        WaitForSent(4);
 
-        var expected = new DataTypeTestConcept("a")
+        var expected = new DataTypeTestConcept("partition")
         {
             StringValue_0_1 = null
         };
 
+        var serverPartition = (DataTypeTestConcept)serverForest.Partitions.Last();
         AssertEquals(expected, serverPartition);
     }
 }

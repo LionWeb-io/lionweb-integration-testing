@@ -1,7 +1,6 @@
 ﻿using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Client;
-using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 using NUnit.Framework.Legacy;
 
@@ -15,25 +14,22 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void AddChild()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1);
 
-        WaitForSent(2);
+        WaitForSent(3);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1")
         };
 
-        AssertEquals(expected, serverPartition);
+        AssertEquals(expected, (LinkTestConcept)serverForest.Partitions.First());
     }
 
     /// <summary>
@@ -42,24 +38,22 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void DeleteChild()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.DeleteContainment_0_1);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.DeleteContainment_0_1);
 
-        WaitForSent(3);
+        WaitForSent(4);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = null
         };
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         ClassicAssert.Null(serverPartition.Containment_0_1);
         AssertEquals(expected, serverPartition);
     }
@@ -68,26 +62,25 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Replaces the child node with a new one in the partition.
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void ReplaceChild()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.ReplaceContainment_0_1);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.ReplaceContainment_0_1);
 
-        WaitForSent(3);
+        WaitForSent(4);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("substitute")
         };
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -97,26 +90,24 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveChildFromOtherContainment_Single()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
             Tasks.MoveChildFromOtherContainment_Single);
 
-        WaitForSent(4);
+        WaitForSent(5);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1"),
             Containment_1 = new LinkTestConcept("containment_0_1_containment_0_1")
         };
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
     
@@ -126,26 +117,24 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveChildFromOtherContainment_Multiple()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n,
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n,
             Tasks.MoveChildFromOtherContainment_Multiple);
 
-        WaitForSent(5);
+        WaitForSent(6);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
             Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0"), new LinkTestConcept("containment_1_n_child1")]
         };
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -153,23 +142,21 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node from a single containment to another. Both containments have different parents.
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Single()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
             Tasks.AddContainment_1, Tasks.AddContainment_1_Containment_0_1, Tasks.MoveAndReplaceChildFromOtherContainment_Single);
 
-        WaitForSent(6);
+        WaitForSent(7);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_1 = new LinkTestConcept("containment_0_1"),
             Containment_1 = new LinkTestConcept("containment_1")
@@ -178,6 +165,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
             }
         };
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
     
@@ -185,28 +173,27 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node from a multiple containment to another. Both containments have different parents.
     /// </summary>
     [Test]
+    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Multiple()
     {
         //Todo: MoveChildFromOtherContainment and DeleteChild commands are triggered
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromOtherContainment_Multiple);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromOtherContainment_Multiple);
 
-        WaitForSent(5);
+        WaitForSent(6);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
             Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0")]
         };
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -216,24 +203,22 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveChildFromOtherContainmentInSameParent_Single()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.MoveChildFromOtherContainmentInSameParent_Single);
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.MoveChildFromOtherContainmentInSameParent_Single);
 
-        WaitForSent(3);
+        WaitForSent(4);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_1 = new LinkTestConcept("containment_0_1")
         };
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -244,25 +229,23 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Ignore("Fails to correlate notification id to ParticipationNotificationId")]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
             Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Single);
 
-        WaitForSent(4);
+        WaitForSent(5);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_1 = new LinkTestConcept("containment_0_1")
         };
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -272,26 +255,24 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveChildFromOtherContainmentInSameParent_Multiple()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_n, Tasks.AddContainment_1_n,
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_1_n,
             Tasks.MoveChildFromOtherContainmentInSameParent_Multiple);
 
-        WaitForSent(6);
+        WaitForSent(7);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
             Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_child1"), new LinkTestConcept("containment_1_n_child1")]
         };
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 
@@ -301,25 +282,23 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveChildInSameContainment()
     {
-        _webSocketServer = new WebSocketServer(_lionWebVersion) { Languages = _languages };
-        _webSocketServer.StartServer(IpAddress, Port);
+        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
-        var serverPartition = new LinkTestConcept("a");
         var serverForest = new Forest();
-        serverForest.AddPartitions([serverPartition]);
 
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer);
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector);
 
-        StartClient("A", serverPartition.GetType(), Tasks.SignOn, Tasks.AddContainment_0_n,
+        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
             Tasks.MoveChildInSameContainment);
 
-        WaitForSent(4);
+        WaitForSent(5);
 
-        var expected = new LinkTestConcept("a")
+        var expected = new LinkTestConcept("partition")
         {
             Containment_0_n = [new LinkTestConcept("containment_0_n_child1"), new LinkTestConcept("containment_0_n_child0")],
         };
 
+        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
 }

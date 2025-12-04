@@ -19,8 +19,8 @@ using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Core.M3;
-using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Protocol.Delta.Client;
+using LionWeb.WebSocket;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
@@ -57,21 +57,28 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
 
     protected async Task<LionWebTestClient> ConnectWebSocket(IForest forest, string name, RepositoryId repositoryId)
     {
-        var webSocket = new WebSocketClient(name);
-        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket);
-        
+        var webSocket = new WebSocketClient(name, _lionWebVersion);
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket.Connector);
+
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn(repositoryId);
+        await lionWeb.SubscribeToChangingPartitions(creation: true, deletion: true, partitions: true);
 
-        lionWeb.WaitForReceived(1);
+        lionWeb.WaitForReceived(2);
         return lionWeb;
     }
-    
+
     protected void WaitForReceived(int numberOfMessages = 1)
     {
         long aMessageCount = aClient.WaitCount += numberOfMessages;
         long bMessageCount = bClient.WaitCount += numberOfMessages;
-        while (!_externalProcessRunner.ErrorTriggerEncountered && aClient.MessageCount < aMessageCount || bClient.MessageCount < bMessageCount)
+
+        while (!_externalProcessRunner.ErrorTriggerEncountered
+               && (
+                   aClient.MessageCount < aMessageCount
+                   || bClient.MessageCount < bMessageCount
+               )
+              )
         {
             Thread.Sleep(LionWebTestClient._sleepInterval);
         }
