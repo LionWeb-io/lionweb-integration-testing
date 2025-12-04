@@ -26,23 +26,8 @@ namespace LionWeb.Integration.WebSocket.Tests;
 [TestFixture(ClientProcesses.CSharp)]
 [TestFixture(ClientProcesses.Ts)]
 [TestFixture(ClientProcesses.Ts, ClientProcesses.CSharp)]
-public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : WebSocketServerTestBase(clientProcesses)
+public class MultipleClientTests(params ClientProcesses[] clientProcesses) : WebSocketServerTestBase(clientProcesses)
 {
-    [Test]
-    public void SignIn_1()
-    {
-        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
-            _webSocketServer.Connector);
-
-        StartClient("A", typeof(TestPartition), Tasks.SignOn);
-
-        WaitForSent(1);
-    }
-
     [Test]
     public void SignIn_2()
     {
