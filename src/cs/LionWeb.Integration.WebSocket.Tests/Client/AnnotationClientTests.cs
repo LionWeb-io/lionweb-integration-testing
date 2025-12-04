@@ -63,13 +63,13 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
     [Test]
     public void MoveAnnotationFromOtherParent()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("subHost");
-        aPartition.Containment_0_1.AddAnnotations([new TestAnnotation("annotation")]);
+        aPartition.AddLinks([new LinkTestConcept("subHost")]);
+        aPartition.Links[0].AddAnnotations([new TestAnnotation("annotation")]);
         WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.AddAnnotations(bPartition.Containment_0_1!.GetAnnotations());
+        bPartition.AddAnnotations(bPartition.Links[0].GetAnnotations());
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);

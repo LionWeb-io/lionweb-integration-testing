@@ -104,28 +104,28 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         bForest = new Forest();
         bClient = await ConnectWebSocket(bForest, "B", RepositoryId);
         
-        var aPartition = new LinkTestConcept("a");
+        var aPartition = new TestPartition("a");
         aForest.AddPartitions([aPartition]);
 
         WaitForReceived(1);
         
-        var bPartition = bForest.Partitions.First() as LinkTestConcept;
+        var bPartition = bForest.Partitions.First() as TestPartition;
         Assert.That(bPartition, Is.Not.Null);
 
-        bPartition!.Containment_0_1 = new LinkTestConcept("containment_0_1");
-        Debug.WriteLine($"clientB Containment_0_1 {bPartition.Containment_0_1.PrintIdentity()}");
+        bPartition!.AddLinks([new LinkTestConcept("containment_0_1")]);
+        Debug.WriteLine($"clientB first link {bPartition.Links[0].PrintIdentity()}");
 
         WaitForReceived(1);
 
-        Debug.WriteLine($"clientA Containment_0_1 {aPartition.Containment_0_1!.PrintIdentity()}");
-        aPartition.Containment_0_1!.Name = "hello there";
+        Debug.WriteLine($"clientA first link {aPartition.Links[0].PrintIdentity()}");
+        aPartition.Links[0].Name = "hello there";
 
         WaitForReceived(1);
 
-        Debug.WriteLine($"clientA Containment_0_1 {aPartition.Containment_0_1.PrintIdentity()}");
-        Debug.WriteLine($"clientB Containment_0_1 {bPartition.Containment_0_1.PrintIdentity()}");
+        Debug.WriteLine($"clientA Containment_0_1 {aPartition.Links[0].PrintIdentity()}");
+        Debug.WriteLine($"clientB Containment_0_1 {bPartition.Links[0].PrintIdentity()}");
 
-        bPartition.Containment_0_1.Name = "bye there";
+        bPartition.Links[0].Name = "bye there";
         WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
