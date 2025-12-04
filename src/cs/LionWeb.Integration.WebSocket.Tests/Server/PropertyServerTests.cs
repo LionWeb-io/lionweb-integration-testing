@@ -26,10 +26,14 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         var expected = new TestPartition("partition")
         {
-            Data = new DataTypeTestConcept("dttc")
+            Data = new DataTypeTestConcept("data")
             {
                 StringValue_0_1 = "new property"
-            }
+            },
+            Links =
+            [
+                new LinkTestConcept("link")
+            ]
         };
 
         var serverPartition = (TestPartition)serverForest.Partitions.Last();
@@ -55,10 +59,14 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         var expected = new TestPartition("partition")
         {
-            Data = new DataTypeTestConcept("dttc")
+            Data = new DataTypeTestConcept("data")
             {
                 StringValue_0_1 = "changed property"
-            }
+            },
+            Links =
+            [
+                new LinkTestConcept("link")
+            ]
           
         };
 
@@ -86,10 +94,14 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         var expected = new TestPartition("partition")
         {
-            Data = new DataTypeTestConcept("dttc")
+            Data = new DataTypeTestConcept("data")
             {
                 StringValue_0_1 = null
-            }
+            },
+            Links =
+            [
+                new LinkTestConcept("link")
+            ]
         };
 
         var serverPartition = (TestPartition)serverForest.Partitions.Last();

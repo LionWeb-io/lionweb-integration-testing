@@ -26,9 +26,10 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         var expected = new TestPartition("partition")
         {
+            Data = new DataTypeTestConcept("data"),
             Links =
             [
-                new LinkTestConcept("ltc")
+                new LinkTestConcept("link")
                 {
                     Containment_0_1 = new LinkTestConcept("containment_0_1"),
                 }
@@ -59,9 +60,10 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         var expected = new TestPartition("partition")
         {
+            Data = new DataTypeTestConcept("data"),
             Links =
             [
-                new LinkTestConcept("ltc")
+                new LinkTestConcept("link")
                 {
                     Containment_0_1 = new LinkTestConcept("containment_0_1"),
                 }
@@ -91,9 +93,10 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         var expected = new TestPartition("partition")
         {
+            Data = new DataTypeTestConcept("data"),
             Links =
             [
-                new LinkTestConcept("ltc")
+                new LinkTestConcept("link")
                 { 
                     Containment_0_1 = new LinkTestConcept("containment_0_1"),
                     Containment_1 = new LinkTestConcept("containment_1")

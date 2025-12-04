@@ -83,7 +83,17 @@ public class IntegrationWebSocketClient
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.AddPartition, _):
-                    forest.AddPartitions([partition]);
+                    forest.AddPartitions(
+                    [
+                        new TestPartition("partition")
+                        {
+                            Data = new DataTypeTestConcept("data"),
+                            Links =
+                            [
+                                new LinkTestConcept("link")
+                            ]
+                        }
+                    ]);
                     lionWeb.WaitForReceived(1);
                     break;
                 case (Tasks.AddStringValue_0_1, TestPartition p):

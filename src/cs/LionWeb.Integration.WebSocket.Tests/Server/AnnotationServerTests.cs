@@ -74,9 +74,10 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         var expected = new TestPartition("partition")
         {
+            Data = new DataTypeTestConcept("data"),
             Links =
             [
-                new LinkTestConcept("ltc")
+                new LinkTestConcept("link")
                 {
                     Containment_0_1 = new LinkTestConcept("containment_0_1")
                 }
@@ -105,7 +106,14 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         WaitForSent(5);
 
-        var expected = new TestPartition("partition");
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+            ]
+        };
         expected.AddAnnotations([new TestAnnotation("annotation1"), new TestAnnotation("annotation0")]);
 
         var serverPartition = (TestPartition)serverForest.Partitions.First();
