@@ -24,9 +24,9 @@ namespace LionWeb.Integration.WebSocket.Tests.Client;
 public class PropertyClientTests(ServerProcesses serverProcess)
     : WebSocketClientTestBase(serverProcess, LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
 {
-    private DataTypeTestConcept aPartition = null!;
+    private DataTypeTestConcept aParent = null!;
 
-    private DataTypeTestConcept bPartition = null!;
+    private DataTypeTestConcept bParent = null!;
 
     [SetUp]
     public void ConnectToServer()
@@ -37,10 +37,10 @@ public class PropertyClientTests(ServerProcesses serverProcess)
         bForest = new Forest();
         bClient = ConnectWebSocket(bForest, "B", RepositoryId).Result;
 
-        aPartition = new("partition");
-        aForest.AddPartitions([aPartition]);
+        aParent = new("parent");
+        aForest.AddPartitions([new TestPartition("partition"){Data = aParent}]);
         WaitForReceived();
-        bPartition = (DataTypeTestConcept)bForest.Partitions.First();
+        bParent = ((TestPartition)bForest.Partitions.First()).Data!;
     }
 
     /// <inheritdoc />
@@ -50,35 +50,35 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     [Test]
     public void AddProperty()
     {
-        aPartition.StringValue_0_1 = "new property";
+        aParent.StringValue_0_1 = "new property";
         WaitForReceived();
 
-        AssertEquals(aPartition, bPartition);
+        AssertEquals(aParent, bParent);
     }
 
     [Test]
     public void ChangeProperty()
     {
-        aPartition.StringValue_0_1 = "new property";
+        aParent.StringValue_0_1 = "new property";
         WaitForReceived();
 
-        bPartition.StringValue_0_1 = "changed property";
+        bParent.StringValue_0_1 = "changed property";
         WaitForReceived();
 
-        AssertEquals(aPartition, bPartition);
+        AssertEquals(aParent, bParent);
     }
 
     [Test]
     public void DeleteProperty()
     {
-        aPartition.StringValue_0_1 = "new property";
+        aParent.StringValue_0_1 = "new property";
         WaitForReceived();
 
-        AssertEquals(aPartition, bPartition);
+        AssertEquals(aParent, bParent);
 
-        bPartition.StringValue_0_1 = null;
+        bParent.StringValue_0_1 = null;
         WaitForReceived();
 
-        AssertEquals(aPartition, bPartition);
+        AssertEquals(aParent, bParent);
     }
 }

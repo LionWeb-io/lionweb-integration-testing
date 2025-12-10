@@ -17,6 +17,7 @@
 
 using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
@@ -28,10 +29,11 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void AddChild()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        aPartition.AddLinks([new LinkTestConcept("child")]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(bPartition.Links[0].GetId(), Is.EqualTo("child"));
     }
     
     /// <summary>
@@ -47,10 +49,11 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
             Containment_0_n = new List<LinkTestConcept> { new("child1"), new("child2") }
         };
 
-        aPartition.Containment_0_1 = subTree;
+        aPartition.AddLinks([subTree]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(bPartition.Links[0].GetId(), Is.EqualTo("subtree"));
     }
 
     /// <summary>
@@ -60,18 +63,19 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void AddChild_NodeInAddedSubtreeHasAReferenceToAlreadyExistingNodes()
     {
-        aPartition.Containment_1 = new LinkTestConcept("referenced-child");
+        aPartition.AddLinks([new LinkTestConcept("referenced-child")]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = new LinkTestConcept("subtree")
+        bPartition.AddLinks([new LinkTestConcept("subtree")
         {
-            Reference_1 = bPartition.Containment_1
-        };
+            Reference_1 = bPartition.Links[0]
+        }]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Reference_1.GetId(), Is.EqualTo("referenced-child"));
     }
     
     /// <summary>
@@ -80,23 +84,24 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void AddChild_AlreadyExistingNodeHasAReferenceToNodeInAddedSubtree()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("existing-subtree")
+        aPartition.AddLinks([new LinkTestConcept("existing-subtree")
         {
             Containment_0_1 = new LinkTestConcept("containment")
-        };
+        }]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
-        aPartition.Containment_1 = new LinkTestConcept("added-node");
+        aPartition.AddLinks([new LinkTestConcept("added-node")]);
         WaitForReceived();
         
         AssertEquals(aPartition, bPartition);
         
-        aPartition.Containment_0_1.Reference_0_1 = aPartition.Containment_1;
+        aPartition.Links[0].Reference_0_1 = aPartition.Links[1];
         WaitForReceived();
         
         AssertEquals(aPartition, bPartition);
+        Assert.That(bPartition.Links[0].Reference_0_1!.GetId(), Is.EqualTo("added-node"));
     }
 
     
@@ -106,15 +111,16 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void DeleteChild()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        aPartition.AddLinks([new LinkTestConcept("child")]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_0_1 = null;
+        bPartition.RemoveLinks([bPartition.Links[0]]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links, Is.Empty);
     }
     
     /// <summary>
@@ -123,18 +129,19 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void DeleteChild_FromASubtree()
     {
-        aPartition.Containment_1 = new LinkTestConcept("child")
+        aPartition.AddLinks([new LinkTestConcept("child")
         {
             Containment_0_1 = new LinkTestConcept("deleted-node")
-        };
+        }]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1.Containment_0_1 = null;
+        bPartition.Links[0].Containment_0_1 = null;
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_0_1, Is.Null);
     }
 
 
@@ -145,15 +152,16 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void ReplaceChild()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        aPartition.AddLinks([new LinkTestConcept("child")]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_0_1 = new LinkTestConcept("replacedChild") { Name = "replaced" };
+        bPartition.Links[0].ReplaceWith(new LinkTestConcept("replacedChild") { Name = "replaced" });
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].GetId(), Is.EqualTo("replacedChild"));
     }
     
     /// <summary>
@@ -163,20 +171,21 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void ReplaceChild_WithASubtree()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        aPartition.AddLinks([new LinkTestConcept("child")]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_0_1 = new LinkTestConcept("subtree")
+        bPartition.Links[0].ReplaceWith(new LinkTestConcept("subtree")
         {
             Name = "containment_0_1",
             Containment_0_1 = new LinkTestConcept("containment_0_1"),
             Containment_0_n = new List<LinkTestConcept> { new("child1"), new("child2") }
-        };
+        });
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].GetId(), Is.EqualTo("subtree"));
     }
 
     /// <summary>
@@ -185,15 +194,16 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void MoveChildFromOtherContainment_Single()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
+        aPartition.AddLinks([new LinkTestConcept("parent") { Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") }}]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = bPartition.Containment_0_1!.Containment_0_1!;
+        bPartition.Links[0].Containment_1 = bPartition.Links[0].Containment_0_1!.Containment_0_1!;
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_1.GetId(), Is.EqualTo("child"));
     }
     
     /// <summary>
@@ -202,21 +212,22 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void MoveChildFromOtherContainment_Multiple()
     {
-        aPartition.AddContainment_0_n([new LinkTestConcept("child0") { Containment_0_n = [new LinkTestConcept("moved")] }]);
+        aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_n = [new LinkTestConcept("child0") { Containment_0_n = [new LinkTestConcept("moved")] }]}]);
 
         WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
-        aPartition.AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("child2")]);
+        aPartition.Links[0].AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("child2")]);
         WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.InsertContainment_1_n(0, [bPartition.Containment_0_n[^1].Containment_0_n[0]]);
+        bPartition.Links[0].InsertContainment_1_n(0, [bPartition.Links[0].Containment_0_n[^1].Containment_0_n[0]]);
         WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_1_n[0].GetId(), Is.EqualTo("moved"));
     }
     
     /// <summary>
@@ -226,20 +237,21 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Single_WithAssignment()
     {
-        aPartition.Containment_0_1 =  new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") };
+        aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_1 =  new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") }}]);
+        WaitForReceived(2);
+        
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Links[0].Containment_1 = new LinkTestConcept("replaced-subHost"){ Containment_0_1 = new LinkTestConcept("replaced-child")};
         WaitForReceived();
         
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = new LinkTestConcept("replaced-subHost"){ Containment_0_1 = new LinkTestConcept("replaced-child")};
+        bPartition.Links[0].Containment_1.Containment_0_1 = bPartition.Links[0].Containment_0_1!.Containment_0_1!;
         WaitForReceived();
         
         AssertEquals(aPartition, bPartition);
-
-        bPartition.Containment_1.Containment_0_1 = bPartition.Containment_0_1!.Containment_0_1!;
-        WaitForReceived();
-        
-        AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_1.Containment_0_1!.GetId(), Is.EqualTo("moved-child"));
     }
     
     /// <summary>
@@ -249,20 +261,21 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Single_WithReplaceWith()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") };
+        aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_1 = new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") }}]);
+        WaitForReceived(2);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Links[0].Containment_1 = new LinkTestConcept("replaced-subHost") { Containment_0_1 = new LinkTestConcept("replaced-child") };
         WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = new LinkTestConcept("replaced-subHost") { Containment_0_1 = new LinkTestConcept("replaced-child") };
+        bPartition.Links[0].Containment_1.Containment_0_1!.ReplaceWith(bPartition.Links[0].Containment_0_1!.Containment_0_1!);
         WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
-
-        bPartition.Containment_1.Containment_0_1.ReplaceWith(bPartition.Containment_0_1!.Containment_0_1!);
-        WaitForReceived(1);
-
-        AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_1.Containment_0_1!.GetId(), Is.EqualTo("moved-child"));
     }
 
 
@@ -272,20 +285,21 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple()
     {
-        aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
+        aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_n =[new LinkTestConcept("child0"), new LinkTestConcept("moved")]}]);
+        WaitForReceived(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Links[0].AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("replaced")]);
         WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("replaced")]);
-        WaitForReceived(2);
-
-        AssertEquals(aPartition, bPartition);
-
-        aPartition.Containment_1_n[^1].ReplaceWith(aPartition.Containment_0_n[^1]);
+        aPartition.Links[0].Containment_1_n[^1].ReplaceWith(aPartition.Links[0].Containment_0_n[^1]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_1_n[1].GetId(), Is.EqualTo("moved"));
     }
 
     /// <summary>
@@ -295,25 +309,26 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     public void MoveAndReplaceChildFromOtherContainment_Multiple()
     {
         //todo: MoveChildFromOtherContainment and DeleteChild commands are triggered
-        aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("moved")]);
+        aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_n = [new LinkTestConcept("child0"), new LinkTestConcept("moved")]}]);
+        WaitForReceived(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Links[0].AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("child2")]);
         WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.AddContainment_1_n([new LinkTestConcept("child1"), new LinkTestConcept("child2")]);
-        WaitForReceived(2);
-
-        AssertEquals(aPartition, bPartition);
-
-        bPartition.Containment_1_n[^1].AddContainment_0_n([new LinkTestConcept("child3"), new LinkTestConcept("replaced")]);
+        bPartition.Links[0].Containment_1_n[^1].AddContainment_0_n([new LinkTestConcept("child3"), new LinkTestConcept("replaced")]);
         WaitForReceived(2);
         
         AssertEquals(aPartition, bPartition);
 
-        aPartition.Containment_1_n[^1].Containment_0_n[^1].ReplaceWith(aPartition.Containment_0_n[^1]);
+        aPartition.Links[0].Containment_1_n[^1].Containment_0_n[^1].ReplaceWith(aPartition.Links[0].Containment_0_n[^1]);
         WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_1_n[1].Containment_0_n[1].GetId(), Is.EqualTo("moved"));
     }
 
     /// <summary>
@@ -322,15 +337,16 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void MoveChildFromOtherContainmentInSameParent_Single()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_1 = new LinkTestConcept("child")}]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = bPartition.Containment_0_1!;
+        bPartition.Links[0].Containment_1 = bPartition.Links[0].Containment_0_1!;
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_1.GetId(), Is.EqualTo("child"));
     }
     
     /// <summary>
@@ -340,20 +356,21 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Ignore("Fails to correlate notification id to ParticipationNotificationId")]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("moved-child");
+        aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_1 = new LinkTestConcept("moved-child")}]);
+        WaitForReceived(2);
+        
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Links[0].Containment_1 = new LinkTestConcept("replaced-child");
         WaitForReceived();
         
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Containment_1 = new LinkTestConcept("replaced-child");
+        bPartition.Links[0].Containment_1 = bPartition.Links[0].Containment_0_1!;
         WaitForReceived();
         
         AssertEquals(aPartition, bPartition);
-
-        bPartition.Containment_1 = bPartition.Containment_0_1!;
-        WaitForReceived();
-        
-        AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_1.GetId(), Is.EqualTo("moved-child"));
     }
 
     /// <summary>
@@ -362,14 +379,15 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void MoveChildInSameContainment()
     {
-        aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("child1")]);
-        WaitForReceived(2);
+        aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_n=[new LinkTestConcept("child0"), new LinkTestConcept("child1")]}]);
+        WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.InsertContainment_0_n(0, [bPartition.Containment_0_n.Last()]);
+        bPartition.Links[0].InsertContainment_0_n(0, [bPartition.Links[0].Containment_0_n.Last()]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_0_n[0].GetId(), Is.EqualTo("child1"));
     }
 }

@@ -25,9 +25,9 @@ namespace LionWeb.Integration.WebSocket.Tests.Client;
 public abstract class LinkClientTestBase(ServerProcesses serverProcess)
     : WebSocketClientTestBase(serverProcess, LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
 {
-    protected LinkTestConcept aPartition = null!;
+    protected TestPartition aPartition = null!;
 
-    protected LinkTestConcept bPartition = null!;
+    protected TestPartition bPartition = null!;
 
     [SetUp]
     public void ConnectToServer()
@@ -41,7 +41,7 @@ public abstract class LinkClientTestBase(ServerProcesses serverProcess)
         aPartition = new("partition");
         aForest.AddPartitions([aPartition]);
         WaitForReceived();
-        while ((bPartition = ((LinkTestConcept?)bForest.Partitions.FirstOrDefault())!) == null)
+        while ((bPartition = ((TestPartition?)bForest.Partitions.FirstOrDefault())!) == null)
             Thread.Sleep(100);
     }
 

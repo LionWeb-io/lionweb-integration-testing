@@ -24,49 +24,52 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     [Test]
     public void AddReference()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
-        aPartition.Reference_0_1 = aPartition.Containment_0_1;
+        aPartition.AddLinks([new LinkTestConcept("child")]);
+        aPartition.Links[0].Reference_0_1 = aPartition.Links[0];
         WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(bPartition.Links[0].Reference_0_1!.GetId(), Is.EqualTo("child"));
     }
 
     [Test]
     public void DeleteReference()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
-        aPartition.Reference_0_1 = aPartition.Containment_0_1;
+        aPartition.AddLinks([new LinkTestConcept("child")]);
+        aPartition.Links[0].Reference_0_1 = aPartition.Links[0];
         WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Reference_0_1 = null;
+        bPartition.Links[0].Reference_0_1 = null;
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Reference_0_1, Is.Null);
     }
 
     [Test]
     public void ChangeReference()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("childA");
-        aPartition.Containment_1 = new LinkTestConcept("childB");
-        aPartition.Reference_0_1 = aPartition.Containment_0_1;
+        aPartition.AddLinks([new LinkTestConcept("childA")]);
+        aPartition.AddLinks([new LinkTestConcept("childB")]);
+        aPartition.Links[0].Reference_0_1 = aPartition.Links[0];
         WaitForReceived(3);
 
         AssertEquals(aPartition, bPartition);
 
-        bPartition.Reference_0_1 = bPartition.Containment_1;
+        bPartition.Links[0].Reference_0_1 = bPartition.Links[1];
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Reference_0_1!.GetId(), Is.EqualTo("childB"));
     }
 
     [Test]
     [Ignore("no way to move reference")]
     public void MoveEntryFromOtherReference()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") };
+        aPartition.AddLinks([new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") }]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
@@ -81,7 +84,7 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     [Ignore("no way to move reference")]
     public void MoveEntryFromOtherReferenceInSameParent()
     {
-        aPartition.Containment_0_1 = new LinkTestConcept("child");
+        aPartition.AddLinks([new LinkTestConcept("child")]);
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
@@ -96,7 +99,7 @@ public class ReferenceClientTests(ServerProcesses serverProcess) : LinkClientTes
     [Ignore("no way to move reference")]
     public void MoveEntryInSameReference()
     {
-        aPartition.AddContainment_0_n([new LinkTestConcept("child0"), new LinkTestConcept("child1")]);
+        aPartition.AddLinks([new LinkTestConcept("child0"), new LinkTestConcept("child1")]);
         WaitForReceived(2);
 
         AssertEquals(aPartition, bPartition);

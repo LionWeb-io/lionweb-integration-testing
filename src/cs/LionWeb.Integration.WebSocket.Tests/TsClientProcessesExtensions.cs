@@ -24,11 +24,11 @@ namespace LionWeb.Integration.WebSocket.Tests;
 
 public static class TsClientProcessesExtensions
 {
-    public static Process TsClient(string clientId, string partitionType, int port, IEnumerable<string> tasks,
+    public static Process TsClient(string clientId, int port, IEnumerable<string> tasks,
         out string readyTrigger,
         out string errorTrigger)
     {
-        var cmdLine = $"{port} {clientId} {partitionType} {string.Join(",", tasks)}";
+        var cmdLine = $"{port} {clientId} {string.Join(",", tasks)}";
 
 // Accesses `<DefineConstants>USE_LION_WEB_PACKAGES</DefineConstants>` from .csproj 
 #if USE_LION_WEB_PACKAGES

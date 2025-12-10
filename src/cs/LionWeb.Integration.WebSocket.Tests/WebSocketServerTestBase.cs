@@ -21,6 +21,7 @@ using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Repository;
 using LionWeb.WebSocket;
 using NUnit.Framework.Legacy;
+
 // ReSharper disable InconsistentNaming
 
 namespace LionWeb.Integration.WebSocket.Tests;
@@ -46,14 +47,14 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
         _nextClientProcess = 0;
     }
 
-    private Process NextProcess(string name, Type partitionType, Tasks[] tasks, out string readyTrigger,
+    private Process NextProcess(string name, Tasks[] tasks, out string readyTrigger,
         out string errorTrigger) =>
         _clientProcesses[_nextClientProcess++ % _clientProcesses.Length]
-            .Create(name, partitionType.Name, Port, tasks.Select(Enum.GetName)!, out readyTrigger, out errorTrigger);
+            .Create(name, Port, tasks.Select(Enum.GetName)!, out readyTrigger, out errorTrigger);
 
-    protected void StartClient(string name, Type partitionType, params Tasks[] tasks)
+    protected void StartClient(string name, params Tasks[] tasks)
     {
-        var process = NextProcess(name, partitionType, tasks, out var readyTrigger, out var errorTrigger);
+        var process = NextProcess(name, tasks, out var readyTrigger, out var errorTrigger);
         _externalProcessRunner.StartProcess(process, readyTrigger, errorTrigger);
 
         ClassicAssert.IsFalse(process.HasExited);

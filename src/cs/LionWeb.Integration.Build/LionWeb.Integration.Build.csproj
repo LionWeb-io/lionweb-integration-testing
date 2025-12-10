@@ -15,6 +15,9 @@
       <Content Include="..\..\languages\testLanguage.2024.1.json">
         <Link>languages\testLanguage.2024.1.json</Link>
       </Content>
+      <Content Include="..\..\languages\testLanguage.2025.1.json">
+        <Link>languages\testLanguage.2025.1.json</Link>
+      </Content>
     </ItemGroup>
 
     <ItemGroup Condition="$(UseLionWebPackages)">

@@ -15,7 +15,6 @@
 // SPDX-FileCopyrightText: 2025 LionWeb Project
 // SPDX-License-Identifier: Apache-2.0
 
-using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Client;
@@ -27,23 +26,8 @@ namespace LionWeb.Integration.WebSocket.Tests;
 [TestFixture(ClientProcesses.CSharp)]
 [TestFixture(ClientProcesses.Ts)]
 [TestFixture(ClientProcesses.Ts, ClientProcesses.CSharp)]
-public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : WebSocketServerTestBase(clientProcesses)
+public class MultipleClientTests(params ClientProcesses[] clientProcesses) : WebSocketServerTestBase(clientProcesses)
 {
-    [Test]
-    public void SignIn_1()
-    {
-        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
-            _webSocketServer.Connector);
-
-        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn);
-
-        WaitForSent(1);
-    }
-
     [Test]
     public void SignIn_2()
     {
@@ -54,15 +38,15 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
             _webSocketServer.Connector);
 
-        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn);
-        StartClient("B", typeof(LinkTestConcept), Tasks.SignOn);
+        StartClient("A", Tasks.SignOn);
+        StartClient("B", Tasks.SignOn);
 
         WaitForSent(2);
     }
 
 
     [Test]
-    public void Model()
+    public void MultipleClients()
     {
         _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
 
@@ -71,19 +55,29 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
             _webSocketServer.Connector);
 
-        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.SubscribeToChangingPartitions, Tasks.Wait, Tasks.Wait, Tasks.AddName_Containment_0_1);
-        StartClient("B", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1);
+        StartClient("A", Tasks.SignOn, Tasks.SubscribeToChangingPartitions, Tasks.Wait, Tasks.Wait, Tasks.AddName_Containment_0_1);
+        StartClient("B", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1);
 
         WaitForSent(6);
 
-        var serverPartition = (LinkTestConcept)serverForest.Partitions.First();
-        AssertEquals(new LinkTestConcept("partition")
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+
+        var expected = new TestPartition("partition")
         {
-            Containment_0_1 = new LinkTestConcept("containment_0_1")
-            {
-                Name = "my name"
-            }
-        }, serverPartition);
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_0_1 = new LinkTestConcept("containment_0_1")
+                    {
+                        Name = "my name"
+                    }
+                }
+            ]
+        };
+        
+        AssertEquals(expected, serverPartition);
     }
 
     [Test]
@@ -96,14 +90,22 @@ public class WebSocketServerTests(params ClientProcesses[] clientProcesses) : We
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
             _webSocketServer.Connector);
 
-        StartClient("A", typeof(LinkTestConcept), Tasks.SignOn, Tasks.AddPartition);
-        StartClient("B", typeof(LinkTestConcept), Tasks.SignOn);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition);
+        StartClient("B", Tasks.SignOn);
 
         WaitForSent(3);
 
-        AssertEquals(
-            (INode)new LinkTestConcept("partition"),
-            (INode)serverForest.Partitions.First()
-        );
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+            ]
+        };
+        
+        AssertEquals(expected, serverPartition);
     }
 }

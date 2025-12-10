@@ -24,7 +24,7 @@ namespace LionWeb.Integration.WebSocket.Tests;
 
 public static class CSharpClientProcessesExtensions
 {
-    public static Process CSharpClient(string name, string partitionType, int port, IEnumerable<string> tasks,
+    public static Process CSharpClient(string name, int port, IEnumerable<string> tasks,
         out string readyTrigger, out string errorTrigger)
     {
         var process = new Process();
@@ -39,7 +39,6 @@ public static class CSharpClientProcessesExtensions
                                        {name}
                                        {WebSocketTestBase.IpAddress}
                                        {port}
-                                       {partitionType}
                                        {string.Join(",", tasks)}
                                        """.ReplaceLineEndings(" ");
         process.StartInfo.UseShellExecute = false;
