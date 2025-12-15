@@ -45,12 +45,12 @@ public class IntegrationWebSocketServer
         List<Language> languages =
             [TestLanguageLanguage.Instance, lionWebVersion.BuiltIns, lionWebVersion.LionCore];
 
-        var webSocketServer = new WebSocketServer(lionWebVersion)
+        Action<string> logger = Log;
+        
+        var webSocketServer = new WebSocketTestServer(lionWebVersion, IpAddress, port, logger)
         {
             Languages = languages
         };
-
-        webSocketServer.StartServer(IpAddress, port);
 
         IPartitionInstance serverPartition = languages
             .SelectMany(l => l.Entities)
@@ -62,9 +62,9 @@ public class IntegrationWebSocketServer
         var serverForest = new Forest();
         Log($"Server partition: <{serverPartition.GetClassifier().Name}>{serverPartition.PrintIdentity()}");
 
-        var lionWebServer = new LionWebRepository(lionWebVersion, webSocketServer.Languages, "server",
+        var lionWebServer = new LionWebTestRepository(lionWebVersion, webSocketServer.Languages, "server",
             serverForest,
-            webSocketServer.Connector);
+            webSocketServer.Connector, logger);
 
         Console.ReadLine();
         webSocketServer.Stop();
@@ -73,8 +73,15 @@ public class IntegrationWebSocketServer
     public required List<Language> Languages { get; init; }
 
 
-    private static void Log(string message, bool header = false) =>
-        Console.WriteLine(header
+    private static void Log(string message, bool header) =>
+        Log(header
             ? $"{ILionWebRepository.HeaderColor_Start}{message}{ILionWebRepository.HeaderColor_End}"
             : message);
+
+    private static void Log(string message) =>
+        Console.WriteLine(message
+            // TODO: Temporary workaround to https://youtrack.jetbrains.com/issue/RIDER-133132
+            .Replace(ILionWebRepository.HeaderColor_Start, "SSS: ")
+            .Replace(ILionWebRepository.HeaderColor_End, "")
+        );
 }

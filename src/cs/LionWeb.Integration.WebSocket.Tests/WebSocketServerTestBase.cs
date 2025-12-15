@@ -79,4 +79,11 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
         if (_externalProcessRunner.ErrorTriggerEncountered)
             Assert.Fail("client failure");
     }
+
+    protected static void Log(string message) =>
+        Console.WriteLine(message
+            // TODO: Temporary workaround to https://youtrack.jetbrains.com/issue/RIDER-133132
+            .Replace(ILionWebRepository.HeaderColor_Start, "SSS: ")
+            .Replace(ILionWebRepository.HeaderColor_End, "")
+        );
 }

@@ -18,7 +18,7 @@
 using LionWeb.Core.M1;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Client;
-using LionWeb.Integration.WebSocket.Tests.Server;
+using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Repository;
 
 namespace LionWeb.Integration.WebSocket.Tests;
@@ -31,12 +31,12 @@ public class MultipleClientTests(params ClientProcesses[] clientProcesses) : Web
     [Test]
     public void SignIn_2()
     {
-        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
+        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
 
         var serverForest = new Forest();
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
-            _webSocketServer.Connector);
+            _webSocketServer.Connector, Log);
 
         StartClient("A", Tasks.SignOn);
         StartClient("B", Tasks.SignOn);
@@ -48,12 +48,12 @@ public class MultipleClientTests(params ClientProcesses[] clientProcesses) : Web
     [Test]
     public void MultipleClients()
     {
-        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
+        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
 
         var serverForest = new Forest();
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
-            _webSocketServer.Connector);
+            _webSocketServer.Connector, Log);
 
         StartClient("A", Tasks.SignOn, Tasks.SubscribeToChangingPartitions, Tasks.Wait, Tasks.Wait, Tasks.AddName_Containment_0_1);
         StartClient("B", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1);
@@ -83,12 +83,12 @@ public class MultipleClientTests(params ClientProcesses[] clientProcesses) : Web
     [Test]
     public void Partition()
     {
-        _webSocketServer = new TestWebSocketServer(_lionWebVersion, Port) { Languages = _languages };
+        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
 
         var serverForest = new Forest();
 
         lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest,
-            _webSocketServer.Connector);
+            _webSocketServer.Connector, Log);
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition);
         StartClient("B", Tasks.SignOn);

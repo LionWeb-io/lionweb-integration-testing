@@ -47,10 +47,10 @@ public class IntegrationWebSocketClient
 
         var forest = new Forest();
 
-        var webSocketClient = new WebSocketClient(name, _lionWebVersion);
+        var webSocketClient = new WebSocketTestClient(name, _lionWebVersion, Log);
         
         var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest,
-            webSocketClient.Connector);
+            webSocketClient.Connector, Log);
 
         await webSocketClient.ConnectToServer(serverIp, serverPort);
 
@@ -223,8 +223,15 @@ public class IntegrationWebSocketClient
         Console.ReadLine();
     }
 
-    private static void Log(string message, bool header = false) =>
-        Console.WriteLine(header
+    private static void Log(string message, bool header) =>
+        Log(header
             ? $"{ILionWebClient.HeaderColor_Start}{message}{ILionWebClient.HeaderColor_End}"
             : message);
+
+    private static void Log(string message) =>
+        Console.WriteLine(message
+            // TODO: Temporary workaround to https://youtrack.jetbrains.com/issue/RIDER-133132
+            .Replace(ILionWebClient.HeaderColor_Start, "CCC: ")
+            .Replace(ILionWebClient.HeaderColor_End, "")
+        );
 }
