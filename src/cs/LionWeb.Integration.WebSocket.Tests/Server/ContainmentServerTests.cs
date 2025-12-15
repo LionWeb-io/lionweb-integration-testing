@@ -77,7 +77,6 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Replaces the child node with a new one in the partition.
     /// </summary>
     [Test]
-    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void ReplaceChild()
     {
         _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
@@ -180,7 +179,6 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node from a single containment to another. Both containments have different parents.
     /// </summary>
     [Test]
-    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Single()
     {
         _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
@@ -218,10 +216,9 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node from a multiple containment to another. Both containments have different parents.
     /// </summary>
     [Test]
-    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Multiple()
     {
-        //Todo: MoveChildFromOtherContainment and DeleteChild commands are triggered
+        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
 
         var serverForest = new Forest();
 
@@ -284,7 +281,6 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node within the same parent containment.
     /// </summary>
     [Test]
-    [Ignore("Fails to correlate notification id to ParticipationNotificationId")]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
         _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
