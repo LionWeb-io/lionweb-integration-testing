@@ -21,6 +21,7 @@ using LionWeb.Core.M1;
 using LionWeb.Core.Notification;
 using LionWeb.Core.Serialization;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Protocol.Delta;
 using LionWeb.Protocol.Delta.Message;
 using LionWeb.Protocol.Delta.Message.Event;
@@ -82,10 +83,10 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
     [Test]
     public async Task Communication()
     {
-        var clientA = new TestWebSocketClient("A", _lionWebVersion);
+        var clientA = new WebSocketTestClient("A", _lionWebVersion, Log);
         clientA.Connector.ReceivedFromRepository += (sender, msg) => Console.WriteLine($"client A received: {msg}");
 
-        var clientB = new TestWebSocketClient("B", _lionWebVersion);
+        var clientB = new WebSocketTestClient("B", _lionWebVersion, Log);
         clientB.Connector.ReceivedFromRepository += (sender, msg) => Console.WriteLine($"client B received: {msg}");
 
         var ipAddress = "localhost";

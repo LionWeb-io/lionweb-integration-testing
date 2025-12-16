@@ -19,8 +19,8 @@ using System.Diagnostics;
 using LionWeb.Core;
 using LionWeb.Core.M1;
 using LionWeb.Core.M3;
+using LionWeb.Integration.WebSocket.Client;
 using LionWeb.Protocol.Delta.Client;
-using LionWeb.WebSocket;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
@@ -56,8 +56,8 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
 
     protected async Task<LionWebTestClient> ConnectWebSocket(IForest forest, string name, RepositoryId repositoryId)
     {
-        var webSocket = new WebSocketClient(name, _lionWebVersion);
-        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket.Connector);
+        var webSocket = new WebSocketTestClient(name, _lionWebVersion, Log);
+        var lionWeb = new LionWebTestClient(_lionWebVersion, _languages, $"client_{name}", forest, webSocket.Connector, Log);
 
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn(repositoryId);
@@ -85,4 +85,11 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
         if (_externalProcessRunner.ErrorTriggerEncountered)
             Assert.Fail("repo failure");
     }
+
+    protected virtual void Log(string message) =>
+        Console.WriteLine(message
+            // TODO: Temporary workaround to https://youtrack.jetbrains.com/issue/RIDER-133132
+            .Replace(ILionWebClient.HeaderColor_Start, "CCC: ")
+            .Replace(ILionWebClient.HeaderColor_End, "")
+        );
 }

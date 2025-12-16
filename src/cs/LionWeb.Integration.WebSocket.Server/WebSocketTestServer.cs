@@ -16,15 +16,26 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using LionWeb.Core;
+using LionWeb.Protocol.Delta.Repository;
 using LionWeb.WebSocket;
 
-namespace LionWeb.Integration.WebSocket.Tests.Server;
+namespace LionWeb.Integration.WebSocket.Server;
 
-internal class TestWebSocketServer : WebSocketServer
+public class WebSocketTestServer : WebSocketServer
 {
-    public TestWebSocketServer(LionWebVersions lionWebVersion, int port) : base(lionWebVersion)
+    private readonly Action<string> _logger;
+
+    public WebSocketTestServer(LionWebVersions lionWebVersion, string ipAddress, int port, Action<string> logger) : base(lionWebVersion)
     {
-        StartServer(WebSocketTestBase.IpAddress, port);
-        Console.Error.WriteLine($"Server started on port {port}.");
+        _logger = logger;
+        StartServer(ipAddress, port);
+        _logger($"Server started on port {port}.");
+    }
+
+    protected override void Log(string message, bool header = false)
+    {
+        _logger(header
+            ? $"{ILionWebRepository.HeaderColor_Start}{message}{ILionWebRepository.HeaderColor_End}"
+            : message);
     }
 }

@@ -16,11 +16,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using LionWeb.Core;
+using LionWeb.Protocol.Delta.Client;
 using LionWeb.WebSocket;
 
-namespace LionWeb.Integration.WebSocket.Tests;
+namespace LionWeb.Integration.WebSocket.Client;
 
-internal class TestWebSocketClient(string name, LionWebVersions lionWebVersion) : WebSocketClient(name, lionWebVersion)
+public class WebSocketTestClient(string name, LionWebVersions lionWebVersion, Action<string> logger) : WebSocketClient(name, lionWebVersion)
 {
     public new Task Send(string msg) => base.Send(msg);
+    
+    protected override void Log(string message, bool header = false)
+    {
+        logger(header
+            ? $"{ILionWebClient.HeaderColor_Start}{message}{ILionWebClient.HeaderColor_End}"
+            : message);
+    }
 }

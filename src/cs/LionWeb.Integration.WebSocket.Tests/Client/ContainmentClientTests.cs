@@ -60,7 +60,6 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Node in an added subtree has a reference to already existing node
     /// </summary>
     [Test]
-    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void AddChild_NodeInAddedSubtreeHasAReferenceToAlreadyExistingNodes()
     {
         aPartition.AddLinks([new LinkTestConcept("referenced-child")]);
@@ -75,7 +74,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
-        Assert.That(aPartition.Links[0].Reference_1.GetId(), Is.EqualTo("referenced-child"));
+        Assert.That(aPartition.Links[1].Reference_1.GetId(), Is.EqualTo("referenced-child"));
     }
     
     /// <summary>
@@ -149,7 +148,6 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Replaces an existing node with a new node
     /// </summary>
     [Test]
-    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void ReplaceChild()
     {
         aPartition.AddLinks([new LinkTestConcept("child")]);
@@ -168,7 +166,6 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Replaces an existing node a (complex) subtree
     /// </summary>
     [Test]
-    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void ReplaceChild_WithASubtree()
     {
         aPartition.AddLinks([new LinkTestConcept("child")]);
@@ -234,11 +231,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
     [Test]
-    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Single_WithAssignment()
     {
         aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_1 =  new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") }}]);
-        WaitForReceived(2);
+        WaitForReceived(1);
         
         AssertEquals(aPartition, bPartition);
 
@@ -258,11 +254,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
     [Test]
-    [Ignore("Requires M1Extension.ReplaceWith() to handle notifications")]
     public void MoveAndReplaceChildFromOtherContainment_Single_WithReplaceWith()
     {
         aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_1 = new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") }}]);
-        WaitForReceived(2);
+        WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
 
@@ -353,11 +348,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from one containment to another within the same parent and replaces the existing child node.
     /// </summary>
     [Test]
-    [Ignore("Fails to correlate notification id to ParticipationNotificationId")]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
         aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_1 = new LinkTestConcept("moved-child")}]);
-        WaitForReceived(2);
+        WaitForReceived(1);
         
         AssertEquals(aPartition, bPartition);
 
