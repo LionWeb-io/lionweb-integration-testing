@@ -7,7 +7,7 @@
     "key": "MyReference"
   },
   "index": 3,
-  "newTarget": "otherNodeId",
+  "newReference": "otherNodeId",
   "newResolveInfo": "otherNode name",
   "commandId": "cmdId",
   "protocolMessages": [

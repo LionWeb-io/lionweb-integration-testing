@@ -7,7 +7,7 @@
     "key": "MyReference"
   },
   "index": 3,
-  "newTarget": "targetNodeId",
+  "newReference": "targetNodeId",
   "newResolveInfo": "otherNode name",
   "originCommands": [
     {
