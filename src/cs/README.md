@@ -156,6 +156,6 @@ dotnet run Generate.cs
 ```
 
 This generates the source code for the C# implementation of the test language in `<gitroot>/src/languages` into the `LionWeb.Integration.Languages` project.
-This test language comes in three LionWeb versions: `2023.1`, `2024.1`, `2025.1`.
+This test language comes in three LionWeb versions: `2023.1`, `2024.1`, `2026.1`.
 The generated source code is found in the `Generated/V<LionWeb version>` directories.
 *Note* that the generation is not triggered automatically, so whenever the contents of `<gitroot>/src/languages` change, you need to rerun this command.

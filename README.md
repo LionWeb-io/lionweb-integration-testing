@@ -57,7 +57,7 @@ The [`src/languages`](src/languages) directory contains (artifacts relating to) 
 
 By running `generate.sh` (which is equivalent to running `deno task generate-test-language`), the `TestLanguage` language is:
 
-* generated and serialized, for LionWeb versions [`2023.1`](src/languages/testLanguage.2023.1.json), [`2024.1`](src/languages/testLanguage.2024.1.json), and [`2025.1`](src/languages/testLanguage.2025.1.json),
+* generated and serialized, for LionWeb versions [`2023.1`](src/languages/testLanguage.2023.1.json), [`2024.1`](src/languages/testLanguage.2024.1.json), and [`2026.1`](src/languages/testLanguage.2026.1.json),
 * [textualized](src/languages/testLanguage.txt), and
 * [rendered as PlantUML diagram](src/languages/testLanguage.puml).
 
