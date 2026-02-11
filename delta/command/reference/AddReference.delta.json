@@ -10,7 +10,7 @@
   "newReference": "otherNodeId",
   "newResolveInfo": "otherNode name",
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

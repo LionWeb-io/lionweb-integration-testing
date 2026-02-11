@@ -10,7 +10,7 @@
   "deletedReference": "targetNodeId",
   "deletedResolveInfo": "TargetNode name",
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

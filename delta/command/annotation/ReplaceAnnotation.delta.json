@@ -34,7 +34,7 @@
   "index": 3,
   "replacedAnnotation": "replacedNodeId",
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",
