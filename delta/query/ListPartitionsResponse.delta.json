@@ -1,5 +1,6 @@
 {
   "messageKind": "ListPartitionsResponse",
+  "split": true,
   "partitions": {
     "nodes": [
       {

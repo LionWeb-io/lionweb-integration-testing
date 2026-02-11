@@ -1,6 +1,7 @@
 {
   "messageKind": "ReplaceAnnotation",
   "parent": "nodeId",
+  "split": false,
   "newAnnotation": {
     "nodes": [
       {

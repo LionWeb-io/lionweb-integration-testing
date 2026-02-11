@@ -1,5 +1,6 @@
 {
   "messageKind": "PartitionAdded",
+  "split": false,
   "newPartition": {
     "nodes": [
       {
@@ -44,6 +45,7 @@
   "additionalInfos": [
     {
       "kind": "msgKind",
+      "distribute": true,
       "message": "Human message",
       "data": [
         {
