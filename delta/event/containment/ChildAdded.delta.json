@@ -1,6 +1,7 @@
 {
   "messageKind": "ChildAdded",
   "parent": "nodeId",
+  "split": true,
   "newChild": {
     "nodes": [
       {
@@ -48,7 +49,7 @@
     }
   ],
   "sequenceNumber": 123,
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

@@ -1,11 +1,12 @@
 {
-  "messageKind": "DeletePartition",
-  "deletedPartition": "nodeId",
-  "commandId": "cmdId",
+  "messageKind": "InformAboutChangingPartitionsRequest",
+  "creation": false,
+  "deletion": false,
+  "depthLimit": 2,
+  "queryId": "q1",
   "additionalInfos": [
     {
       "kind": "msgKind",
-      "distribute": true,
       "message": "Human message",
       "data": [
         {

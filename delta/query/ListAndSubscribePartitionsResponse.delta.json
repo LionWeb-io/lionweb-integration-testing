@@ -1,7 +1,7 @@
 {
-  "messageKind": "SubscribeToPartitionContentsResponse",
+  "messageKind": "ListAndSubscribePartitionsResponse",
   "split": false,
-  "contents": {
+  "partitions": {
     "nodes": [
       {
         "id": "a",

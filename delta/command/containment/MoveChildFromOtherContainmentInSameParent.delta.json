@@ -8,7 +8,7 @@
   "newIndex": 3,
   "movedChild": "otherNodeId",
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

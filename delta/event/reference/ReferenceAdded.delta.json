@@ -7,7 +7,7 @@
     "key": "MyReference"
   },
   "index": 3,
-  "newTarget": "targetNodeId",
+  "newReference": "targetNodeId",
   "newResolveInfo": "otherNode name",
   "originCommands": [
     {
@@ -20,7 +20,7 @@
     }
   ],
   "sequenceNumber": 123,
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

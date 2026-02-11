@@ -1,6 +1,7 @@
 {
   "messageKind": "AnnotationReplaced",
   "parent": "nodeId",
+  "split": false,
   "newAnnotation": {
     "nodes": [
       {
@@ -47,7 +48,7 @@
     }
   ],
   "sequenceNumber": 123,
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

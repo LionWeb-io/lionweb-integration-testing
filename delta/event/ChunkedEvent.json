@@ -1,7 +1,9 @@
 {
-  "messageKind": "SubscribeToPartitionContentsResponse",
-  "split": false,
-  "contents": {
+  "messageKind": "ChunkedEvent",
+  "continuedChunkCompleted": true,
+  "continuedChunkSequenceNumber": 2,
+  "chunkedEventSequenceNumber": 102,
+  "chunk": {
     "nodes": [
       {
         "id": "a",
@@ -31,7 +33,7 @@
       }
     ]
   },
-  "queryId": "q1",
+  "sequenceNumber": 123,
   "additionalInfos": [
     {
       "kind": "msgKind",

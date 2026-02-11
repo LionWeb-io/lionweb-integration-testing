@@ -4,7 +4,7 @@
   "clientId": "iAmTheClient",
   "queryId": "q1",
   "repositoryId": "myRepo",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",
