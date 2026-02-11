@@ -1,7 +1,7 @@
 {
   "messageKind": "ListPartitionsRequest",
   "queryId": "q1",
-  "protocolMessages": [
+  "depthLimit": 0,
   "additionalInfos": [
     {
       "kind": "msgKind",

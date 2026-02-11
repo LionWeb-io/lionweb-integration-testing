@@ -2,7 +2,6 @@
   "messageKind": "SubscribeToChangingPartitionsRequest",
   "creation": false,
   "deletion": false,
-  "partitions": false,
   "queryId": "q1",
   "additionalInfos": [
     {
