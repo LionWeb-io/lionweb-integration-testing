@@ -2,7 +2,7 @@
   "messageKind": "ReconnectResponse",
   "lastSentSequenceNumber": 123,
   "queryId": "q1",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

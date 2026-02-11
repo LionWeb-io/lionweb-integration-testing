@@ -33,7 +33,7 @@
   },
   "index": 3,
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

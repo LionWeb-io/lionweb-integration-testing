@@ -2,7 +2,7 @@
   "messageKind": "DeletePartition",
   "deletedPartition": "nodeId",
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

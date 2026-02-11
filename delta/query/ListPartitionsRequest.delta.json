@@ -2,6 +2,7 @@
   "messageKind": "ListPartitionsRequest",
   "queryId": "q1",
   "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

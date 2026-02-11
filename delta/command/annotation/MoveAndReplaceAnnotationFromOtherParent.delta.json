@@ -5,7 +5,7 @@
   "replacedAnnotation": "replacedNodeId",
   "movedAnnotation": "otherNodeId",
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",
