@@ -37,10 +37,8 @@ jobs:
       - name: Run Deno integration tests
         run: ./test.sh
       - name: Build all C# projects
-        if: always()
         run: dotnet build --configuration Release ./src/cs/LionWeb.Integration.WebSocket.Tests/
       - name: Test all C# projects
-        if: always()
         run: dotnet test --configuration Release --logger trx ./src/cs/LionWeb.Integration.WebSocket.Tests/
       - name: Publish C# Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
