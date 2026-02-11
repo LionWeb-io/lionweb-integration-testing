@@ -1,6 +1,7 @@
 {
   "messageKind": "AddChild",
   "parent": "nodeId",
+  "split": false,
   "newChild": {
     "nodes": [
       {

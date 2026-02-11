@@ -1,6 +1,7 @@
 {
   "messageKind": "AnnotationAdded",
   "parent": "nodeId",
+  "split": true,
   "newAnnotation": {
     "nodes": [
       {

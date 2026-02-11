@@ -1,6 +1,7 @@
 {
   "messageKind": "ChildReplaced",
   "parent": "nodeId",
+  "split": false,
   "newChild": {
     "nodes": [
       {

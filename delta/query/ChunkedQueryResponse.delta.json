@@ -1,7 +1,8 @@
 {
-  "messageKind": "SubscribeToPartitionContentsResponse",
-  "split": false,
-  "contents": {
+  "messageKind": "ChunkedQueryResponse",
+  "continuedChunkCompleted": false,
+  "continuedChunkSequenceNumber": 0,
+  "chunk": {
     "nodes": [
       {
         "id": "a",

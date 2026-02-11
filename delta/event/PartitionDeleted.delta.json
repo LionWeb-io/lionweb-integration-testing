@@ -18,6 +18,7 @@
   "additionalInfos": [
     {
       "kind": "msgKind",
+      "distribute": false,
       "message": "Human message",
       "data": [
         {
