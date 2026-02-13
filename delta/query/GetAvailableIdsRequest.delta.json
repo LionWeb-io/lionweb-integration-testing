@@ -2,7 +2,7 @@
   "messageKind": "GetAvailableIdsRequest",
   "count": 3,
   "queryId": "q1",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

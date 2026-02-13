@@ -1,7 +1,8 @@
 {
-  "messageKind": "SubscribeToPartitionContentsResponse",
-  "split": false,
-  "contents": {
+  "messageKind": "ChunkedCommand",
+  "continuedChunkCompleted": false,
+  "continuedChunkSequenceNumber": 1,
+  "chunk": {
     "nodes": [
       {
         "id": "a",
@@ -31,10 +32,11 @@
       }
     ]
   },
-  "queryId": "q1",
+  "commandId": "cmdId",
   "additionalInfos": [
     {
       "kind": "msgKind",
+      "distribute": false,
       "message": "Human message",
       "data": [
         {

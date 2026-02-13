@@ -1,10 +1,10 @@
 {
   "messageKind": "SignOnRequest",
-  "deltaProtocolVersion": "2025.1",
+  "deltaProtocolVersion": "2026.1",
   "clientId": "iAmTheClient",
   "queryId": "q1",
   "repositoryId": "myRepo",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

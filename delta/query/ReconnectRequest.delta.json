@@ -3,7 +3,7 @@
   "participationId": "partipId",
   "lastReceivedSequenceNumber": 123,
   "queryId": "q1",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",
