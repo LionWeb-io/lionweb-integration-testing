@@ -1,6 +1,7 @@
 {
   "messageKind": "AddAnnotation",
   "parent": "nodeId",
+  "split": true,
   "newAnnotation": {
     "nodes": [
       {
@@ -33,7 +34,7 @@
   },
   "index": 3,
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

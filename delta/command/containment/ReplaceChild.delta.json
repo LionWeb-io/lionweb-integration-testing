@@ -1,6 +1,7 @@
 {
   "messageKind": "ReplaceChild",
   "parent": "nodeId",
+  "split": false,
   "newChild": {
     "nodes": [
       {
@@ -39,7 +40,7 @@
   "index": 3,
   "replacedChild": "replacedNodeId",
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

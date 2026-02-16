@@ -7,12 +7,12 @@
     "key": "MyReference"
   },
   "index": 3,
-  "oldTarget": "oldTargetNodeId",
+  "oldReference": "oldTargetNodeId",
   "oldResolveInfo": "TargetNode name",
-  "newTarget": "otherNodeId",
+  "newReference": "otherNodeId",
   "newResolveInfo": "otherNode name",
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

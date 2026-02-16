@@ -15,9 +15,10 @@
     }
   ],
   "sequenceNumber": 123,
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
+      "distribute": false,
       "message": "Human message",
       "data": [
         {

@@ -1,5 +1,6 @@
 {
   "messageKind": "ListPartitionsResponse",
+  "split": true,
   "partitions": {
     "nodes": [
       {
@@ -31,7 +32,7 @@
     ]
   },
   "queryId": "q1",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
       "message": "Human message",

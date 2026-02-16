@@ -1,5 +1,6 @@
 {
   "messageKind": "AddPartition",
+  "split": true,
   "newPartition": {
     "nodes": [
       {
@@ -31,9 +32,10 @@
     ]
   },
   "commandId": "cmdId",
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
+      "distribute": false,
       "message": "Human message",
       "data": [
         {

@@ -1,5 +1,6 @@
 {
   "messageKind": "PartitionAdded",
+  "split": false,
   "newPartition": {
     "nodes": [
       {
@@ -41,9 +42,10 @@
     }
   ],
   "sequenceNumber": 123,
-  "protocolMessages": [
+  "additionalInfos": [
     {
       "kind": "msgKind",
+      "distribute": true,
       "message": "Human message",
       "data": [
         {

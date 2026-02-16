@@ -14,14 +14,10 @@ serializations:
   - path: lionweb-java/core/src/test/resources/serialization/lioncore.json
     kind: m3
     repo: Java
-  - path: lionweb-typescript/packages/artifacts/chunks/languages/lioncore.json
+  - path: lionweb-typescript/packages/build/artifacts/core/v2023_1/lioncore.json
     kind: m3
     repo: TypeScript
   - path: specification/2023.1/metametamodel/lioncore.json
     kind: spec
     repo: specification
-
-schemas:
-  - path: lionweb-typescript/packages/artifacts/schemas/lioncore.serialization.schema.json
-    kind: m3
 
