@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lionweb.io/lionweb-integration-testing/bulk-api/request.schema.json",
+  "title": "LionWeb Integration Testing Bulk API Request",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "description": "unique client id",
+          "$ref": "#/$defs/id"
+        },
+        "command": {
+          "type": "object",
+          "properties": {
+            "listPartitions": {
+              "description": "List available partitions",
+              "type": "object",
+              "properties": {
+              },
+              "additionalProperties": false,
+              "maxProperties": 0
+            },
+            "createPartitions": {
+              "description": "Create new partitions",
+              "type": "object",
+              "properties": {
+                "chunk": {
+                  "description": "SerializationChunk containing all nodes we want to add as new partitions",
+                  "$ref": "#/$defs/serializationChunk"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "chunk"
+              ]
+            },
+            "deletePartitions": {
+              "description": "Delete partitions and all their contents",
+              "type": "object",
+              "properties": {
+                "nodeIds": {
+                  "description": "List of node ids to delete",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/idVariable"
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "nodeIds"
+              ]
+            },
+            "retrieve": {
+              "description": "Get nodes from repository",
+              "type": "object",
+              "properties": {
+                "nodeIds": {
+                  "description": "List of node ids we want to retrieve from the repository",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/idVariable"
+                  }
+                },
+                "depthLimit": {
+                  "description": "Limit the depth of retrieved subtrees",
+                  "$ref": "#/$defs/numberString"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "nodeIds"
+              ]
+            },
+            "store": {
+              "description": "Put nodes into repository",
+              "type": "object",
+              "properties": {
+                "chunk": {
+                  "description": "SerializationChunk containing all nodes to store to the repository",
+                  "$ref": "#/$defs/serializationChunk"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "chunk"
+              ]
+            },
+            "ids": {
+              "description": "Get available ids",
+              "type": "object",
+              "properties": {
+                "count": {
+                  "description": "Number of ids requested",
+                  "$ref": "#/$defs/numberString"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "count"
+              ]
+            }
+          },
+          "minProperties": 1,
+          "maxProperties": 1
+        }
+      },
+      "required": [
+        "clientId",
+        "command"
+      ],
+      "additionalProperties": false,
+      "minProperties": 2,
+      "maxProperties": 2
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "command": {
+          "type": "object",
+          "properties": {
+            "listPartitions": {
+              "description": "List available partitions",
+              "type": "object",
+              "properties": {
+                "chunk": {
+                  "description": "SerializationChunk with all accessible Partitions in the Repository",
+                  "$ref": "#/$defs/serializationChunk"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "chunk"
+              ]
+            },
+            "createPartitions": {
+              "description": "Create new partitions",
+              "type": "object",
+              "properties": {
+              },
+              "additionalProperties": false,
+              "maxProperties": 0
+            },
+            "deletePartitions": {
+              "description": "Delete partitions and all their contents",
+              "type": "object",
+              "properties": {
+              },
+              "additionalProperties": false,
+              "maxProperties": 0
+            },
+            "retrieve": {
+              "description": "Get nodes from repository",
+              "type": "object",
+              "properties": {
+                "chunk": {
+                  "description": "SerializationChunk containing all nodes according to nodeIds and depthLimit parameters",
+                  "$ref": "#/$defs/serializationChunk"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "chunk"
+              ]
+            },
+            "store": {
+              "description": "Put nodes into repository",
+              "type": "object",
+              "properties": {
+              },
+              "additionalProperties": false,
+              "maxProperties": 0
+            },
+            "ids": {
+              "description": "Get available ids",
+              "type": "object",
+              "properties": {
+                "nodeIds": {
+                  "description": "List of ids guaranteed to be free",
+                  "type": "array"
+                },
+                "items": {
+                  "$ref": "#/$defs/idVariable"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "nodeIds"
+              ]
+            }
+          },
+          "minProperties": 1,
+          "maxProperties": 1
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "$ref": "#/$defs/id"
+              },
+              "data": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "propertyNames": {
+                  "$ref": "#/$defs/id"
+                }
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ]
+          }
+        }
+      },
+      "required": [
+        "success",
+        "command",
+        "messages"
+      ],
+      "additionalProperties": false,
+      "minProperties": 3,
+      "maxProperties": 3
+    }
+  },
+  "additionalProperties": false,
+  "required": ["request","response"],
+  "minProperties": 2,
+  "maxProperties": 2,
+  "$defs": {
+    "serializationChunk": {
+      "$ref": "./serialization.schema.json"
+    },
+    "id": {
+      "$ref": "./serialization.schema.json#/$defs/id"
+    },
+    "idVariable": {
+      "description": "node id or variable",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_-]+$|^\\$[a-zA-Z0-9_-]$"
+    },
+    "numberString": {
+      "type": "string",
+      "pattern": "^[0-9]+"
+    }
+  }
+}

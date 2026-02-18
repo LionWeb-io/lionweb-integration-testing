@@ -1,0 +1,21 @@
+{
+  "request": {
+    "clientId": "clientA",
+    "command": {
+      "deletePartitions": {
+        "nodeIds": [
+          "$first"
+        ]
+      }
+    }
+  },
+  "response": {
+    "success": true,
+    "command": {
+      "deletePartitions": {
+      }
+    },
+    "messages": [
+    ]
+  }
+}

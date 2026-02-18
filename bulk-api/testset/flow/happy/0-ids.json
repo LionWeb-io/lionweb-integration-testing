@@ -1,0 +1,23 @@
+{
+  "request": {
+    "clientId": "clientA",
+    "command": {
+      "ids": {
+        "count": "2"
+      }
+    }
+  },
+  "response": {
+    "success": true,
+    "command": {
+      "ids": {
+        "nodeIds": [
+          "$first",
+          "$second"
+        ]
+      }
+    },
+    "messages": [
+    ]
+  }
+}

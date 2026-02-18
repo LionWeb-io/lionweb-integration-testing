@@ -1,0 +1,29 @@
+{
+  "request": {
+    "clientId": "clientA",
+    "command": {
+      "retrieve": {
+        "nodeIds": [
+          "ID-2"
+        ]
+      }
+    }
+  },
+  "response": {
+    "success": true,
+    "command": {
+      "retrieve": {
+        "chunk": {
+          "serializationFormatVersion": "2023.1",
+          "languages": [],
+          "nodes": []
+        }
+      }
+    },
+    "messages": [
+      {
+        "kind": "EmptyIdList"
+      }
+    ]
+  }
+}
