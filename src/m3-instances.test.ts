@@ -3,7 +3,7 @@ import {assertEquals} from "./deps.ts"
 import {create as ansiColors} from "ansi-colors"
 const {green, red} = ansiColors()
 
-import {deserializeLanguages, lioncoreBuiltins} from "lionweb-core"
+import {deserializeLanguages, LionWebVersions} from "lionweb-core"
 import {LionWebJsonChunk} from "lionweb-json"
 import {sortedSerializationChunk, readFileAsJson} from "lionweb-utilities"
 
@@ -14,9 +14,10 @@ Deno.test("M3 instances (Deno)", async (tctx) => {
 
     const withBuiltins = (serializationChunk: LionWebJsonChunk, origin?: string): LionWebJsonChunk => {
         const {languages} = serializationChunk
-        if (!languages.some(({key}) => key === lioncoreBuiltins.key)) {
-            languages.push({ key: lioncoreBuiltins.key, version: lioncoreBuiltins.version })
-            console.log(`added LionCore-builtins (version: ${lioncoreBuiltins.version}) to used languages of serialization chunk${origin ? ` of origin "${origin}"` : ""}`)
+        const builtins = LionWebVersions.v2023_1.builtinsFacade.language
+        if (!languages.some(({key}) => key === builtins.key)) {
+            languages.push({ key: builtins.key, version: builtins.version })
+            console.log(`added LionCore-builtins (version: ${builtins.version}) to used languages of serialization chunk${origin ? ` of origin "${origin}"` : ""}`)
         }
         return serializationChunk
     }
