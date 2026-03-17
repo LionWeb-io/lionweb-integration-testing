@@ -64,7 +64,7 @@ public class IntegrationWebSocketClient
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.SubscribeToChangingPartitions:
-                    await lionWeb.SubscribeToChangingPartitions(true, true, true);
+                    await lionWeb.SubscribeToChangingPartitions(true, true);
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.SignOff:

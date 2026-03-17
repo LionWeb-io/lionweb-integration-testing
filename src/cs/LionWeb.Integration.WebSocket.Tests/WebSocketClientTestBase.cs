@@ -61,7 +61,7 @@ public abstract class WebSocketClientTestBase : WebSocketTestBase
 
         await webSocket.ConnectToServer(IpAddress, Port);
         await lionWeb.SignOn(repositoryId);
-        await lionWeb.SubscribeToChangingPartitions(creation: true, deletion: true, partitions: true);
+        await lionWeb.SubscribeToChangingPartitions(creation: true, deletion: true);
 
         lionWeb.WaitForReceived(2);
         return lionWeb;

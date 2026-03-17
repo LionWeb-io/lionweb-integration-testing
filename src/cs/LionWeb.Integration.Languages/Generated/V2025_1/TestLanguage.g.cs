@@ -12,7 +12,7 @@ using LionWeb.Core.Notification;
 using LionWeb.Core.Notification.Partition;
 using LionWeb.Core.Notification.Pipe;
 using LionWeb.Core.Utilities;
-using LionWeb.Core.VersionSpecific.V2025_1;
+using LionWeb.Core.VersionSpecific.V2026_1;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -21,7 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 public partial class TestLanguageLanguage : LanguageBase<ITestLanguageFactory>
 {
 	public static readonly TestLanguageLanguage Instance = new Lazy<TestLanguageLanguage>(() => new("TestLanguage")).Value;
-	public TestLanguageLanguage(string id) : base(id, LionWebVersions.v2025_1)
+	public TestLanguageLanguage(string id) : base(id, LionWebVersions.v2026_1)
 	{
 		_dataTypeTestConcept = new(() => new ConceptBase<TestLanguageLanguage>("DataTypeTestConcept", this) { Key = "DataTypeTestConcept", Name = "DataTypeTestConcept", Abstract = false, Partition = false, FeaturesLazy = new(() => [DataTypeTestConcept_booleanValue_0_1, DataTypeTestConcept_booleanValue_1, DataTypeTestConcept_enumValue_0_1, DataTypeTestConcept_enumValue_1, DataTypeTestConcept_integerValue_0_1, DataTypeTestConcept_integerValue_1, DataTypeTestConcept_stringValue_0_1, DataTypeTestConcept_stringValue_1]) });
 		_dataTypeTestConcept_booleanValue_0_1 = new(() => new PropertyBase<TestLanguageLanguage>("DataTypeTestConcept-booleanValue_0_1", DataTypeTestConcept, this) { Key = "DataTypeTestConcept-booleanValue_0_1", Name = "booleanValue_0_1", Optional = true, Type = _builtIns.Boolean });
@@ -733,7 +733,7 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 	/// <remarks>Required Property</remarks>
     	/// <exception cref = "UnsetFeatureException">If Name has not been set</exception>
     	/// <exception cref = "InvalidValueException">If set to null</exception>
-        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2025_1.BuiltInsLanguage_2025_1), Key = "LionCore-builtins-INamed-name")]
+        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2026_1.BuiltInsLanguage_2026_1), Key = "LionCore-builtins-INamed-name")]
 	[LionCoreFeature(Kind = LionCoreFeatureKind.Property, Optional = false, Multiple = false)]
 	public string Name { get => _name ?? throw new UnsetFeatureException(_builtIns.INamed_name); set => SetName(value); }
 
@@ -1575,7 +1575,7 @@ public partial class TestAnnotation : AnnotationInstanceBase, INamedWritable
 	/// <remarks>Required Property</remarks>
     	/// <exception cref = "UnsetFeatureException">If Name has not been set</exception>
     	/// <exception cref = "InvalidValueException">If set to null</exception>
-        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2025_1.BuiltInsLanguage_2025_1), Key = "LionCore-builtins-INamed-name")]
+        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2026_1.BuiltInsLanguage_2026_1), Key = "LionCore-builtins-INamed-name")]
 	[LionCoreFeature(Kind = LionCoreFeatureKind.Property, Optional = false, Multiple = false)]
 	public string Name { get => _name ?? throw new UnsetFeatureException(_builtIns.INamed_name); set => SetName(value); }
 
@@ -1683,7 +1683,7 @@ public partial class TestPartition : ConceptInstanceBase, INamedWritable, IParti
 	/// <remarks>Required Property</remarks>
     	/// <exception cref = "UnsetFeatureException">If Name has not been set</exception>
     	/// <exception cref = "InvalidValueException">If set to null</exception>
-        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2025_1.BuiltInsLanguage_2025_1), Key = "LionCore-builtins-INamed-name")]
+        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2026_1.BuiltInsLanguage_2026_1), Key = "LionCore-builtins-INamed-name")]
 	[LionCoreFeature(Kind = LionCoreFeatureKind.Property, Optional = false, Multiple = false)]
 	public string Name { get => _name ?? throw new UnsetFeatureException(_builtIns.INamed_name); set => SetName(value); }
 
