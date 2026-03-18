@@ -4,24 +4,24 @@
 // ReSharper disable SuggestVarOrType_Elsewhere
 #pragma warning disable 1591
 #nullable enable
-namespace LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2;
-using LionWeb.Core;
-using LionWeb.Core.M2;
-using LionWeb.Core.M3;
-using LionWeb.Core.Notification;
-using LionWeb.Core.Notification.Partition;
-using LionWeb.Core.Notification.Pipe;
-using LionWeb.Core.Utilities;
-using LionWeb.Core.VersionSpecific.V2025_1;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+namespace LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2;
+using global::LionWeb.Core;
+using global::LionWeb.Core.M2;
+using global::LionWeb.Core.M3;
+using global::LionWeb.Core.Notification;
+using global::LionWeb.Core.Notification.Partition;
+using global::LionWeb.Core.Notification.Pipe;
+using global::LionWeb.Core.Utilities;
+using global::LionWeb.Core.VersionSpecific.V2026_1;
+using global::System;
+using global::System.Collections.Generic;
+using global::System.Diagnostics.CodeAnalysis;
 
 [LionCoreLanguage(Key = "TestLanguage", Version = "0")]
 public partial class TestLanguageLanguage : LanguageBase<ITestLanguageFactory>
 {
 	public static readonly TestLanguageLanguage Instance = new Lazy<TestLanguageLanguage>(() => new("TestLanguage")).Value;
-	public TestLanguageLanguage(string id) : base(id, LionWebVersions.v2025_1)
+	public TestLanguageLanguage(string id) : base(id, LionWebVersions.v2026_1)
 	{
 		_dataTypeTestConcept = new(() => new ConceptBase<TestLanguageLanguage>("DataTypeTestConcept", this) { Key = "DataTypeTestConcept", Name = "DataTypeTestConcept", Abstract = false, Partition = false, FeaturesLazy = new(() => [DataTypeTestConcept_booleanValue_0_1, DataTypeTestConcept_booleanValue_1, DataTypeTestConcept_enumValue_0_1, DataTypeTestConcept_enumValue_1, DataTypeTestConcept_integerValue_0_1, DataTypeTestConcept_integerValue_1, DataTypeTestConcept_stringValue_0_1, DataTypeTestConcept_stringValue_1]) });
 		_dataTypeTestConcept_booleanValue_0_1 = new(() => new PropertyBase<TestLanguageLanguage>("DataTypeTestConcept-booleanValue_0_1", DataTypeTestConcept, this) { Key = "DataTypeTestConcept-booleanValue_0_1", Name = "booleanValue_0_1", Optional = true, Type = _builtIns.Boolean });
@@ -45,7 +45,8 @@ public partial class TestLanguageLanguage : LanguageBase<ITestLanguageFactory>
 		_secondTestEnumeration_literal1 = new(() => new EnumerationLiteralBase<TestLanguageLanguage>("SecondTestEnumeration-literal1", SecondTestEnumeration, this) { Key = "SecondTestEnumeration-literal1", Name = "literal1" });
 		_secondTestEnumeration_literal2 = new(() => new EnumerationLiteralBase<TestLanguageLanguage>("SecondTestEnumeration-literal2", SecondTestEnumeration, this) { Key = "SecondTestEnumeration-literal2", Name = "literal2" });
 		_secondTestEnumeration_literal3 = new(() => new EnumerationLiteralBase<TestLanguageLanguage>("SecondTestEnumeration-literal3", SecondTestEnumeration, this) { Key = "SecondTestEnumeration-literal3", Name = "literal3" });
-		_testAnnotation = new(() => new AnnotationBase<TestLanguageLanguage>("TestAnnotation", this) { Key = "TestAnnotation", Name = "TestAnnotation", AnnotatesLazy = new(() => _builtIns.Node), ImplementsLazy = new(() => [_builtIns.INamed]) });
+		_testAnnotation = new(() => new AnnotationBase<TestLanguageLanguage>("TestAnnotation", this) { Key = "TestAnnotation", Name = "TestAnnotation", AnnotatesLazy = new(() => _builtIns.Node), ImplementsLazy = new(() => [_builtIns.INamed]), FeaturesLazy = new(() => [TestAnnotation_ref]) });
+		_testAnnotation_ref = new(() => new ReferenceBase<TestLanguageLanguage>("TestAnnotation-ref", TestAnnotation, this) { Key = "TestAnnotation-ref", Name = "ref", Optional = false, Multiple = false, Type = _builtIns.Node });
 		_testEnumeration = new(() => new EnumerationBase<TestLanguageLanguage>("TestEnumeration", this) { Key = "TestEnumeration", Name = "TestEnumeration", LiteralsLazy = new(() => [TestEnumeration_literal1, TestEnumeration_literal2, TestEnumeration_literal3]) });
 		_testEnumeration_literal1 = new(() => new EnumerationLiteralBase<TestLanguageLanguage>("TestEnumeration-literal1", TestEnumeration, this) { Key = "TestEnumeration-literal1", Name = "literal1" });
 		_testEnumeration_literal2 = new(() => new EnumerationLiteralBase<TestLanguageLanguage>("TestEnumeration-literal2", TestEnumeration, this) { Key = "TestEnumeration-literal2", Name = "literal2" });
@@ -141,6 +142,9 @@ public partial class TestLanguageLanguage : LanguageBase<ITestLanguageFactory>
 
 	private readonly Lazy<Annotation> _testAnnotation;
 	public Annotation TestAnnotation => _testAnnotation.Value;
+
+	private readonly Lazy<Reference> _testAnnotation_ref;
+	public Reference TestAnnotation_ref => _testAnnotation_ref.Value;
 
 	private readonly Lazy<Enumeration> _testEnumeration;
 	public Enumeration TestEnumeration => _testEnumeration.Value;
@@ -604,9 +608,9 @@ public partial class DataTypeTestConcept : ConceptInstanceBase
 
 		if (TestLanguageLanguage.Instance.DataTypeTestConcept_enumValue_0_1.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.TestEnumeration)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.TestEnumeration)
 			{
-				SetEnumValue_0_1((LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.TestEnumeration?)value);
+				SetEnumValue_0_1((LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.TestEnumeration?)value);
 				return true;
 			}
 
@@ -615,7 +619,7 @@ public partial class DataTypeTestConcept : ConceptInstanceBase
 
 		if (TestLanguageLanguage.Instance.DataTypeTestConcept_enumValue_1.EqualsIdentity(feature))
 		{
-			if (value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.TestEnumeration v)
+			if (value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.TestEnumeration v)
 			{
 				SetEnumValue_1(v);
 				return true;
@@ -679,10 +683,10 @@ public partial class DataTypeTestConcept : ConceptInstanceBase
 			return SetBooleanValue_0_1Raw((bool?)value);
 		if (TestLanguageLanguage.Instance.DataTypeTestConcept_booleanValue_1.EqualsIdentity(feature) && value is null or bool)
 			return SetBooleanValue_1Raw((bool?)value);
-		if (TestLanguageLanguage.Instance.DataTypeTestConcept_enumValue_0_1.EqualsIdentity(feature) && value is null or LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.TestEnumeration)
-			return SetEnumValue_0_1Raw((LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.TestEnumeration?)value);
-		if (TestLanguageLanguage.Instance.DataTypeTestConcept_enumValue_1.EqualsIdentity(feature) && value is null or LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.TestEnumeration)
-			return SetEnumValue_1Raw((LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.TestEnumeration?)value);
+		if (TestLanguageLanguage.Instance.DataTypeTestConcept_enumValue_0_1.EqualsIdentity(feature) && value is null or LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.TestEnumeration)
+			return SetEnumValue_0_1Raw((LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.TestEnumeration?)value);
+		if (TestLanguageLanguage.Instance.DataTypeTestConcept_enumValue_1.EqualsIdentity(feature) && value is null or LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.TestEnumeration)
+			return SetEnumValue_1Raw((LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.TestEnumeration?)value);
 		if (TestLanguageLanguage.Instance.DataTypeTestConcept_integerValue_0_1.EqualsIdentity(feature) && value is null or int)
 			return SetIntegerValue_0_1Raw((int?)value);
 		if (TestLanguageLanguage.Instance.DataTypeTestConcept_integerValue_1.EqualsIdentity(feature) && value is null or int)
@@ -733,7 +737,7 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 	/// <remarks>Required Property</remarks>
     	/// <exception cref = "UnsetFeatureException">If Name has not been set</exception>
     	/// <exception cref = "InvalidValueException">If set to null</exception>
-        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2025_1.BuiltInsLanguage_2025_1), Key = "LionCore-builtins-INamed-name")]
+        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2026_1.BuiltInsLanguage_2026_1), Key = "LionCore-builtins-INamed-name")]
 	[LionCoreFeature(Kind = LionCoreFeatureKind.Property, Optional = false, Multiple = false)]
 	public string Name { get => _name ?? throw new UnsetFeatureException(_builtIns.INamed_name); set => SetName(value); }
 
@@ -1210,9 +1214,9 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_1.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept)
 			{
-				SetContainment_0_1((LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept?)value);
+				SetContainment_0_1((LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept?)value);
 				return true;
 			}
 
@@ -1227,7 +1231,7 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1.EqualsIdentity(feature))
 		{
-			if (value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v)
+			if (value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v)
 			{
 				SetContainment_1(v);
 				return true;
@@ -1244,9 +1248,9 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_reference_0_1.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept)
 			{
-				SetReference_0_1((LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept?)value);
+				SetReference_0_1((LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept?)value);
 				return true;
 			}
 
@@ -1267,7 +1271,7 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_reference_1.EqualsIdentity(feature))
 		{
-			if (value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v)
+			if (value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v)
 			{
 				SetReference_1(v);
 				return true;
@@ -1304,10 +1308,10 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 	{
 		if (base.SetContainmentRaw(feature, value))
 			return true;
-		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_1.EqualsIdentity(feature) && value is null or LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept)
-			return SetContainment_0_1Raw((LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept?)value);
-		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1.EqualsIdentity(feature) && value is null or LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept)
-			return SetContainment_1Raw((LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept?)value);
+		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_1.EqualsIdentity(feature) && value is null or LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept)
+			return SetContainment_0_1Raw((LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept?)value);
+		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1.EqualsIdentity(feature) && value is null or LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept)
+			return SetContainment_1Raw((LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept?)value);
 		return false;
 	}
 
@@ -1351,9 +1355,9 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 	{
 		if (base.AddContainmentsRaw(feature, value))
 			return true;
-		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v0)
+		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v0)
 			return AddContainment_0_nRaw(v0);
-		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v1)
+		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v1)
 			return AddContainment_1_nRaw(v1);
 		return false;
 	}
@@ -1373,9 +1377,9 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 	{
 		if (base.InsertContainmentsRaw(feature, index, value))
 			return true;
-		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v0)
+		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v0)
 			return InsertContainment_0_nRaw(index, v0);
-		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v1)
+		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v1)
 			return InsertContainment_1_nRaw(index, v1);
 		return false;
 	}
@@ -1395,9 +1399,9 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 	{
 		if (base.RemoveContainmentsRaw(feature, value))
 			return true;
-		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v0)
+		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v0)
 			return RemoveContainment_0_nRaw(v0);
-		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v1)
+		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v1)
 			return RemoveContainment_1_nRaw(v1);
 		return false;
 	}
@@ -1420,25 +1424,25 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 			return true;
 		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.EqualsIdentity(link))
 		{
-			AddContainment_0_n(TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			AddContainment_0_n(TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.EqualsIdentity(link))
 		{
-			AddContainment_1_n(TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			AddContainment_1_n(TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_reference_0_n.EqualsIdentity(link))
 		{
-			AddReference_0_n(TestLanguageLanguage.Instance.LinkTestConcept_reference_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			AddReference_0_n(TestLanguageLanguage.Instance.LinkTestConcept_reference_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_reference_1_n.EqualsIdentity(link))
 		{
-			AddReference_1_n(TestLanguageLanguage.Instance.LinkTestConcept_reference_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			AddReference_1_n(TestLanguageLanguage.Instance.LinkTestConcept_reference_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
@@ -1452,25 +1456,25 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 			return true;
 		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.EqualsIdentity(link))
 		{
-			InsertContainment_0_n(index, TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			InsertContainment_0_n(index, TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.EqualsIdentity(link))
 		{
-			InsertContainment_1_n(index, TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			InsertContainment_1_n(index, TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_reference_0_n.EqualsIdentity(link))
 		{
-			InsertReference_0_n(index, TestLanguageLanguage.Instance.LinkTestConcept_reference_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			InsertReference_0_n(index, TestLanguageLanguage.Instance.LinkTestConcept_reference_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_reference_1_n.EqualsIdentity(link))
 		{
-			InsertReference_1_n(index, TestLanguageLanguage.Instance.LinkTestConcept_reference_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			InsertReference_1_n(index, TestLanguageLanguage.Instance.LinkTestConcept_reference_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
@@ -1484,25 +1488,25 @@ public partial class LinkTestConcept : ConceptInstanceBase, INamedWritable
 			return true;
 		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.EqualsIdentity(link))
 		{
-			RemoveContainment_0_n(TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			RemoveContainment_0_n(TestLanguageLanguage.Instance.LinkTestConcept_containment_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.EqualsIdentity(link))
 		{
-			RemoveContainment_1_n(TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			RemoveContainment_1_n(TestLanguageLanguage.Instance.LinkTestConcept_containment_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_reference_0_n.EqualsIdentity(link))
 		{
-			RemoveReference_0_n(TestLanguageLanguage.Instance.LinkTestConcept_reference_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			RemoveReference_0_n(TestLanguageLanguage.Instance.LinkTestConcept_reference_0_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
 		if (TestLanguageLanguage.Instance.LinkTestConcept_reference_1_n.EqualsIdentity(link))
 		{
-			RemoveReference_1_n(TestLanguageLanguage.Instance.LinkTestConcept_reference_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			RemoveReference_1_n(TestLanguageLanguage.Instance.LinkTestConcept_reference_1_n.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
@@ -1575,7 +1579,7 @@ public partial class TestAnnotation : AnnotationInstanceBase, INamedWritable
 	/// <remarks>Required Property</remarks>
     	/// <exception cref = "UnsetFeatureException">If Name has not been set</exception>
     	/// <exception cref = "InvalidValueException">If set to null</exception>
-        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2025_1.BuiltInsLanguage_2025_1), Key = "LionCore-builtins-INamed-name")]
+        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2026_1.BuiltInsLanguage_2026_1), Key = "LionCore-builtins-INamed-name")]
 	[LionCoreFeature(Kind = LionCoreFeatureKind.Property, Optional = false, Multiple = false)]
 	public string Name { get => _name ?? throw new UnsetFeatureException(_builtIns.INamed_name); set => SetName(value); }
 
@@ -1597,6 +1601,42 @@ public partial class TestAnnotation : AnnotationInstanceBase, INamedWritable
 		return this;
 	}
 
+	private ReferenceTarget? _ref = null;
+	/// <remarks>Required Single Reference</remarks>
+    	/// <exception cref = "UnsetFeatureException">If Ref has not been set</exception>
+    	/// <exception cref = "InvalidValueException">If set to null</exception>
+        [LionCoreMetaPointer(Language = typeof(TestLanguageLanguage), Key = "TestAnnotation-ref")]
+	[LionCoreFeature(Kind = LionCoreFeatureKind.Reference, Optional = false, Multiple = false)]
+	public IReadableNode Ref { get => ReferenceTargetNonNullTarget<IReadableNode>(_ref, TestLanguageLanguage.Instance.TestAnnotation_ref) ?? throw new UnsetFeatureException(TestLanguageLanguage.Instance.TestAnnotation_ref); set => SetRef(value); }
+
+	/// <remarks>Required Single Reference</remarks>
+        public bool TryGetRef([NotNullWhenAttribute(true)] out IReadableNode? @ref)
+	{
+		@ref = ReferenceTargetNullableTarget<IReadableNode>(_ref, TestLanguageLanguage.Instance.TestAnnotation_ref);
+		return @ref != null;
+	}
+
+	private TestAnnotation SetRef(ReferenceTarget? value)
+	{
+		SetRequiredSingleReference<IReadableNode>(value, TestLanguageLanguage.Instance.TestAnnotation_ref, _ref, SetRefRaw);
+		return this;
+	}
+
+	private bool SetRefRaw(ReferenceTarget? value)
+	{
+		if (value == _ref)
+			return false;
+		_ref = value;
+		return true;
+	}
+
+	/// <remarks>Required Single Reference</remarks>
+    	/// <exception cref = "InvalidValueException">If set to null</exception>
+        public TestAnnotation SetRef(IReadableNode value)
+	{
+		return SetRef(ReferenceTarget.FromNodeOptional(value));
+	}
+
 	public TestAnnotation(string id) : base(id)
 	{
 	}
@@ -1614,6 +1654,12 @@ public partial class TestAnnotation : AnnotationInstanceBase, INamedWritable
 			return true;
 		}
 
+		if (TestLanguageLanguage.Instance.TestAnnotation_ref.EqualsIdentity(feature))
+		{
+			result = Ref;
+			return true;
+		}
+
 		return false;
 	}
 
@@ -1624,6 +1670,19 @@ public partial class TestAnnotation : AnnotationInstanceBase, INamedWritable
 		if (_builtIns.INamed_name.EqualsIdentity(feature))
 		{
 			result = _name;
+			return true;
+		}
+
+		return false;
+	}
+
+	protected override bool TryGetReferenceRaw(Reference feature, out IReferenceTarget? result)
+	{
+		if (base.TryGetReferenceRaw(feature, out result))
+			return true;
+		if (TestLanguageLanguage.Instance.TestAnnotation_ref.EqualsIdentity(feature))
+		{
+			result = _ref;
 			return true;
 		}
 
@@ -1646,6 +1705,23 @@ public partial class TestAnnotation : AnnotationInstanceBase, INamedWritable
 			throw new InvalidValueException(feature, value);
 		}
 
+		if (TestLanguageLanguage.Instance.TestAnnotation_ref.EqualsIdentity(feature))
+		{
+			if (value is IReadableNode v)
+			{
+				SetRef(v);
+				return true;
+			}
+
+			if (value is ReferenceTarget target)
+			{
+				SetRef(target);
+				return true;
+			}
+
+			throw new InvalidValueException(feature, value);
+		}
+
 		return false;
 	}
 
@@ -1658,12 +1734,23 @@ public partial class TestAnnotation : AnnotationInstanceBase, INamedWritable
 		return false;
 	}
 
+	protected override bool SetReferenceRaw(Reference feature, ReferenceTarget? value)
+	{
+		if (base.SetReferenceRaw(feature, value))
+			return true;
+		if (TestLanguageLanguage.Instance.TestAnnotation_ref.EqualsIdentity(feature))
+			return SetRefRaw(value);
+		return false;
+	}
+
 	/// <inheritdoc/>
         public override IEnumerable<Feature> CollectAllSetFeatures()
 	{
 		List<Feature> result = base.CollectAllSetFeatures().ToList();
 		if (TryGetName(out _))
 			result.Add(_builtIns.INamed_name);
+		if (TryGetRef(out _))
+			result.Add(TestLanguageLanguage.Instance.TestAnnotation_ref);
 		return result;
 	}
 }
@@ -1683,7 +1770,7 @@ public partial class TestPartition : ConceptInstanceBase, INamedWritable, IParti
 	/// <remarks>Required Property</remarks>
     	/// <exception cref = "UnsetFeatureException">If Name has not been set</exception>
     	/// <exception cref = "InvalidValueException">If set to null</exception>
-        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2025_1.BuiltInsLanguage_2025_1), Key = "LionCore-builtins-INamed-name")]
+        [LionCoreMetaPointer(Language = typeof(LionWeb.Core.VersionSpecific.V2026_1.BuiltInsLanguage_2026_1), Key = "LionCore-builtins-INamed-name")]
 	[LionCoreFeature(Kind = LionCoreFeatureKind.Property, Optional = false, Multiple = false)]
 	public string Name { get => _name ?? throw new UnsetFeatureException(_builtIns.INamed_name); set => SetName(value); }
 
@@ -1865,9 +1952,9 @@ public partial class TestPartition : ConceptInstanceBase, INamedWritable, IParti
 
 		if (TestLanguageLanguage.Instance.TestPartition_data.EqualsIdentity(feature))
 		{
-			if (value is null or LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.DataTypeTestConcept)
+			if (value is null or LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.DataTypeTestConcept)
 			{
-				SetData((LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.DataTypeTestConcept?)value);
+				SetData((LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.DataTypeTestConcept?)value);
 				return true;
 			}
 
@@ -1896,8 +1983,8 @@ public partial class TestPartition : ConceptInstanceBase, INamedWritable, IParti
 	{
 		if (base.SetContainmentRaw(feature, value))
 			return true;
-		if (TestLanguageLanguage.Instance.TestPartition_data.EqualsIdentity(feature) && value is null or LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.DataTypeTestConcept)
-			return SetDataRaw((LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.DataTypeTestConcept?)value);
+		if (TestLanguageLanguage.Instance.TestPartition_data.EqualsIdentity(feature) && value is null or LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.DataTypeTestConcept)
+			return SetDataRaw((LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.DataTypeTestConcept?)value);
 		return false;
 	}
 
@@ -1918,7 +2005,7 @@ public partial class TestPartition : ConceptInstanceBase, INamedWritable, IParti
 	{
 		if (base.AddContainmentsRaw(feature, value))
 			return true;
-		if (TestLanguageLanguage.Instance.TestPartition_links.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v0)
+		if (TestLanguageLanguage.Instance.TestPartition_links.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v0)
 			return AddLinksRaw(v0);
 		return false;
 	}
@@ -1927,7 +2014,7 @@ public partial class TestPartition : ConceptInstanceBase, INamedWritable, IParti
 	{
 		if (base.InsertContainmentsRaw(feature, index, value))
 			return true;
-		if (TestLanguageLanguage.Instance.TestPartition_links.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v0)
+		if (TestLanguageLanguage.Instance.TestPartition_links.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v0)
 			return InsertLinksRaw(index, v0);
 		return false;
 	}
@@ -1936,7 +2023,7 @@ public partial class TestPartition : ConceptInstanceBase, INamedWritable, IParti
 	{
 		if (base.RemoveContainmentsRaw(feature, value))
 			return true;
-		if (TestLanguageLanguage.Instance.TestPartition_links.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept v0)
+		if (TestLanguageLanguage.Instance.TestPartition_links.EqualsIdentity(feature) && value is LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept v0)
 			return RemoveLinksRaw(v0);
 		return false;
 	}
@@ -1948,7 +2035,7 @@ public partial class TestPartition : ConceptInstanceBase, INamedWritable, IParti
 			return true;
 		if (TestLanguageLanguage.Instance.TestPartition_links.EqualsIdentity(link))
 		{
-			AddLinks(TestLanguageLanguage.Instance.TestPartition_links.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			AddLinks(TestLanguageLanguage.Instance.TestPartition_links.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
@@ -1962,7 +2049,7 @@ public partial class TestPartition : ConceptInstanceBase, INamedWritable, IParti
 			return true;
 		if (TestLanguageLanguage.Instance.TestPartition_links.EqualsIdentity(link))
 		{
-			InsertLinks(index, TestLanguageLanguage.Instance.TestPartition_links.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			InsertLinks(index, TestLanguageLanguage.Instance.TestPartition_links.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 
@@ -1976,7 +2063,7 @@ public partial class TestPartition : ConceptInstanceBase, INamedWritable, IParti
 			return true;
 		if (TestLanguageLanguage.Instance.TestPartition_links.EqualsIdentity(link))
 		{
-			RemoveLinks(TestLanguageLanguage.Instance.TestPartition_links.AsNodes<LionWeb.Integration.Languages.Generated.V2025_1.TestLanguage.M2.LinkTestConcept>(value));
+			RemoveLinks(TestLanguageLanguage.Instance.TestPartition_links.AsNodes<LionWeb.Integration.Languages.Generated.V2026_1.TestLanguage.M2.LinkTestConcept>(value));
 			return true;
 		}
 

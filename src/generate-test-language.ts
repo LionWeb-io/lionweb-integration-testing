@@ -1,11 +1,4 @@
-import {
-    builtinClassifiers,
-    builtinPrimitives,
-    Enumeration,
-    LanguageFactory,
-    Link,
-    serializeLanguages
-} from "lionweb-core"
+import { DataType, Enumeration, LanguageFactory, Link, LionWebVersions, serializeLanguages } from "lionweb-core"
 import { LionWebJsonChunk } from "lionweb-json"
 import { StringsMapper } from "lionweb-ts-utils"
 import { generatePlantUmlForLanguage, languageAsText } from "lionweb-utilities"
@@ -32,23 +25,32 @@ const TestEnumeration = generateTestEnumeration("TestEnumeration")
 generateTestEnumeration("SecondTestEnumeration")
 
 
+const builtinPrimitives = LionWebVersions.v2023_1.builtinsFacade.primitiveTypes
+const builtinClassifiers = LionWebVersions.v2023_1.builtinsFacade.classifiers
+
 // generate a `DataTypeTestConcept` concept with boolean-, integer-, string-, and TestEnumeration-typed properties, both required and optional:
 const {booleanDataType, integerDataType, stringDataType} = builtinPrimitives
 const DataTypeTestConcept = factory.concept("DataTypeTestConcept", false)
+const namedDataTypes: Record<string, DataType> = {
+    "boolean": booleanDataType,
+    "integer": integerDataType,
+    "string": stringDataType,
+    "enum": TestEnumeration
+}
 ;[false, true].forEach((optional) => {
-    ;[["boolean", booleanDataType], ["integer", integerDataType], ["string", stringDataType], ["enum", TestEnumeration]].forEach(
-        ([typeName, dataType]) => {
-            const property = factory.property(DataTypeTestConcept, `${typeName}Value_${optional ? "0_" : ""}1`).ofType(dataType)
-            if (optional) {
-                property.isOptional()
-            }
-        }
-    )
+    Object.entries(namedDataTypes)
+        .forEach(
+            ([typeName, dataType]) => {
+                const property = factory.property(DataTypeTestConcept, `${typeName}Value_${optional ? "0_" : ""}1`).ofType(dataType)
+                if (optional) {
+                    property.isOptional()
+                }
+        })
 })
 
 
 // generate a `LinkTestConcept` concept with containments and references in all cardinalities:
-const LinkTestConcept = factory.concept("LinkTestConcept", false).implementing(builtinClassifiers.inamed)
+const LinkTestConcept = factory.concept("LinkTestConcept", false).implementing(LionWebVersions.v2023_1.builtinsFacade.classifiers.inamed)
 type LinkType = "containment" | "reference"
 const linkTypes: LinkType[] = ["containment", "reference"]
 linkTypes.forEach((linkType) => {
@@ -113,7 +115,7 @@ const oldPrefix = "LionCore-builtins-"
 serializedTestLanguage.nodes.forEach(({ references }) => {
     references.forEach(({ targets }) => {
         targets.forEach((target) => {
-            if (target.reference.startsWith(oldPrefix)) {
+            if (target.reference !== null && target.reference.startsWith(oldPrefix)) {
                 target.resolveInfo = `LionWeb.LionCore_builtins.${target.reference.substring(oldPrefix.length)}`
                 target.reference = null
             }

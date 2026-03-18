@@ -84,7 +84,7 @@ public static class TsClientProcessesExtensions
     /// </remarks>
     // ReSharper disable once UnusedMember.Local
     private static Process TsNpxClient(string cmdLine)
-        => CreateNodeUtilityProcess("npx", "cli-client", cmdLine);
+        => CreateNodeUtilityProcess("npx", $"--package=@lionweb/delta-protocol-test-cli@{LionWebTsVersion}", "--cmd=cli-client", cmdLine);
 
     internal static string LionWebTsVersion => AssemblyConfigurationAttribute.Get("LionWebTsVersion");
 
