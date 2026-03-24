@@ -32,6 +32,7 @@ public enum Tasks
     AddAnnotation,
     AddAnnotations,
     AddAnnotation_to_Containment_0_1,
+    AddAnnotationWithLanguageReference,
     DeleteAnnotation,
     MoveAnnotationInSameParent,
     MoveAnnotationFromOtherParent,
