@@ -89,4 +89,16 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
 
         AssertEquals(aPartition, bPartition);
     }
+    
+    [Test]
+    public void AddAnnotationWithLanguageReference()
+    {
+        aPartition.AddAnnotations([new TestAnnotation("annotation")
+        {
+            Ref = TestLanguageLanguage.Instance.DataTypeTestConcept_booleanValue_0_1
+        }]);
+        WaitForReceived();
+
+        AssertEquals(aPartition, bPartition);
+    }
 }

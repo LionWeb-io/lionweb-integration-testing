@@ -113,6 +113,15 @@ public class IntegrationWebSocketClient
                     partition.Links[0].Containment_0_1!.AddAnnotations([new TestAnnotation("annotation")]);
                     lionWeb.WaitForReceived(1);
                     break;
+                case Tasks.AddAnnotationWithLanguageReference:
+                    partition.AddAnnotations([
+                        new TestAnnotation("annotation")
+                        {
+                            Ref = TestLanguageLanguage.Instance.DataTypeTestConcept_booleanValue_0_1
+                        }
+                    ]);
+                    lionWeb.WaitForReceived(1);
+                    break;
                 case Tasks.DeleteAnnotation:
                     partition.RemoveAnnotations(partition.GetAnnotations());
                     lionWeb.WaitForReceived(1);

@@ -137,4 +137,38 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
         var serverPartition = (TestPartition)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
+    
+    /// <summary>
+    /// Adds an annotation with a reference to an M2 element.
+    /// </summary>
+    [Test]
+    public void AddAnnotationWithLanguageReference()
+    {
+        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
+
+        var serverForest = new Forest();
+
+        lionWebServer =
+            new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotationWithLanguageReference);
+
+        WaitForSent(3);
+
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+            ]
+        }.WithAnnotation(new TestAnnotation("annotation")
+        {
+            Ref = TestLanguageLanguage.Instance.DataTypeTestConcept_booleanValue_0_1
+        });
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+
 }
