@@ -48,6 +48,8 @@ If this happens, then just rerun the job: usually the job succeeds the next time
 The schema validation that the build performs can’t be run locally directly, but the following should be equivalent:
 
 ```shell
+$ ./download-delta.schema.json.sh 
+$ ./download-serialization.schema.json.sh
 $ npm install @exodus/schemasafe
 $ node validate-json.js
 ```
