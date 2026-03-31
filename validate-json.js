@@ -15,7 +15,14 @@ const lsFilesInPaths = (fileNameEnding, paths) =>
 
 const validateJsonInPaths = (schemaPath, fileNameEnding, paths) => {
     const schema = readFileAsJson(schemaPath)
-    const validate = validator(schema, { includeErrors: true })
+    const validate = validator(schema, {
+        includeErrors: true,
+        allErrors: false,
+            // Note: cardinalby/schema-validator-action@v3 configures allErrors=true, but I want to avoid too much output per JSON file.
+            // Use validate-specific-message-json.js for more detailed output.
+        weakFormats: true,
+        extraFormats: true
+    })
     let nFilesWithErrors = 0
     const jsonFilePaths = lsFilesInPaths(fileNameEnding, paths)
     for (const jsonPath of jsonFilePaths) {

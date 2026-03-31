@@ -48,11 +48,26 @@ If this happens, then just rerun the job: usually the job succeeds the next time
 The schema validation that the build performs can’t be run locally directly, but the following should be equivalent:
 
 ```shell
-$ ./download-delta.schema.json.sh 
-$ ./download-serialization.schema.json.sh
+$ ./download-delta.schema.json.sh         # (download JSON schema for delta protocol messages)
+$ ./download-serialization.schema.json.sh # (download JSON schema for serialization format)
 $ npm install @exodus/schemasafe
 $ node validate-json.js
 ```
+
+The `validate-specific-message-json.js` script can be used to troubleshoot message JSONs that don’t validate.
+
+```shell
+$ ./download-delta.schema.json.sh   # (download full JSON schema for delta protocol messages)
+$ node validate-specific-message-json.js
+Usage: execute
+        node validate-specific-message-json.js <path to JSON with message> <message kind>
+to validate that JSON as a message of the indicated kind — hopefully producing more understandable errors.
+In addition, a JSON schema that only pertains to that message kind is saved to a file with name "<message kind>.schema.json".
+$ node validate-specific-message-json.js delta/event/ErrorEvent.delta.json ErrorEvent
+JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message of kind ErrorEvent.
+```
+
+(All files with names ending in `.schema.json` are already Git-ignored.)
 
 
 ## Installation requirements
