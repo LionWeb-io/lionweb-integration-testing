@@ -27,10 +27,11 @@ const validateJsonInPaths = (schemaPath, fileNameEnding, paths) => {
             console.dir(validate.errors)
         }
     }
+    const filesTerm = `file${nFilesWithErrors === 1 ? "" : "s"}`
     if (nFilesWithErrors > 0) {
-        console.error(`${nFilesWithErrors} JSON files didn’t validate!`)
+        console.error(`${nFilesWithErrors} JSON ${filesTerm} didn’t validate!`)
     } else {
-        console.log(`(all ${jsonFilePaths.length} JSON files validated)`)
+        console.log(`(all ${jsonFilePaths.length} JSON ${filesTerm} validated)`)
     }
 }
 

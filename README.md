@@ -48,6 +48,7 @@ If this happens, then just rerun the job: usually the job succeeds the next time
 The schema validation that the build performs can’t be run locally directly, but the following should be equivalent:
 
 ```shell
+$ npm install @exodus/schemasafe
 $ node validate-json.js
 ```
 
@@ -56,7 +57,7 @@ $ node validate-json.js
 
 * [Deno](https://deno.com), currently (at least) version 2.7.7 — for the integration tests written in Deno-compliant TypeScript in [`src/`](src).
   (Deno is used instead of Node.js because Deno can reliably execute TypeScript code natively.)
-* [Node.js](https://nodejs.org/en/download), currently (at least) version 23.6.0 — for running `validate-json.js`.
+* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 23.6.0 — for running `validate-json.js`.
 * Java 11 (but really Java 8) - for the [`lionweb-java` repo](repos/lionweb-java).
 
 
