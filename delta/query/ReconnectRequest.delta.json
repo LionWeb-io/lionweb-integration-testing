@@ -1,5 +1,7 @@
 {
   "messageKind": "ReconnectRequest",
+  "clientId": "iAmTheClient",
+  "repositoryId": "myRepo",
   "participationId": "partipId",
   "lastReceivedSequenceNumber": 123,
   "queryId": "q1",
