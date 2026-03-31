@@ -1,5 +1,6 @@
 {
   "messageKind": "ReconnectRequest",
+  "deltaProtocolVersion": "2026.1",
   "clientId": "iAmTheClient",
   "repositoryId": "myRepo",
   "participationId": "partipId",
