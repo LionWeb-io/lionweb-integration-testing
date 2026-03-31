@@ -24,7 +24,7 @@ jobs:
         with:
           schema: 'serialization.schema.json'
           file:
-            'testchanges/**/*.json|testset/valid/**/*.json|testset/valid/**.json|testset/withLanguage/valid/**/*.json|testset/withLanguage/valid/*.json'
+            'testchanges/**/*.json|testset/withoutLanguage/valid/**/*.json|testset/withoutLanguage/valid/**.json|testset/withLanguage/valid/**/*.json|testset/withLanguage/valid/*.json'
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x  # run with the latest stable version 2 of Deno
