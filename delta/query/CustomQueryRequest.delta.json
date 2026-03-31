@@ -1,5 +1,5 @@
 {
-  "messageKind": "custom-MyQueryRequest",
+  "messageKind": "custom_MyQueryRequest",
   "bool": true,
   "int": 12,
   "array": [
