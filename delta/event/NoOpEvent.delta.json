@@ -1,5 +1,5 @@
 {
-  "messageKind": "NoOpEvent",
+  "messageKind": "NoOp",
   "originCommands": [
     {
       "participationId": "partId",
