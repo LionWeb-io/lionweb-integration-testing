@@ -55,12 +55,9 @@
         {
           "kind": "msgKind",
           "message": "Human message",
-          "data": [
-            {
-              "key": "dataKey",
-              "value": "dataValue"
-            }
-          ]
+          "data": {
+            "dataKey": "dataValue"
+          }
         }
       ]
     },
@@ -85,12 +82,9 @@
         {
           "kind": "msgKind",
           "message": "Human message",
-          "data": [
-            {
-              "key": "dataKey",
-              "value": "dataValue"
-            }
-          ]
+          "data": {
+            "dataKey": "dataValue"
+          }
         }
       ]
     },
@@ -139,12 +133,9 @@
     {
       "kind": "msgKind",
       "message": "Human message",
-      "data": [
-        {
-          "key": "dataKey",
-          "value": "dataValue"
-        }
-      ]
+      "data": {
+        "dataKey": "dataValue"
+      }
     }
   ]
 }

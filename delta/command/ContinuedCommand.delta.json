@@ -38,12 +38,9 @@
       "kind": "msgKind",
       "distribute": false,
       "message": "Human message",
-      "data": [
-        {
-          "key": "dataKey",
-          "value": "dataValue"
-        }
-      ]
+      "data": {
+        "dataKey": "dataValue"
+      }
     }
   ]
 }
