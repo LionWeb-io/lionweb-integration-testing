@@ -1,8 +1,7 @@
 {
-  "messageKind": "ChunkedEvent",
-  "continuedChunkCompleted": true,
-  "continuedChunkSequenceNumber": 2,
-  "chunkedEventSequenceNumber": 102,
+  "messageKind": "ContinuedCommand",
+  "continuedChunkCompleted": false,
+  "continuedChunkSequenceNumber": 1,
   "chunk": {
     "nodes": [
       {
@@ -33,10 +32,11 @@
       }
     ]
   },
-  "sequenceNumber": 123,
+  "commandId": "cmdId",
   "additionalInfos": [
     {
       "kind": "msgKind",
+      "distribute": false,
       "message": "Human message",
       "data": [
         {

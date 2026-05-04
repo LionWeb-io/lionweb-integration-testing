@@ -1,7 +1,7 @@
 {
-  "messageKind": "ChunkedCommand",
+  "messageKind": "ContinuedQueryResponse",
   "continuedChunkCompleted": false,
-  "continuedChunkSequenceNumber": 1,
+  "continuedChunkSequenceNumber": 0,
   "chunk": {
     "nodes": [
       {
@@ -32,11 +32,10 @@
       }
     ]
   },
-  "commandId": "cmdId",
+  "queryId": "q1",
   "additionalInfos": [
     {
       "kind": "msgKind",
-      "distribute": false,
       "message": "Human message",
       "data": [
         {

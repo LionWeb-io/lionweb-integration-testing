@@ -1,7 +1,8 @@
 {
-  "messageKind": "ChunkedQueryResponse",
-  "continuedChunkCompleted": false,
-  "continuedChunkSequenceNumber": 0,
+  "messageKind": "ContinuedEvent",
+  "continuedChunkCompleted": true,
+  "continuedChunkSequenceNumber": 2,
+  "chunkedEventSequenceNumber": 102,
   "chunk": {
     "nodes": [
       {
@@ -32,7 +33,7 @@
       }
     ]
   },
-  "queryId": "q1",
+  "sequenceNumber": 123,
   "additionalInfos": [
     {
       "kind": "msgKind",
