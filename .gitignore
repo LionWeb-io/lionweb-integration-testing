@@ -12,3 +12,6 @@
 # downloaded:
 /*.schema.json
 
+# generated:
+/*.specific-schema.json
+
