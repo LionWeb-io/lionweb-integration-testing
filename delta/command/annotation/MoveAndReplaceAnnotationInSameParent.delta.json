@@ -1,5 +1,7 @@
 {
   "messageKind": "MoveAndReplaceAnnotationInSameParent",
+  "parent": "parentNodeId",
+  "oldIndex": 0,
   "newIndex": 3,
   "replacedAnnotation": "replacedNodeId",
   "movedAnnotation": "otherNodeId",
@@ -8,12 +10,9 @@
     {
       "kind": "msgKind",
       "message": "Human message",
-      "data": [
-        {
-          "key": "dataKey",
-          "value": "dataValue"
-        }
-      ]
+      "data": {
+        "dataKey": "dataValue"
+      }
     }
   ]
 }

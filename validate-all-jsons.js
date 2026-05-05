@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+
+
 // Copyright 2026 TRUMPF Laser SE and other contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License")

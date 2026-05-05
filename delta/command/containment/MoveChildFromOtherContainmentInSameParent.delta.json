@@ -1,9 +1,16 @@
 {
   "messageKind": "MoveChildFromOtherContainmentInSameParent",
+  "parent": "parentNodeId",
+  "oldContainment": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyOldContainment"
+  },
+  "oldIndex": 0,
   "newContainment": {
     "language": "MyLang",
     "version": "4",
-    "key": "MyContainment"
+    "key": "MyNewContainment"
   },
   "newIndex": 3,
   "movedChild": "otherNodeId",
@@ -12,12 +19,9 @@
     {
       "kind": "msgKind",
       "message": "Human message",
-      "data": [
-        {
-          "key": "dataKey",
-          "value": "dataValue"
-        }
-      ]
+      "data": {
+        "dataKey": "dataValue"
+      }
     }
   ]
 }

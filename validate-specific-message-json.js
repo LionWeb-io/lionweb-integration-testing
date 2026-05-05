@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+
+
 // Copyright 2026 TRUMPF Laser SE and other contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License")
@@ -20,18 +23,46 @@ const { readFileSync, writeFileSync } = require("fs")
 const { argv, exit } = require("process")
 const { validator } = require("@exodus/schemasafe")
 
-if (argv.length < 4) {
-    console.log(`Usage: execute`)
-    console.log(`\tnode validate-specific-message-json.js <path to JSON with message> <message kind>`)
-    console.log(`to validate that JSON as a message of the indicated kind — hopefully producing more understandable errors.`)
-    console.log(`In addition, a JSON schema that only pertains to that message kind is saved to a file with name "<message kind>.schema.json".`)
+
+// process arguments:
+
+if (argv.length < 3) {
+    console.log(
+`Usage: execute
+    node validate-specific-message-json.js <path to JSON with message> [message kind]
+to validate that JSON as a message of the indicated kind — hopefully producing more understandable errors.
+If the message kind is not given, we try to derive that from the file name, although that might fail.
+In addition, a JSON schema that only pertains to that message kind is saved to a file with name "<message kind>.specific-schema.json".`
+    )
     exit(64)
 }
 
+const postfixTryRemover = (postfix) =>
+    (str) =>
+        str.endsWith(postfix) ? str.substring(0, str.length - postfix.length) : str
+
+const composeTransforms = (...transforms) =>
+    (str) =>
+        transforms.reduce((current, transform) => transform(current), str)
+
+const fileNameFrom = composeTransforms(
+    (path) => path.substring(path.lastIndexOf("/") + 1),
+    postfixTryRemover(".delta.json"),
+    postfixTryRemover(".json")
+)
+
 const messagePath = argv[2]
-const messageKind = argv[3]
+const optionalArg2 = argv[3]
+const messageKind = optionalArg2 ?? fileNameFrom(messagePath)
+if (!optionalArg2) {
+    console.log(`Derived message kind from path of JSON file as: ${messageKind}`)
+}
+
 
 const readFileAsJson = (path) => JSON.parse(readFileSync(path).toString())
+
+
+// compute JSON Schema specific to message kind:
 
 const schema = readFileAsJson("delta.schema.json")
 
@@ -56,12 +87,14 @@ const gatherReferredDefsFrom = (thing) => {
         }
     } else if ("anyOf" in thing) {
         thing.anyOf.forEach(gatherReferredDefsFrom)
+    } else if ("oneOf" in thing) {
+        thing.oneOf.forEach(gatherReferredDefsFrom)
     }
 }
 
 gatherReferredDefsFrom(messageSchema)
 
-const effectiveSchema = {
+const specificSchema = {
     $schema: schema.$schema,
     $id: schema.$id,
     title: schema.title + ` — specialized for messageKind ${messageKind}`,
@@ -74,9 +107,12 @@ const effectiveSchema = {
     )
 }
 
-writeFileSync(`${messageKind}.schema.json`, JSON.stringify(effectiveSchema, null, 2))
+writeFileSync(`${messageKind}.specific-schema.json`, JSON.stringify(specificSchema, null, 2))
 
-const validate = validator(effectiveSchema, {
+
+// validate delta JSON:
+
+const validate = validator(specificSchema, {
     includeErrors: true,
     allErrors: true,
     weakFormats: true,

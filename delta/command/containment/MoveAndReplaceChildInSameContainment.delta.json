@@ -1,5 +1,12 @@
 {
   "messageKind": "MoveAndReplaceChildInSameContainment",
+  "parent": "parentNodeId",
+  "containment": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyContainment"
+  },
+  "oldIndex": 0,
   "newIndex": 3,
   "replacedChild": "replacedNodeId",
   "movedChild": "otherNodeId",
@@ -8,12 +15,9 @@
     {
       "kind": "msgKind",
       "message": "Human message",
-      "data": [
-        {
-          "key": "dataKey",
-          "value": "dataValue"
-        }
-      ]
+      "data": {
+        "dataKey": "dataValue"
+      }
     }
   ]
 }

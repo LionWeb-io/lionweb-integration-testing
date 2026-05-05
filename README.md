@@ -51,19 +51,21 @@ The schema validation that the build performs can’t be run locally directly, b
 $ ./download-delta.schema.json.sh         # (download JSON schema for delta protocol messages)
 $ ./download-serialization.schema.json.sh # (download JSON schema for serialization format)
 $ npm install @exodus/schemasafe
-$ node validate-json.js
+$ ./validate-all-jsons.js
 ```
 
 The `validate-specific-message-json.js` script can be used to troubleshoot message JSONs that don’t validate.
 
 ```shell
 $ ./download-delta.schema.json.sh   # (download full JSON schema for delta protocol messages)
-$ node validate-specific-message-json.js
+$ ./validate-specific-message-json.js
 Usage: execute
-        node validate-specific-message-json.js <path to JSON with message> <message kind>
+    node validate-specific-message-json.js <path to JSON with message> [message kind]
 to validate that JSON as a message of the indicated kind — hopefully producing more understandable errors.
-In addition, a JSON schema that only pertains to that message kind is saved to a file with name "<message kind>.schema.json".
-$ node validate-specific-message-json.js delta/event/ErrorEvent.delta.json ErrorEvent
+If the message kind is not given, we try to derive that from the file name, although that might fail.
+In addition, a JSON schema that only pertains to that message kind is saved to a file with name "<message kind>.specific-schema.json".
+$ ./validate-specific-message-json.js delta/event/ErrorEvent.delta.json
+Derived message kind from path of JSON file as: ErrorEvent
 JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message of kind ErrorEvent.
 ```
 
@@ -74,7 +76,7 @@ JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message
 
 * [Deno](https://deno.com), currently (at least) version 2.7.7 — for the integration tests written in Deno-compliant TypeScript in [`src/`](src).
   (Deno is used instead of Node.js because Deno can reliably execute TypeScript code natively.)
-* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 23.6.0 — for running `validate-json.js`.
+* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 23.6.0 — for running `validate-all-jsons.js`.
 * Java 11 (but really Java 8) - for the [`lionweb-java` repo](repos/lionweb-java).
 
 
