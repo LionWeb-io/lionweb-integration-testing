@@ -2,7 +2,7 @@
   "messageKind": "ContinuedEvent",
   "continuedChunkCompleted": true,
   "continuedChunkSequenceNumber": 2,
-  "chunkedEventSequenceNumber": 102,
+  "continuedEventSequenceNumber": 102,
   "chunk": {
     "nodes": [
       {

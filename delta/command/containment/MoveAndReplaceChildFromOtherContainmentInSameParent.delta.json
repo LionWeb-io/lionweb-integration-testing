@@ -1,5 +1,12 @@
 {
   "messageKind": "MoveAndReplaceChildFromOtherContainmentInSameParent",
+  "parent": "parentNodeId",
+  "oldContainment": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyContainment"
+  },
+  "oldIndex": 0,
   "newContainment": {
     "language": "MyLang",
     "version": "4",

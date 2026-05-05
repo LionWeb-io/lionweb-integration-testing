@@ -1,5 +1,12 @@
 {
   "messageKind": "MoveChildInSameContainment",
+  "parent": "parentId",
+  "containment": {
+    "language": "MyLang",
+    "version": "4",
+    "key": "MyContainment"
+  },
+  "oldIndex": 0,
   "newIndex": 3,
   "movedChild": "otherNodeId",
   "commandId": "cmdId",
