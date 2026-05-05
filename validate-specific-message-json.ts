@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --no-warnings
 
 
 // Copyright 2026 TRUMPF Laser SE and other contributors
@@ -37,11 +37,13 @@ In addition, a JSON schema that only pertains to that message kind is saved to a
     exit(64)
 }
 
-const postfixTryRemover = (postfix) =>
+type StringTransformer = (str: string) => string
+
+const postfixTryRemover= (postfix: string): StringTransformer =>
     (str) =>
         str.endsWith(postfix) ? str.substring(0, str.length - postfix.length) : str
 
-const composeTransforms = (...transforms) =>
+const composeTransforms = (...transforms: StringTransformer[]): StringTransformer =>
     (str) =>
         transforms.reduce((current, transform) => transform(current), str)
 
@@ -59,7 +61,8 @@ if (!optionalArg2) {
 }
 
 
-const readFileAsJson = (path) => JSON.parse(readFileSync(path).toString())
+const readFileAsJson = (path: string) =>
+    JSON.parse(readFileSync(path).toString())
 
 
 // compute JSON Schema specific to message kind:
@@ -73,8 +76,8 @@ if (messageSchema === undefined) {
     exit(64)
 }
 
-const referredDefs = []
-const gatherReferredDefsFrom = (thing) => {
+const referredDefs: string[] = []
+const gatherReferredDefsFrom = (thing: object) => {
     if ("properties" in thing) {
         Object.values(thing.properties).forEach(gatherReferredDefsFrom)
     } else if (thing.type === "array") {
