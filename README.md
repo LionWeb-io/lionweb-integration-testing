@@ -69,7 +69,7 @@ Derived message kind from path of JSON file as: ErrorEvent
 JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message of kind ErrorEvent.
 ```
 
-(All files with names ending in `.schema.json` are already Git-ignored.)
+(All files with names ending in `.[specific-]schema.json` are already Git-ignored.)
 
 
 ## Installation requirements
