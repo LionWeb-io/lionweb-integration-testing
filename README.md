@@ -90,3 +90,36 @@ By running `generate.sh` (which is equivalent to running `deno task generate-tes
 * [textualized](src/languages/testLanguage.txt), and
 * [rendered as PlantUML diagram](src/languages/testLanguage.puml).
 
+
+## Test data for serialization format validators
+
+The [`testset/`](testset) directory contains test data that can be used to test validators that validate whether serialization chunks (JSON files) conform to the serialization format specification.
+The subdirectory [`withoutLanguage/`](testset/withoutLanguage) pertains to serialization chunks that are to be validated *without* a registered language.
+The subdirectory [`withLanguage/`](testset/withLanguage) pertains to serialization chunks that are to be validated *against* a registered language — m.n. the one serialized as [`myLang.language.json`](testset/withLanguage/myLang.language.json).
+Either subdirectories contain two subdirectories named `valid` and `invalid`.
+Each (nested) subdirectory under `invalid` contains a `__TestExpectation.json` file which specifies which chunk fails validation, and if so, with which error type.
+The format of the `__TestExpectation.json` files is as follows:
+
+```json lines
+{
+  "errors": [
+    {
+      "file": "<file next to __TestExpectation.json>",
+      "error": "<error type>"
+    },
+    ...
+  ]
+}
+```
+
+Consider the following example of a member of the `errors` array:
+
+```json
+{
+  "file": "empty.json",
+  "error": "PropertyValueIncorrect"
+}
+```
+
+This means that validating the `empty.json` file is expected to produce an error of type `PropertyValueIncorrect` (and that it’s the first one produced).
+
