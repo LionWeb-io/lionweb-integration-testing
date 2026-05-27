@@ -69,7 +69,7 @@ public class WebSocketClientTests(ServerProcesses serverProcess) : WebSocketClie
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = true,
-            TypeInfoResolver = new DeltaProtocolTypeResolver()
+            TypeInfoResolver = LionWebDeltaSerializerContext.Default
         };
         var serialized = JsonSerializer.Serialize<IDeltaContent>(childAdded, jsonSerializerOptions);
 
