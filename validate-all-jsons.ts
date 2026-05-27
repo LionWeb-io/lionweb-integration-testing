@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --no-warnings
 
 
 // Copyright 2026 TRUMPF Laser SE and other contributors
@@ -23,24 +23,24 @@ const { validator} = require("@exodus/schemasafe")
 const { readdirSync, readFileSync } = require("fs")
 const { join } = require("path")
 
-const readFileAsJson = (path) => JSON.parse(readFileSync(path).toString())
+const readFileAsJson = (path: string) => JSON.parse(readFileSync(path).toString())
 
-const lsFilesInPath = (fileNameEnding, path) =>
+const lsFilesInPath = (fileNameEnding: string, path: string) =>
     readdirSync(path, { recursive: true })
         .filter((subPath) => subPath.endsWith(fileNameEnding))
         .map((subPath) => join(path, subPath))
 
-const lsFilesInPaths = (fileNameEnding, paths) =>
+const lsFilesInPaths = (fileNameEnding: string, paths: string[]) =>
     paths.flatMap((path) => lsFilesInPath(fileNameEnding, path))
 
 
-const validateJsonInPaths = (schemaPath, fileNameEnding, paths) => {
+const validateJsonInPaths = (schemaPath: string, fileNameEnding: string, paths: string[]) => {
     const schema = readFileAsJson(schemaPath)
     const validate = validator(schema, {
         includeErrors: true,
         allErrors: false,
             // Note: cardinalby/schema-validator-action@v3 configures allErrors=true, but I want to avoid too much output per JSON file.
-            // Use validate-specific-message-json.js for more detailed output.
+            // Use validate-specific-message-json.ts for more detailed output.
         weakFormats: true,
         extraFormats: true
     })
