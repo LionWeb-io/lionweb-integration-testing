@@ -26,6 +26,7 @@ namespace LionWeb.Integration.WebSocket.Tests;
 
 // [TestFixture(ServerProcesses.LionWebServer)]
 [TestFixture(ServerProcesses.CSharp)]
+[TestFixture(ServerProcesses.Java)]
 public abstract class WebSocketClientTestBase : WebSocketTestBase
 {
     private readonly ServerProcesses _serverProcess;

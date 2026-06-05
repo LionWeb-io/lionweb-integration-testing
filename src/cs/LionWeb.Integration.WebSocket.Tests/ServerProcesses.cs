@@ -26,7 +26,8 @@ namespace LionWeb.Integration.WebSocket.Tests;
 public enum ServerProcesses
 {
     CSharp,
-    LionWebServer // The server from the lionweb-server project
+    LionWebServer, // The server from the lionweb-server project
+    Java
 }
 
 public static class ServerProcessesExtensions
@@ -37,6 +38,8 @@ public static class ServerProcessesExtensions
         ServerProcesses.CSharp => CSharpServer(port, additionalServerParameters, out readyTrigger,
             out errorTrigger),
         ServerProcesses.LionWebServer => LionWebServer(port, additionalServerParameters, out readyTrigger,
+            out errorTrigger),
+        ServerProcesses.Java => JavaServer(port, additionalServerParameters, out readyTrigger,
             out errorTrigger),
         _ => throw new ArgumentOutOfRangeException(nameof(process), process, null)
     };
@@ -89,6 +92,30 @@ public static class ServerProcessesExtensions
         return result;
     }
 
+    private static Process JavaServer(int port, string additionalServerParameters, out string readyTrigger,
+        out string errorTrigger)
+    {
+        TestContext.WriteLine($"AdditionalServerParameters: {additionalServerParameters}");
+
+        var fullPath = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-java");
+        TestContext.WriteLine($"Dir: {fullPath}");
+        var result = new Process();
+        result.StartInfo.FileName = $"{fullPath}/gradlew";
+        result.StartInfo.WorkingDirectory = fullPath;
+        result.StartInfo.Arguments = $"""
+                                      :server:run
+                                      --args="--ws-port={port}"
+                                      
+                                      """.ReplaceLineEndings(" ");
+        result.StartInfo.UseShellExecute = false;
+        readyTrigger = "LionWeb Delta Server listening on port";
+        errorTrigger = "Exception";
+
+        Console.WriteLine($"JavaServer arguments: {result.StartInfo.Arguments}");
+
+        return result;
+    }
+    
     // Method to write data to a JSON file
     private static void WriteJsonToFile(string filePath, JsonNode node)
     {

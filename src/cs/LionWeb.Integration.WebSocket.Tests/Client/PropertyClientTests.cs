@@ -17,12 +17,15 @@
 
 using LionWeb.Core;
 using LionWeb.Core.M1;
-using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+
+// TODO change for different LW version
+using LionWeb.Integration.Languages.Generated.V2024_1.TestLanguage.M2;
 
 namespace LionWeb.Integration.WebSocket.Tests.Client;
 
 public class PropertyClientTests(ServerProcesses serverProcess)
-    : WebSocketClientTestBase(serverProcess, LionWebVersions.v2023_1, [TestLanguageLanguage.Instance])
+    // TODO change for different LW version
+    : WebSocketClientTestBase(serverProcess, LionWebVersions.v2024_1, [TestLanguageLanguage.Instance])
 {
     private DataTypeTestConcept aParent = null!;
 
