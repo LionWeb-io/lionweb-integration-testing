@@ -1,6 +1,5 @@
 {
   "messageKind": "ChildMovedAndReplacedInSameContainment",
-  "newIndex": 3,
   "movedChild": "movedNodeId",
   "parent": "nodeId",
   "containment": {
@@ -9,6 +8,7 @@
     "key": "MyContainment"
   },
   "oldIndex": 55,
+  "indexOffset": -52,
   "replacedChild": "a",
   "replacedDescendants": [
     "b"

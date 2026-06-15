@@ -7,7 +7,7 @@
     "key": "MyContainment"
   },
   "oldIndex": 0,
-  "newIndex": 3,
+  "indexOffset": 4,
   "replacedChild": "replacedNodeId",
   "movedChild": "otherNodeId",
   "commandId": "cmdId",
