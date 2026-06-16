@@ -5,8 +5,6 @@ repositories:
     id: lionweb-java
   - name: MPS
     id: lionweb-mps
-  - name: OpenAPI
-    id: lioncore-openapi
   - name: TypeScript
     id: lionweb-typescript
 
