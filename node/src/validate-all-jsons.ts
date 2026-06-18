@@ -19,9 +19,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-const { validator} = require("@exodus/schemasafe")
-const { readdirSync, readFileSync } = require("fs")
-const { join } = require("path")
+import { validator} from "@exodus/schemasafe"
+import { readdirSync, readFileSync } from "node:fs"
+import { join } from "node:path"
 
 const readFileAsJson = (path: string) => JSON.parse(readFileSync(path).toString())
 
@@ -65,17 +65,17 @@ const validateJsonInPaths = (schemaPath: string, fileNameEnding: string, paths: 
 
 
 console.log(`validating delta JSON files against delta JSON schema:`)
-validateJsonInPaths("delta.schema.json", ".delta.json", ["delta"])
+validateJsonInPaths("../schemas/delta.schema.json", ".delta.json", ["../delta"])
 console.log()
 
 console.log(`validating serialization chunks against serialization JSON schema:`)
 validateJsonInPaths(
-    "serialization.schema.json",
+    "../schemas/serialization.schema.json",
     ".json",
     [
-        "testchanges/data",
-        "testset/withoutLanguage/valid",
-        "testset/withLanguage/valid"
+        "../testchanges/data",
+        "../testset/withoutLanguage/valid",
+        "../testset/withLanguage/valid"
     ]
 )
 console.log()

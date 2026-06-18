@@ -19,9 +19,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-const { readFileSync, writeFileSync } = require("fs")
-const { argv, exit } = require("process")
-const { validator } = require("@exodus/schemasafe")
+import { readFileSync, writeFileSync } from "node:fs"
+import { argv, exit } from "node:process"
+import { validator } from "@exodus/schemasafe"
 
 
 // process arguments:
@@ -67,7 +67,7 @@ const readFileAsJson = (path: string) =>
 
 // compute JSON Schema specific to message kind:
 
-const schema = readFileAsJson("delta.schema.json")
+const schema = readFileAsJson("schemas/delta.schema.json")
 
 const messageSchema = schema.$defs[messageKind]
 
@@ -110,7 +110,7 @@ const specificSchema = {
     )
 }
 
-writeFileSync(`${messageKind}.specific-schema.json`, JSON.stringify(specificSchema, null, 2))
+writeFileSync(`schemas/${messageKind}.specific-schema.json`, JSON.stringify(specificSchema, null, 2))
 
 
 // validate delta JSON:

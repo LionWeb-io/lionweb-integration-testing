@@ -9,9 +9,3 @@
 /package-lock.json
 /package.json
 
-# downloaded:
-/*.schema.json
-
-# generated:
-/*.specific-schema.json
-
