@@ -54,7 +54,7 @@ return;
 
 DynamicLanguage[] DeserializeExternalLanguage(LionWebVersions lionWebVersion, string name, params Language[] dependentLanguages)
 {
-    SerializationChunk serializationChunk = JsonUtils.ReadJsonFromString<SerializationChunk>(File.ReadAllText($"../../languages/{name}.{lionWebVersion.VersionString}.json"));
+    SerializationChunk serializationChunk = JsonUtils.ReadJsonFromString<SerializationChunk>(File.ReadAllText($"../../../testLanguage/{name}.{lionWebVersion.VersionString}.json"));
     return new LanguageDeserializerBuilder()
         .WithLionWebVersion(lionWebVersion)
         .WithCompressedIds(new(KeepOriginal: true))
