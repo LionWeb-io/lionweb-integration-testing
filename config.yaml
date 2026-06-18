@@ -1,15 +1,15 @@
 repositories:
   - name: Specification
     id: specification
-  - name: Java
-    id: lionweb-java
+  - name: JVM
+    id: lionweb-jvm
   - name: MPS
     id: lionweb-mps
   - name: TypeScript
     id: lionweb-typescript
 
 serializations:
-  - path: lionweb-java/core/src/test/resources/serialization/lioncore.json
+  - path: lionweb-jvm/core/src/test/resources/serialization/lioncore.json
     kind: m3
     repo: Java
   - path: lionweb-typescript/packages/build/artifacts/core/v2023_1/lioncore.json

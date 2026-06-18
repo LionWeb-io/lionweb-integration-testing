@@ -76,8 +76,8 @@ JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message
 
 * [Deno](https://deno.com), currently (at least) version 2.8.z — for the integration tests written in Deno-compliant TypeScript in [`src/`](src).
   (Deno is used instead of Node.js because Deno can reliably execute TypeScript code natively.)
-* Java 11 (but really Java 8) - for the [`lionweb-java` repo](repos/lionweb-java).
 * [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 24.y.z — for running `validate-all-jsons.ts`.
+* Java 11 for the [`lionweb-jvm` repo](repos/lionweb-jvm).
 
 
 ## Test language
