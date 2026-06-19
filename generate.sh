@@ -1,4 +1,4 @@
 #!/bin/sh -e
 
-deno task generate-test-language
+./node/generate-test-language.ts
 
