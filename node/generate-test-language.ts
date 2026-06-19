@@ -96,6 +96,7 @@ linkTypes.forEach((linkType) => {
 // generate a test annotation:
 const TestAnnotation = factory.annotation("TestAnnotation").annotating(builtinClassifiers.node).implementing(builtinClassifiers.inamed)
 factory.reference(TestAnnotation, "ref").ofType(builtinClassifiers.node)
+factory.containment(TestAnnotation, "containment").ofType(builtinClassifiers.node).isOptional()
 
 // generate a test partition:
 const TestPartition = factory.concept("TestPartition", false).implementing(builtinClassifiers.inamed).isPartition()
