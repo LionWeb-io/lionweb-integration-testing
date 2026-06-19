@@ -1,4 +1,4 @@
-#!/usr/bin/env node --no-warnings
+#!/usr/bin/env -S node --no-warnings
 
 
 // Copyright 2026 TRUMPF Laser SE and other contributors
