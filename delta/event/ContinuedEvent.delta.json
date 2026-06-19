@@ -33,6 +33,16 @@
       }
     ]
   },
+  "originCommands": [
+    {
+      "participationId": "partId",
+      "commandId": "cmdId"
+    },
+    {
+      "participationId": "otherPartId",
+      "commandId": "otherCmdId"
+    }
+  ],
   "sequenceNumber": 123,
   "additionalInfos": [
     {
