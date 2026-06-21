@@ -1,0 +1,67 @@
+name: Java delta-protocol integration tests
+
+# Manually-triggered run of the delta-protocol integration test suite against a real
+# lionweb-jvm server (ServerProcesses.Java fixture), instead of the C# reference server.
+on:
+  workflow_dispatch:
+    inputs:
+      lionweb_jvm_commit:
+        description: 'lionweb-jvm commit SHA to test against'
+        required: true
+        default: 'c550bcfba7f618a027ae728d2a3900b8fa6d39ae'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout lionweb-integration-testing
+        uses: actions/checkout@v5
+        with:
+          path: lionweb-integration-testing
+
+      # Checked out as a sibling directory of lionweb-integration-testing, matching the
+      # relative path ServerProcesses.cs uses to locate and launch the Java server.
+      - name: Checkout lionweb-jvm at pinned commit
+        uses: actions/checkout@v5
+        with:
+          repository: LionWeb-io/lionweb-jvm
+          ref: ${{ inputs.lionweb_jvm_commit }}
+          path: lionweb-jvm
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build lionweb-jvm server
+        working-directory: lionweb-jvm
+        run: ./gradlew :server:installDist
+
+      - name: Build C# delta-protocol tests
+        working-directory: lionweb-integration-testing
+        run: dotnet build --configuration Release ./src/cs/LionWeb.Integration.WebSocket.Tests/
+
+      - name: Run delta-protocol tests against the Java server
+        working-directory: lionweb-integration-testing
+        run: dotnet test --configuration Release --filter "FullyQualifiedName~Java" --logger trx ./src/cs/LionWeb.Integration.WebSocket.Tests/
+
+      - name: Publish C# Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            lionweb-integration-testing/**/*.trx
+          large_files: "true"
+          report_individual_runs: "true"
+          report_suite_logs: "any"
+          check_run_annotations: all tests, skipped tests
+          action_fail: "true"
