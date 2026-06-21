@@ -60,6 +60,15 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
         Assert.That(aPartition.GetAnnotations().First().GetId(), Is.EqualTo("replacedAnnotation"));
     }
 
+    /// <remarks>
+    /// Fails against ServerProcesses.Java: lionweb-jvm implements the Move/MoveAndReplace commands
+    /// per the currently published spec (https://lionweb.io/specification/delta/delta-api.html, v2026.1),
+    /// which uses a relative `indexOffset` plus explicit old-location fields (parent/index).
+    /// lionweb-csharp is still pinned to the older v2025.1 wire shape (absolute `newIndex`, no
+    /// old-location fields on the wire), so this test's command JSON doesn't match what lionweb-jvm
+    /// expects. This is a version mismatch between lionweb-csharp and the current spec, not a defect
+    /// in lionweb-jvm.
+    /// </remarks>
     [Test]
     public void MoveAnnotationFromOtherParent()
     {
@@ -75,6 +84,10 @@ public class AnnotationClientTests(ServerProcesses serverProcess) : LinkClientTe
         AssertEquals(aPartition, bPartition);
     }
 
+    /// <remarks>
+    /// Fails against ServerProcesses.Java — see remarks on <see cref="MoveAnnotationFromOtherParent"/>
+    /// for the v2025.1/v2026.1 protocol version mismatch.
+    /// </remarks>
     [Test]
     public void MoveAnnotationInSameParent()
 

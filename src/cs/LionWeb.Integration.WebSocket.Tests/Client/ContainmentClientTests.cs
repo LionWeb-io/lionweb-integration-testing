@@ -188,6 +188,15 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// <summary>
     /// Move a child node from a single containment to another. Both containments have different parents.
     /// </summary>
+    /// <remarks>
+    /// Fails against ServerProcesses.Java: lionweb-jvm implements the Move/MoveAndReplace commands
+    /// per the currently published spec (https://lionweb.io/specification/delta/delta-api.html, v2026.1),
+    /// which uses a relative `indexOffset` plus explicit old-location fields (parent/containment/index).
+    /// lionweb-csharp is still pinned to the older v2025.1 wire shape (absolute `newIndex`, no
+    /// old-location fields on the wire), so this test's command JSON doesn't match what lionweb-jvm
+    /// expects. This is a version mismatch between lionweb-csharp and the current spec, not a defect
+    /// in lionweb-jvm.
+    /// </remarks>
     [Test]
     public void MoveChildFromOtherContainment_Single()
     {
@@ -206,6 +215,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// <summary>
     /// Move a child node from a multiple containment to another.  Both containments have different parents.
     /// </summary>
+    /// <remarks>
+    /// Fails against ServerProcesses.Java — see remarks on <see cref="MoveChildFromOtherContainment_Single"/>
+    /// for the v2025.1/v2026.1 protocol version mismatch.
+    /// </remarks>
     [Test]
     public void MoveChildFromOtherContainment_Multiple()
     {
@@ -230,6 +243,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// <summary>
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
+    /// <remarks>
+    /// Fails against ServerProcesses.Java — see remarks on <see cref="MoveChildFromOtherContainment_Single"/>
+    /// for the v2025.1/v2026.1 protocol version mismatch.
+    /// </remarks>
     [Test]
     public void MoveAndReplaceChildFromOtherContainment_Single_WithAssignment()
     {
@@ -253,6 +270,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// <summary>
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
+    /// <remarks>
+    /// Fails against ServerProcesses.Java — see remarks on <see cref="MoveChildFromOtherContainment_Single"/>
+    /// for the v2025.1/v2026.1 protocol version mismatch.
+    /// </remarks>
     [Test]
     public void MoveAndReplaceChildFromOtherContainment_Single_WithReplaceWith()
     {
@@ -277,6 +298,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// <summary>
     /// Moves a child from a multiple containment to other multiple containment within the same parent and replaces the existing child.
     /// </summary>
+    /// <remarks>
+    /// Fails against ServerProcesses.Java — see remarks on <see cref="MoveChildFromOtherContainment_Single"/>
+    /// for the v2025.1/v2026.1 protocol version mismatch.
+    /// </remarks>
     [Test]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple()
     {
@@ -300,6 +325,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// <summary>
     /// Moves a child from a multiple containment to other multiple containment and replaces the existing child. Both containments have different parents.
     /// </summary>
+    /// <remarks>
+    /// Fails against ServerProcesses.Java — see remarks on <see cref="MoveChildFromOtherContainment_Single"/>
+    /// for the v2025.1/v2026.1 protocol version mismatch.
+    /// </remarks>
     [Test]
     public void MoveAndReplaceChildFromOtherContainment_Multiple()
     {
@@ -327,8 +356,12 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     }
 
     /// <summary>
-    /// Moves a child from one containment to another within the same parent. 
+    /// Moves a child from one containment to another within the same parent.
     /// </summary>
+    /// <remarks>
+    /// Fails against ServerProcesses.Java — see remarks on <see cref="MoveChildFromOtherContainment_Single"/>
+    /// for the v2025.1/v2026.1 protocol version mismatch.
+    /// </remarks>
     [Test]
     public void MoveChildFromOtherContainmentInSameParent_Single()
     {
@@ -347,6 +380,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// <summary>
     /// Moves a child from one containment to another within the same parent and replaces the existing child node.
     /// </summary>
+    /// <remarks>
+    /// Fails against ServerProcesses.Java — see remarks on <see cref="MoveChildFromOtherContainment_Single"/>
+    /// for the v2025.1/v2026.1 protocol version mismatch.
+    /// </remarks>
     [Test]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
@@ -370,6 +407,10 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// <summary>
     /// Moves child within the same containment to a new index
     /// </summary>
+    /// <remarks>
+    /// Fails against ServerProcesses.Java — see remarks on <see cref="MoveChildFromOtherContainment_Single"/>
+    /// for the v2025.1/v2026.1 protocol version mismatch.
+    /// </remarks>
     [Test]
     public void MoveChildInSameContainment()
     {
