@@ -97,15 +97,15 @@ public static class ServerProcessesExtensions
     {
         TestContext.WriteLine($"AdditionalServerParameters: {additionalServerParameters}");
 
-        var fullPath = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-java");
+        var fullPath = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-jvm");
         TestContext.WriteLine($"Dir: {fullPath}");
         var result = new Process();
         result.StartInfo.FileName = $"{fullPath}/gradlew";
         result.StartInfo.WorkingDirectory = fullPath;
         result.StartInfo.Arguments = $"""
                                       :server:run
-                                      --args="--ws-port={port}"
-                                      
+                                      --args="--ws-port={port} --http-port={port + 10000}"
+
                                       """.ReplaceLineEndings(" ");
         result.StartInfo.UseShellExecute = false;
         readyTrigger = "LionWeb Delta Server listening on port";

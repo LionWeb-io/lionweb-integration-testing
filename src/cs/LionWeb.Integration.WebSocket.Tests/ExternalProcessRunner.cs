@@ -58,6 +58,10 @@ public class ExternalProcessRunner
     /// </summary>
     public void StartProcess(Process process, string readyTrigger, string errorTrigger)
     {
+        // _externalProcessRunner is shared across every test in the fixture, so a stale flag
+        // from a previous test's process must not poison all subsequent tests.
+        ErrorTriggerEncountered = false;
+
         process.StartInfo.RedirectStandardInput = true;
         process.StartInfo.RedirectStandardOutput = true;
         process.StartInfo.RedirectStandardError = true;
@@ -107,7 +111,9 @@ public class ExternalProcessRunner
                 continue;
 
             TestContext.WriteLine($"Killing process {process.ProcessName}");
-            process.Kill();
+            // Gradle-launched servers (e.g. :server:run) run in a forked JVM child process;
+            // killing only the gradlew wrapper leaves that JVM (and its bound port) alive.
+            process.Kill(entireProcessTree: true);
         }
     }
 }
