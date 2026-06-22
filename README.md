@@ -74,21 +74,21 @@ JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message
 
 ## Installation requirements
 
-* [Deno](https://deno.com), currently (at least) version 2.7.7 — for the integration tests written in Deno-compliant TypeScript in [`src/`](src).
+* [Deno](https://deno.com), currently (at least) version 2.8.z — for the integration tests written in Deno-compliant TypeScript in [`src/`](src).
   (Deno is used instead of Node.js because Deno can reliably execute TypeScript code natively.)
-* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 23.6.0 — for running `validate-all-jsons.ts`.
 * Java 11 (but really Java 8) - for the [`lionweb-java` repo](repos/lionweb-java).
+* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 24.y.z — for running `validate-all-jsons.ts`.
 
 
-## Test languages
+## Test language
 
-The [`src/languages`](src/languages) directory contains (artifacts relating to) several test languages — in particular the `Shapes` and `TestLanguage` languages.
+The [`testLanguage`](testLanguage) directory contains (artifacts relating to) the `TestLanguage` language.
 
-By running `generate.sh` (which is equivalent to running `deno task generate-test-language`), the `TestLanguage` language is:
+By running `generate.sh` (which is equivalent to running `./node/generate-test-language.ts`), the `TestLanguage` language is:
 
-* generated and serialized, for LionWeb versions [`2023.1`](src/languages/testLanguage.2023.1.json), [`2024.1`](src/languages/testLanguage.2024.1.json), and [`2026.1`](src/languages/testLanguage.2026.1.json),
-* [textualized](src/languages/testLanguage.txt), and
-* [rendered as PlantUML diagram](src/languages/testLanguage.puml).
+* generated and serialized, for LionWeb versions [`2023.1`](testLanguage/testLanguage.2023.1.json), [`2024.1`](testLanguage/testLanguage.2024.1.json), and [`2026.1`](testLanguage/testLanguage.2026.1.json),
+* [textualized](testLanguage/testLanguage.txt), and
+* [rendered as PlantUML diagram](testLanguage/testLanguage.puml).
 
 
 ## Test data for serialization format validators

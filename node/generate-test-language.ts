@@ -1,7 +1,29 @@
-import { DataType, Enumeration, LanguageFactory, Link, LionWebVersions, serializeLanguages } from "lionweb-core"
-import { LionWebJsonChunk } from "lionweb-json"
-import { StringsMapper } from "lionweb-ts-utils"
-import { generatePlantUmlForLanguage, languageAsText } from "lionweb-utilities"
+#!/usr/bin/env -S node --no-warnings
+
+
+// Copyright 2026 TRUMPF Laser SE and other contributors
+//
+// Licensed under the Apache License, Version 2.0 (the "License")
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-FileCopyrightText: 2026 TRUMPF Laser SE and other contributors
+// SPDX-License-Identifier: Apache-2.0
+
+
+import { DataType, Enumeration, LanguageFactory, Link, LionWebVersions, serializeLanguages } from "@lionweb/core"
+import type { LionWebJsonChunk } from "@lionweb/json"
+import type { StringsMapper } from "@lionweb/ts-utils"
+import { generatePlantUmlForLanguage, languageAsText } from "@lionweb/utilities"
+import { writeFileSync } from "node:fs"
 
 
 // configure a convenient factory for producing a Language:
@@ -74,6 +96,7 @@ linkTypes.forEach((linkType) => {
 // generate a test annotation:
 const TestAnnotation = factory.annotation("TestAnnotation").annotating(builtinClassifiers.node).implementing(builtinClassifiers.inamed)
 factory.reference(TestAnnotation, "ref").ofType(builtinClassifiers.node)
+factory.containment(TestAnnotation, "containment").ofType(builtinClassifiers.node).isOptional()
 
 // generate a test partition:
 const TestPartition = factory.concept("TestPartition", false).implementing(builtinClassifiers.inamed).isPartition()
@@ -83,18 +106,18 @@ factory.containment(TestPartition, "data").ofType(DataTypeTestConcept).isOptiona
 
 const testLanguage = factory.language
 
-const languagesPath = "src/languages"
+const languagesPath = "testLanguage"
 const jsonAsText = (json: unknown) => JSON.stringify(json, null, 4)
 
 
 // persist a textualization and a PlantUML graph of the language:
-await Deno.writeTextFile(`${languagesPath}/testLanguage.txt`, languageAsText(testLanguage))
-await Deno.writeTextFile(`${languagesPath}/testLanguage.puml`, generatePlantUmlForLanguage(testLanguage))
+writeFileSync(`${languagesPath}/testLanguage.txt`, languageAsText(testLanguage))
+writeFileSync(`${languagesPath}/testLanguage.puml`, generatePlantUmlForLanguage(testLanguage))
 
 
 // serialize in 2023.1 format (and persist):
 const serializedTestLanguage = serializeLanguages(testLanguage)
-await Deno.writeTextFile(`${languagesPath}/testLanguage.2023.1.json`, jsonAsText(serializedTestLanguage))
+writeFileSync(`${languagesPath}/testLanguage.2023.1.json`, jsonAsText(serializedTestLanguage))
 
 // function to set all "version" fields in the given serialization chunk to the specified version:
 const setVersion = (chunkJson: LionWebJsonChunk, version: string) => {
@@ -122,11 +145,14 @@ serializedTestLanguage.nodes.forEach(({ references }) => {
         })
     })
 })
-await Deno.writeTextFile(`${languagesPath}/testLanguage.2024.1.json`, jsonAsText(serializedTestLanguage))
+writeFileSync(`${languagesPath}/testLanguage.2024.1.json`, jsonAsText(serializedTestLanguage))
 
 
 // modify version for 2026.1 version, and persist:
 setVersion(serializedTestLanguage, "2026.1")
 // Note: reference objects were already modified to comply with the specification in the previous step!
-await Deno.writeTextFile(`${languagesPath}/testLanguage.2026.1.json`, jsonAsText(serializedTestLanguage))
+writeFileSync(`${languagesPath}/testLanguage.2026.1.json`, jsonAsText(serializedTestLanguage))
+
+
+console.log(`Generated artifacts for test language.`)
 

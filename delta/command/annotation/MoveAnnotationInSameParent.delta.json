@@ -2,7 +2,7 @@
   "messageKind": "MoveAnnotationInSameParent",
   "parent": "parentNodeId",
   "oldIndex": 0,
-  "newIndex": 3,
+  "indexOffset": 3,
   "movedAnnotation": "otherNodeId",
   "commandId": "cmdId",
   "additionalInfos": [

@@ -1,9 +1,9 @@
 {
   "messageKind": "AnnotationMovedAndReplacedInSameParent",
-  "newIndex": 3,
   "movedAnnotation": "movedNodeId",
   "parent": "nodeId",
   "oldIndex": 44,
+  "indexOffset": -41,
   "replacedAnnotation": "c",
   "replacedDescendants": [
     "d"
