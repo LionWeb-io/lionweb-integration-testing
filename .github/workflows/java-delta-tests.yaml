@@ -3,6 +3,7 @@ name: Java delta-protocol integration tests
 # Manually-triggered run of the delta-protocol integration test suite against a real
 # lionweb-jvm server (ServerProcesses.Java fixture), instead of the C# reference server.
 on:
+  push: # just so we can test it, eventually to be removed
   workflow_dispatch:
     inputs:
       lionweb_jvm_commit:
