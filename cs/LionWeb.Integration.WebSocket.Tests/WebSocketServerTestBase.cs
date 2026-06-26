@@ -16,7 +16,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System.Diagnostics;
+using LionWeb.Core.M1;
 using LionWeb.Integration.WebSocket.Client;
+using LionWeb.Integration.WebSocket.Server;
 using LionWeb.Protocol.Delta.Client;
 using LionWeb.Protocol.Delta.Repository;
 using LionWeb.WebSocket;
@@ -86,4 +88,15 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
             .Replace(ILionWebRepository.HeaderColor_Start, "SSS: ")
             .Replace(ILionWebRepository.HeaderColor_End, "")
         );
+
+    protected Forest CreateAndStartServer()
+    {
+        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
+
+        var serverForest = new Forest();
+
+        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        lionWebServer.CommunicationError += (sender, exception) => Assert.Fail(exception.ToString());
+        return serverForest;
+    }
 }
