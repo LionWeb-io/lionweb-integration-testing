@@ -1,4 +1,7 @@
 #!/bin/sh -e
 
-deno task run-tests
+cd node
+npm i
+npm test
+cd ..
 

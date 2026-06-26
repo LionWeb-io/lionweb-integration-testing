@@ -32,14 +32,7 @@ jobs:
         env:
           LIONWEB_PAT: ${{ secrets.LIONWEB_PAT }}
 
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x  # run with the latest stable version 2 of Deno
-
-      - name: Log Deno version
-        run: deno --version
-
-      - name: Run Deno integration tests
+      - name: Run integration tests implemented in TS
         run: ./scripts/test.sh
 
       - name: Build all C# projects

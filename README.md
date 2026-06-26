@@ -20,8 +20,8 @@ The build – in the form of a GitHub Action name “LionWeb integration tests�
 
 * validate the delta payloads under [`delta/`](delta) against the [Delta JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/delta/delta.schema.json) for those,
 * validate the _valid_ serialization chunks (recognizable as such by the presence of a `valid` fragment in their paths) under [`testchanges/`](testchanges) and [`testset/`](testset) against the [Serialization chunk JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/serialization/serialization.schema.json) for those,
-* run the integration test suite which is implemented using Deno, by running `test.sh`.
-  For this suite to run, (most of) the other repositories are cloned, by running `clone.sh`.
+* run the integration test suite, by running `test.sh`.
+  For this suite to run, a number of the other repositories have to be cloned, by running `clone.sh`.
 
 The automated tests in the cloned repositories are **not** run.
 
@@ -71,8 +71,6 @@ JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message
 
 ## Installation requirements
 
-* [Deno](https://deno.com), currently (at least) version 2.8.z — for the integration tests written in Deno-compliant TypeScript in [`src/`](src).
-  (Deno is used instead of Node.js because Deno can reliably execute TypeScript code natively.)
 * [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 24.y.z — for running Node.js scripts such as `node/src/validate-all-jsons.ts`.
 * Java 11 for the [`lionweb-jvm` repo](repos/lionweb-jvm).
 
