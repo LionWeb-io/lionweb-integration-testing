@@ -1,9 +1,8 @@
 #!/bin/sh -e
 
-./scripts/download-delta.schema.json.sh
-./scripts/download-serialization.schema.json.sh
+./scripts/download-json-schemas.sh
 cd node
 npm i
-./validate-all-jsons.ts
+./src/validate-all-jsons.ts
 cd ..
 
