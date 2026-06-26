@@ -1,6 +1,5 @@
 {
   "tasks": {
-    "clone": "deno run --allow-run --allow-read --allow-env src/clone.ts",
     "run-tests": "deno test --allow-read --allow-env src/*.test.ts",
     "watch-tests": "deno test --watch --allow-read --allow-env src/*.test.ts"
   },
