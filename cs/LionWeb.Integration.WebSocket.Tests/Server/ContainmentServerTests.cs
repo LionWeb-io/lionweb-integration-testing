@@ -1,8 +1,5 @@
-﻿using LionWeb.Core.M1;
-using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
+﻿using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Integration.WebSocket.Client;
-using LionWeb.Integration.WebSocket.Server;
-using LionWeb.Protocol.Delta.Repository;
 using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests.Server;
@@ -15,11 +12,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void AddChild()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1);
 
@@ -46,11 +39,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void DeleteChild()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.DeleteContainment_0_1);
 
@@ -79,11 +68,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void ReplaceChild()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.ReplaceContainment_0_1);
 
@@ -111,11 +96,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveChildFromOtherContainment_Single()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
             Tasks.MoveChildFromOtherContainment_Single);
@@ -146,11 +127,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveChildFromOtherContainment_Multiple()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n,
             Tasks.MoveChildFromOtherContainment_Multiple);
@@ -181,11 +158,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveAndReplaceChildFromOtherContainment_Single()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
             Tasks.AddContainment_1, Tasks.AddContainment_1_Containment_0_1, Tasks.MoveAndReplaceChildFromOtherContainment_Single);
@@ -218,11 +191,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveAndReplaceChildFromOtherContainment_Multiple()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromOtherContainment_Multiple);
 
@@ -251,11 +220,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveChildFromOtherContainmentInSameParent_Single()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.MoveChildFromOtherContainmentInSameParent_Single);
 
@@ -283,11 +248,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
             Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Single);
@@ -316,11 +277,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveChildFromOtherContainmentInSameParent_Multiple()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_1_n,
             Tasks.MoveChildFromOtherContainmentInSameParent_Multiple);
@@ -350,11 +307,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     [Test]
     public void MoveChildInSameContainment()
     {
-        _webSocketServer = new WebSocketTestServer(_lionWebVersion, IpAddress, Port, Log) { Languages = _languages };
-
-        var serverForest = new Forest();
-
-        lionWebServer = new LionWebTestRepository(_lionWebVersion, _languages, "server", serverForest, _webSocketServer.Connector, Log);
+        var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
             Tasks.MoveChildInSameContainment);
