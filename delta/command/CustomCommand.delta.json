@@ -1,5 +1,5 @@
 {
-  "messageKind": "custom_MyCommand",
+  "messageKind": "Custom_MyCommand",
   "bool": true,
   "int": 12,
   "array": [
