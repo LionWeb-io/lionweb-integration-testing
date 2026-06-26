@@ -43,10 +43,10 @@ jobs:
         run: ./scripts/test.sh
 
       - name: Build all C# projects
-        run: dotnet build --configuration Release ./src/cs/LionWeb.Integration.WebSocket.Tests/
+        run: dotnet build --configuration Release ./cs/LionWeb.Integration.WebSocket.Tests/
 
       - name: Test all C# projects
-        run: dotnet test --configuration Release --logger trx ./src/cs/LionWeb.Integration.WebSocket.Tests/
+        run: dotnet test --configuration Release --logger trx ./cs/LionWeb.Integration.WebSocket.Tests/
 
       - name: Publish C# Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2

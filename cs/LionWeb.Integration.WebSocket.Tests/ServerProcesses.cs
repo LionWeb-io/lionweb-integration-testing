@@ -69,8 +69,8 @@ public static class ServerProcessesExtensions
         out string errorTrigger)
     {
         string serverConfig =
-            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
-        string serverDir = $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-server/packages/server";
+            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-integration-testing/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
+        string serverDir = $"{Directory.GetCurrentDirectory()}/../../../../../../lionweb-server/packages/server";
         // Read config file
         JsonNode configJson = ReadJsonFromFile(serverDir + "/" + "server-config.json");
         configJson["server"]["serverPort"] = port;
@@ -82,7 +82,7 @@ public static class ServerProcessesExtensions
         result.StartInfo.FileName = "node";
         result.StartInfo.WorkingDirectory = serverDir;
         result.StartInfo.Arguments =
-            "./dist/server.js --run --config ../../../lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
+            "./dist/server.js --run --config ../../../lionweb-integration-testing/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
         result.StartInfo.UseShellExecute = false;
         readyTrigger = "Server is running";
         errorTrigger = "Error";

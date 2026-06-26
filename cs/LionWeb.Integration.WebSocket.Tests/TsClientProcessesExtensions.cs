@@ -56,8 +56,8 @@ public static class TsClientProcessesExtensions
         var process = new Process();
         process.StartInfo.FileName = "node";
         process.StartInfo.WorkingDirectory =
-            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-typescript/packages/delta-protocol-test-cli";
-        // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/src/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
+            $"{Directory.GetCurrentDirectory()}/../../../../../../lionweb-typescript/packages/delta-protocol-test-cli";
+        // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
         // (hence 7x ../)
         process.StartInfo.Arguments = $"dist/cli-client.js {cmdLine}";
 
