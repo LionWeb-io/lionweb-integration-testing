@@ -1,8 +1,2 @@
 # IntelliJ IDEA:
 /.idea/
-
-# NPM (for AJV):
-/node_modules
-/package-lock.json
-/package.json
-
