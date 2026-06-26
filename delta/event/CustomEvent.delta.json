@@ -1,5 +1,5 @@
 {
-  "messageKind": "custom_MyEvent",
+  "messageKind": "Custom_MyEvent",
   "bool": true,
   "int": 12,
   "array": [
