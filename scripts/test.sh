@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-cd node
+cd ts
 npm i
 npm test
 cd ..

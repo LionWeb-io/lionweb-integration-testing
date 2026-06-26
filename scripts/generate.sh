@@ -1,4 +1,4 @@
 #!/bin/sh -e
 
-./node/src/generate-test-language.ts
+./ts/src/generate-test-language.ts
 

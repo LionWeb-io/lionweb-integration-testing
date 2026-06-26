@@ -55,13 +55,13 @@ The `validate-specific-message-json.ts` script can be used to troubleshoot messa
 
 ```shell
 $ ./scripts/download-json-schemas.sh   # (download full JSON Schema for delta protocol messages)
-$ ./node/src/validate-specific-message-json.ts
+$ ./ts/src/validate-specific-message-json.ts
 Usage: execute
-    node validate-specific-message-json.ts <path to JSON with message> [message kind]
+    node ts/src/validate-specific-message-json.ts <path to JSON with message> [message kind]
 to validate that JSON as a message of the indicated kind — hopefully producing more understandable errors.
 If the message kind is not given, we try to derive that from the file name, although that might fail.
 In addition, a JSON schema that only pertains to that message kind is saved to a file with name "<message kind>.specific-schema.json".
-$ ./node/src/validate-specific-message-json.ts delta/event/ErrorEvent.delta.json
+$ ./ts/src/validate-specific-message-json.ts delta/event/ErrorEvent.delta.json
 Derived message kind from path of JSON file as: ErrorEvent
 JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message of kind ErrorEvent.
 ```
@@ -71,7 +71,7 @@ JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message
 
 ## Installation requirements
 
-* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 24.y.z — for running Node.js scripts such as `node/src/validate-all-jsons.ts`.
+* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 24.y.z — for running Node.js scripts such as `ts/src/validate-all-jsons.ts`.
 * Java 11 for the [`lionweb-jvm` repo](repos/lionweb-jvm).
 
 
@@ -79,7 +79,7 @@ JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message
 
 The [`testLanguage`](testLanguage) directory contains (artifacts relating to) the `TestLanguage` language.
 
-By running `generate.sh` (which is equivalent to running `./node/src/generate-test-language.ts`), the `TestLanguage` language is:
+By running `generate.sh` (which is equivalent to running `./ts/src/generate-test-language.ts`), the `TestLanguage` language is:
 
 * generated and serialized, for LionWeb versions [`2023.1`](testLanguage/testLanguage.2023.1.json), [`2024.1`](testLanguage/testLanguage.2024.1.json), and [`2026.1`](testLanguage/testLanguage.2026.1.json),
 * [textualized](testLanguage/testLanguage.txt), and
