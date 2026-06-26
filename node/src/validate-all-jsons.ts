@@ -64,18 +64,19 @@ const validateJsonInPaths = (schemaPath: string, fileNameEnding: string, paths: 
 }
 
 
-console.log(`validating delta JSON files against delta JSON schema:`)
+console.log(`validating delta JSON files against delta JSON Schema:`)
 validateJsonInPaths("../schemas/delta.schema.json", ".delta.json", ["../delta"])
 console.log()
 
-console.log(`validating serialization chunks against serialization JSON schema:`)
+console.log(`validating various serialization chunks against serialization JSON Schema:`)
 validateJsonInPaths(
     "../schemas/serialization.schema.json",
     ".json",
     [
         "../testchanges/data",
         "../testset/withoutLanguage/valid",
-        "../testset/withLanguage/valid"
+        "../testset/withLanguage/valid",
+        "../../repos/lionweb-jvm/core/src/test/resources/serialization"
     ]
 )
 console.log()

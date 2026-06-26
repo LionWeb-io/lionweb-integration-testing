@@ -32,6 +32,13 @@ jobs:
         env:
           LIONWEB_PAT: ${{ secrets.LIONWEB_PAT }}
 
+      - name: Validate LionCore serialized by lionweb-jvm
+        uses: cardinalby/schema-validator-action@v3
+        with:
+          schema: 'schemas/serialization.schema.json'
+          file:
+            '../repos/lionweb-jvm/core/src/test/resources/serialization/lioncore.json'
+
       - name: Run integration tests implemented in TS
         run: ./scripts/test.sh
 
