@@ -28,7 +28,7 @@ jobs:
             'testchanges/**/*.json|testset/withoutLanguage/valid/**/*.json|testset/withoutLanguage/valid/**.json|testset/withLanguage/valid/**/*.json|testset/withLanguage/valid/*.json'
 
       - name: Run clone script
-        run: ./scripts/clone.sh
+        run: ./scripts/clone-repos.sh
         env:
           LIONWEB_PAT: ${{ secrets.LIONWEB_PAT }}
 
@@ -40,7 +40,7 @@ jobs:
             '../repos/lionweb-jvm/core/src/test/resources/serialization/lioncore.json'
 
       - name: Run integration tests implemented in TS
-        run: ./scripts/test.sh
+        run: ./scripts/run-ts-tests.sh
 
       - name: Build all C# projects
         run: dotnet build --configuration Release ./cs/LionWeb.Integration.WebSocket.Tests/
