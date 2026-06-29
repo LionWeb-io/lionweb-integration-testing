@@ -1,9 +1,6 @@
-name: LionWeb integration tests
+name: LionWeb integration tests — JSON validation + TypeScript tests
 
 on: [push, workflow_dispatch]
-
-env:
-  NuGetDirectory: ${{github.workspace}}/nuget
 
 jobs:
   test:
@@ -41,22 +38,4 @@ jobs:
 
       - name: Run integration tests implemented in TS
         run: ./scripts/run-ts-tests.sh
-
-      - name: Build all C# projects
-        run: dotnet build --configuration Release ./cs/LionWeb.Integration.WebSocket.Tests/
-
-      - name: Test all C# projects
-        run: dotnet test --configuration Release --logger trx ./cs/LionWeb.Integration.WebSocket.Tests/
-
-      - name: Publish C# Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: |
-            **/*.trx
-          large_files: "true"
-          report_individual_runs: "true"
-          report_suite_logs: "any"
-          check_run_annotations: all tests, skipped tests
-          action_fail: "true"
 
