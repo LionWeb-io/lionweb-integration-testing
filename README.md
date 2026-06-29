@@ -1,6 +1,10 @@
 # LionWeb integration testing
 
-Automated tests that check that the other repos within the [LionWeb GitHub](https://github.com/LionWeb-io) integrate well and consistently with each other.
+Automated tests that check that the other repos within the [LionWeb GitHub (organization)](https://github.com/LionWeb-io) integrate well and consistently with each other.
+
+
+## The build
+
 The definition of “well” in the previous sentences is not very broad — effectively it means: the build runs green.
 With “build” we mean the [GitHub Action](https://github.com/LionWeb-io/lionweb-integration-testing/actions/workflows/build.yaml), from here on.
 
@@ -20,8 +24,8 @@ The build – in the form of a GitHub Action name “LionWeb integration tests�
 
 * validate the delta payloads under [`delta/`](delta) against the [Delta JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/delta/delta.schema.json) for those,
 * validate the _valid_ serialization chunks (recognizable as such by the presence of a `valid` fragment in their paths) under [`testchanges/`](testchanges) and [`testset/`](testset) against the [Serialization chunk JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/serialization/serialization.schema.json) for those,
-* run the integration test suite implemented in TypeScript, by running `run-ts-tests.sh`.
-  For this suite to run, a number of the other repositories have to be cloned, by running `clone-repos.sh`.
+* run the integration test suite implemented in TypeScript, by running `scripts/run-ts-tests.sh`.
+  For this suite to run, a number of the other repositories have to be cloned, by running `scripts/clone-repos.sh`.
 
 The automated tests in the cloned repositories are **not** run.
 
@@ -40,7 +44,7 @@ Note also that the build sometimes fails during the “Test all C# projects” p
    at LionWeb.WebSocket.WebSocketServer.StartServer(String ipAddress, Int32 port)
 ```
 
-If this happens, then just rerun the job: usually the job succeeds the next time.
+If this happens, then just rerun the job: usually(/often), the job succeeds the next time.
 *Why* this happens is unclear to us, as we do take pains to assign each C# WebSocket server its own, unique port number.
 
 ### JSON validation
@@ -55,18 +59,20 @@ The `validate-specific-message-json.ts` script can be used to troubleshoot messa
 
 ```shell
 $ ./scripts/download-json-schemas.sh   # (download full JSON Schema for delta protocol messages)
+
 $ ./ts/src/validate-specific-message-json.ts
 Usage: execute
     node ts/src/validate-specific-message-json.ts <path to JSON with message> [message kind]
 to validate that JSON as a message of the indicated kind — hopefully producing more understandable errors.
 If the message kind is not given, we try to derive that from the file name, although that might fail.
-In addition, a JSON schema that only pertains to that message kind is saved to a file with name "<message kind>.specific-schema.json".
+In addition, a JSON schema that only pertains to that message kind is saved to a file with path "schemas/<message kind>.specific-schema.json".
+
 $ ./ts/src/validate-specific-message-json.ts delta/event/ErrorEvent.delta.json
 Derived message kind from path of JSON file as: ErrorEvent
 JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message of kind ErrorEvent.
 ```
 
-(All files with names ending in `.[specific-]schema.json` are already Git-ignored.)
+(All JSON files within the `schemas/` dir. are Git-ignored.)
 
 
 ## Installation requirements
