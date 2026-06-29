@@ -1,8 +1,23 @@
 # LionWeb integration testing
 
-Automated tests that check that the other repos within the [LionWeb GitHub](https://github.com/LionWeb-io) integrate well and consistently with each other.
+Automated tests that check that the other repos within the [LionWeb GitHub (organization)](https://github.com/LionWeb-io) integrate well and consistently with each other.
+
+
+## The build
+
 The definition of “well” in the previous sentences is not very broad — effectively it means: the build runs green.
-With “build” we mean the [GitHub Action](https://github.com/LionWeb-io/lionweb-integration-testing/actions/workflows/build.yaml), from here on.
+With “build” we mean – from here on – the combined result of **both** of the following GitHub Actions:
+
+* [LionWeb C# integration tests](https://github.com/LionWeb-io/lionweb-integration-testing/actions/workflows/build-cs.yaml)
+  This does the following:
+  * Validate the delta payloads under [`delta/`](delta) against the [Delta JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/delta/delta.schema.json) for those,
+  * Validate the _valid_ serialization chunks (recognizable as such by the presence of a `valid` fragment in their paths) under [`testchanges/`](testchanges) and [`testset/`](testset) against the [Serialization chunk JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/serialization/serialization.schema.json) for those,
+  * Run the integration test suite implemented in TypeScript, by running `scripts/run-ts-tests.sh`.
+    For this suite to run, a number of the other repositories have to be cloned, by running `scripts/clone-repos.sh`.
+    (The automated tests in the cloned repositories are **not** run.)
+
+* [LionWeb integration tests — JSON validation + TypeScript tests](https://github.com/LionWeb-io/lionweb-integration-testing/actions/workflows/build-ts.yaml)
+  This builds the C# code base in `cs/`, and runs all the tests contained in them.
 
 Note that this repository serves as a **“canary in a coal mine”**: if its build turns red, it means there’s a mismatch(/incompatibility) between either an implementation and the specification (and/or between implementations).
 That also means that modifications and additions to this repository – in the form of PRs – might turn the build red when run on the PR’s branch.
@@ -14,16 +29,7 @@ Whenever the build of this repository fails, the steps to take are as follows:
 2. find out where it originates from — typically an implementation, sometimes the specification,
 3. submit an issue on the corresponding repository — which is _most likely not_ this repository,
 4. fix that issue (there),
-5. trigger the build here to verify it runs green again.
-
-The build – in the form of a GitHub Action name “LionWeb integration tests” – does the following:
-
-* validate the delta payloads under [`delta/`](delta) against the [Delta JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/delta/delta.schema.json) for those,
-* validate the _valid_ serialization chunks (recognizable as such by the presence of a `valid` fragment in their paths) under [`testchanges/`](testchanges) and [`testset/`](testset) against the [Serialization chunk JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/serialization/serialization.schema.json) for those,
-* run the integration test suite implemented in TypeScript, by running `run-ts-tests.sh`.
-  For this suite to run, a number of the other repositories have to be cloned, by running `clone-repos.sh`.
-
-The automated tests in the cloned repositories are **not** run.
+5. trigger the build to verify it runs green again.
 
 And remember: a green build is not a guarantee for the absence of bugs (or presence of quality), but a red build is definitely a guarantee that you need to look at something.
 
@@ -40,8 +46,10 @@ Note also that the build sometimes fails during the “Test all C# projects” p
    at LionWeb.WebSocket.WebSocketServer.StartServer(String ipAddress, Int32 port)
 ```
 
-If this happens, then just rerun the job: usually the job succeeds the next time.
+If this happens, then just rerun the job: usually(/often), the job succeeds the next time.
 *Why* this happens is unclear to us, as we do take pains to assign each C# WebSocket server its own, unique port number.
+(This is also the reason for the existence of *two* GitHub Actions.)
+
 
 ### JSON validation
 
@@ -55,12 +63,14 @@ The `validate-specific-message-json.ts` script can be used to troubleshoot messa
 
 ```shell
 $ ./scripts/download-json-schemas.sh   # (download full JSON Schema for delta protocol messages)
+
 $ ./ts/src/validate-specific-message-json.ts
 Usage: execute
     node ts/src/validate-specific-message-json.ts <path to JSON with message> [message kind]
 to validate that JSON as a message of the indicated kind — hopefully producing more understandable errors.
 If the message kind is not given, we try to derive that from the file name, although that might fail.
-In addition, a JSON schema that only pertains to that message kind is saved to a file with name "<message kind>.specific-schema.json".
+In addition, a JSON schema that only pertains to that message kind is saved to a file with path "schemas/<message kind>.specific-schema.json".
+
 $ ./ts/src/validate-specific-message-json.ts delta/event/ErrorEvent.delta.json
 Derived message kind from path of JSON file as: ErrorEvent
 JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message of kind ErrorEvent.

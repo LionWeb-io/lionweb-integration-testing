@@ -32,7 +32,7 @@ if (argv.length < 3) {
     node ts/src/validate-specific-message-json.js <path to JSON with message> [message kind]
 to validate that JSON as a message of the indicated kind — hopefully producing more understandable errors.
 If the message kind is not given, we try to derive that from the file name, although that might fail.
-In addition, a JSON schema that only pertains to that message kind is saved to a file with name "<message kind>.specific-schema.json".`
+In addition, a JSON schema that only pertains to that message kind is saved to a file with path "schemas/<message kind>.specific-schema.json".`
     )
     exit(64)
 }
