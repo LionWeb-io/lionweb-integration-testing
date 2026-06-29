@@ -159,3 +159,4 @@ This generates the source code for the C# implementation of the test language in
 This test language comes in three LionWeb versions: `2023.1`, `2024.1`, `2026.1`.
 The generated source code is found in the `Generated/V<LionWeb version>` directories.
 *Note* that the generation is not triggered automatically, so whenever the contents of `<gitroot>/src/languages` change, you need to rerun this command.
+However, generation *is* also triggered by the `scripts/generate-test-language.sh` script.

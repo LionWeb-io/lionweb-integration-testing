@@ -79,11 +79,12 @@ JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message
 
 The [`testLanguage`](testLanguage) directory contains (artifacts relating to) the `TestLanguage` language.
 
-By running `generate-test-language.sh` (which is equivalent to running `./ts/src/generate-test-language.ts`), the `TestLanguage` language is:
+By running `generate-test-language.sh`, the `TestLanguage` language is:
 
 * generated and serialized, for LionWeb versions [`2023.1`](testLanguage/testLanguage.2023.1.json), [`2024.1`](testLanguage/testLanguage.2024.1.json), and [`2026.1`](testLanguage/testLanguage.2026.1.json),
 * [textualized](testLanguage/testLanguage.txt), and
-* [rendered as PlantUML diagram](testLanguage/testLanguage.puml).
+* [rendered as PlantUML diagram](testLanguage/testLanguage.puml),
+* generated as a C# code base.
 
 
 ## Test data for serialization format validators
