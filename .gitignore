@@ -1,17 +1,2 @@
 # IntelliJ IDEA:
 /.idea/
-
-# isnt' parsed by the GitHub Action:
-/deno.lock
-
-# NPM (for AJV):
-/node_modules
-/package-lock.json
-/package.json
-
-# downloaded:
-/*.schema.json
-
-# generated:
-/*.specific-schema.json
-

@@ -1,0 +1,10 @@
+# Rider files
+.idea/
+
+# .NET:
+Debug/
+Release/
+TestResults/
+obj/
+/LionWeb-CSharp-Integration.sln.DotSettings.user
+

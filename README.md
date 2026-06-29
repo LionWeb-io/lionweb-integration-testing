@@ -20,8 +20,8 @@ The build – in the form of a GitHub Action name “LionWeb integration tests�
 
 * validate the delta payloads under [`delta/`](delta) against the [Delta JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/delta/delta.schema.json) for those,
 * validate the _valid_ serialization chunks (recognizable as such by the presence of a `valid` fragment in their paths) under [`testchanges/`](testchanges) and [`testset/`](testset) against the [Serialization chunk JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/serialization/serialization.schema.json) for those,
-* run the integration test suite which is implemented using Deno, by running `test.sh`.
-  For this suite to run, (most of) the other repositories are cloned, by running `clone.sh`.
+* run the integration test suite implemented in TypeScript, by running `run-ts-tests.sh`.
+  For this suite to run, a number of the other repositories have to be cloned, by running `clone-repos.sh`.
 
 The automated tests in the cloned repositories are **not** run.
 
@@ -48,23 +48,20 @@ If this happens, then just rerun the job: usually the job succeeds the next time
 The schema validation that the build performs can’t be run locally directly, but the following should be equivalent:
 
 ```shell
-$ ./download-delta.schema.json.sh         # (download JSON schema for delta protocol messages)
-$ ./download-serialization.schema.json.sh # (download JSON schema for serialization format)
-$ npm install @exodus/schemasafe
-$ ./validate-all-jsons.ts
+$ ./scripts/validate-jsons.sh
 ```
 
 The `validate-specific-message-json.ts` script can be used to troubleshoot message JSONs that don’t validate.
 
 ```shell
-$ ./download-delta.schema.json.sh   # (download full JSON schema for delta protocol messages)
-$ ./validate-specific-message-json.ts
+$ ./scripts/download-json-schemas.sh   # (download full JSON Schema for delta protocol messages)
+$ ./ts/src/validate-specific-message-json.ts
 Usage: execute
-    node validate-specific-message-json.ts <path to JSON with message> [message kind]
+    node ts/src/validate-specific-message-json.ts <path to JSON with message> [message kind]
 to validate that JSON as a message of the indicated kind — hopefully producing more understandable errors.
 If the message kind is not given, we try to derive that from the file name, although that might fail.
 In addition, a JSON schema that only pertains to that message kind is saved to a file with name "<message kind>.specific-schema.json".
-$ ./validate-specific-message-json.ts delta/event/ErrorEvent.delta.json
+$ ./ts/src/validate-specific-message-json.ts delta/event/ErrorEvent.delta.json
 Derived message kind from path of JSON file as: ErrorEvent
 JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message of kind ErrorEvent.
 ```
@@ -74,21 +71,20 @@ JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message
 
 ## Installation requirements
 
-* [Deno](https://deno.com), currently (at least) version 2.8.z — for the integration tests written in Deno-compliant TypeScript in [`src/`](src).
-  (Deno is used instead of Node.js because Deno can reliably execute TypeScript code natively.)
-* Java 11 (but really Java 8) - for the [`lionweb-java` repo](repos/lionweb-java).
-* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 24.y.z — for running `validate-all-jsons.ts`.
+* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 24.y.z — for running Node.js scripts such as `ts/src/validate-all-jsons.ts`.
+* Java 11 for the [`lionweb-jvm` repo](repos/lionweb-jvm).
 
 
 ## Test language
 
 The [`testLanguage`](testLanguage) directory contains (artifacts relating to) the `TestLanguage` language.
 
-By running `generate.sh` (which is equivalent to running `./node/generate-test-language.ts`), the `TestLanguage` language is:
+By running `generate-test-language.sh`, the `TestLanguage` language is:
 
 * generated and serialized, for LionWeb versions [`2023.1`](testLanguage/testLanguage.2023.1.json), [`2024.1`](testLanguage/testLanguage.2024.1.json), and [`2026.1`](testLanguage/testLanguage.2026.1.json),
 * [textualized](testLanguage/testLanguage.txt), and
-* [rendered as PlantUML diagram](testLanguage/testLanguage.puml).
+* [rendered as PlantUML diagram](testLanguage/testLanguage.puml),
+* generated as a C# code base.
 
 
 ## Test data for serialization format validators
