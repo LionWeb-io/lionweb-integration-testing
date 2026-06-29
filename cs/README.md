@@ -124,10 +124,10 @@ When preparing the process (<a href="#Test structure">as described</a>), assume 
 
 The [`run-tests.sh`](./run-tests.sh) script builds all relevant sources and runs the tests for a certain configuration — either `Release` (which is the default), or `Debug`.
 It also mimicks what happens in the [configured GitHub Action](https://github.com/LionWeb-io/lionweb-integration-testing/actions/workflows/build.yaml) as much as possible.
-Execute this script as follows
+Execute this script as follows from the repo's root:
 
 ```shell
-./run-tests.sh [optional configuration identifier; default=Release]
+./scripts/run-cs-tests.sh [optional configuration identifier; default=Release]
 ```
 
 The script outputs `stdout` into a file `logs/test-<configuration ID>.log`.
