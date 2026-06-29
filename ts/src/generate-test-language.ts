@@ -106,7 +106,7 @@ factory.containment(TestPartition, "data").ofType(DataTypeTestConcept).isOptiona
 
 const testLanguage = factory.language
 
-const languagesPath = "testLanguage"
+const languagesPath = "../testLanguage"
 const jsonAsText = (json: unknown) => JSON.stringify(json, null, 4)
 
 
