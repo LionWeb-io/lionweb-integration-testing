@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Integration.Languag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Integration.WebSocket.Client", "LionWeb.Integration.WebSocket.Client\LionWeb.Integration.WebSocket.Client.csproj", "{AE07F89A-476F-456F-A15E-A081E281499D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb-CSharp-Build", "..\..\lionweb-csharp\build\LionWeb-CSharp-build\LionWeb-CSharp-Build.csproj", "{482BFF5C-548C-4588-86EF-70779A2A0B7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb-CSharp-Build", "..\..\lionweb-csharp\build\LionWeb-CSharp-Build\LionWeb-CSharp-Build.csproj", "{482BFF5C-548C-4588-86EF-70779A2A0B7C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Generator.MpsSpecific", "..\..\lionweb-csharp\src\LionWeb.Generator.MpsSpecific\LionWeb.Generator.MpsSpecific.csproj", "{E78162CC-3E79-4A5E-BCD5-BF24D6F8A63F}"
 EndProject
