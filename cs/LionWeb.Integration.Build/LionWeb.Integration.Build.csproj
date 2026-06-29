@@ -27,9 +27,9 @@
     </ItemGroup>
 
     <ItemGroup Condition="! $(UseLionWebPackages)">
-        <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />
-        <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Generator\LionWeb.Generator.csproj" />
-        <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Generator.MpsSpecific\LionWeb.Generator.MpsSpecific.csproj" />
+        <ProjectReference Include="..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />
+        <ProjectReference Include="..\..\..\lionweb-csharp\src\LionWeb.Generator\LionWeb.Generator.csproj" />
+        <ProjectReference Include="..\..\..\lionweb-csharp\src\LionWeb.Generator.MpsSpecific\LionWeb.Generator.MpsSpecific.csproj" />
     </ItemGroup>
 
 </Project>

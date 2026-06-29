@@ -9,15 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Core", "..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj", "{DC2F0113-2B6B-44C9-BDAC-E0A82EC06722}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Core", "..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj", "{DC2F0113-2B6B-44C9-BDAC-E0A82EC06722}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imported", "Imported", "{A7AD74F7-DCEF-411B-9913-228A914A7234}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Core.Test", "..\..\..\lionweb-csharp\test\LionWeb.Core.Test\LionWeb.Core.Test.csproj", "{1B1EF9C7-BDE9-48E1-A3DC-FF87DBE12503}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Core.Test", "..\..\lionweb-csharp\test\LionWeb.Core.Test\LionWeb.Core.Test.csproj", "{1B1EF9C7-BDE9-48E1-A3DC-FF87DBE12503}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Integration.Build", "LionWeb.Integration.Build\LionWeb.Integration.Build.csproj", "{B7797C67-28D2-4C0C-9753-9E43C824E452}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Generator", "..\..\..\lionweb-csharp\src\LionWeb.Generator\LionWeb.Generator.csproj", "{1E4D2FC6-6146-4375-AC61-C74FD27B3C4B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Generator", "..\..\lionweb-csharp\src\LionWeb.Generator\LionWeb.Generator.csproj", "{1E4D2FC6-6146-4375-AC61-C74FD27B3C4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Integration.WebSocket.Server", "LionWeb.Integration.WebSocket.Server\LionWeb.Integration.WebSocket.Server.csproj", "{A5A3FC0E-379A-43D7-909B-395EA6D2E1C0}"
 EndProject
@@ -25,15 +25,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Integration.Languag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Integration.WebSocket.Client", "LionWeb.Integration.WebSocket.Client\LionWeb.Integration.WebSocket.Client.csproj", "{AE07F89A-476F-456F-A15E-A081E281499D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb-CSharp-Build", "..\..\..\lionweb-csharp\build\LionWeb-CSharp-build\LionWeb-CSharp-Build.csproj", "{482BFF5C-548C-4588-86EF-70779A2A0B7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb-CSharp-Build", "..\..\lionweb-csharp\build\LionWeb-CSharp-build\LionWeb-CSharp-Build.csproj", "{482BFF5C-548C-4588-86EF-70779A2A0B7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Generator.MpsSpecific", "..\..\..\lionweb-csharp\src\LionWeb.Generator.MpsSpecific\LionWeb.Generator.MpsSpecific.csproj", "{E78162CC-3E79-4A5E-BCD5-BF24D6F8A63F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Generator.MpsSpecific", "..\..\lionweb-csharp\src\LionWeb.Generator.MpsSpecific\LionWeb.Generator.MpsSpecific.csproj", "{E78162CC-3E79-4A5E-BCD5-BF24D6F8A63F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Protocol.Delta", "..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj", "{0EB3B7AC-DBC3-45A9-877D-C0AF04F8D229}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Protocol.Delta", "..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj", "{0EB3B7AC-DBC3-45A9-877D-C0AF04F8D229}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Protocol.Delta.Test", "..\..\..\lionweb-csharp\test\LionWeb.Protocol.Delta.Test\LionWeb.Protocol.Delta.Test.csproj", "{533F261E-8449-4D16-8873-57D1E578D081}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.Protocol.Delta.Test", "..\..\lionweb-csharp\test\LionWeb.Protocol.Delta.Test\LionWeb.Protocol.Delta.Test.csproj", "{533F261E-8449-4D16-8873-57D1E578D081}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.WebSocket", "..\..\..\lionweb-csharp\src\LionWeb.WebSocket\LionWeb.WebSocket.csproj", "{7B034F92-280E-420E-A5C7-17E528D46398}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LionWeb.WebSocket", "..\..\lionweb-csharp\src\LionWeb.WebSocket\LionWeb.WebSocket.csproj", "{7B034F92-280E-420E-A5C7-17E528D46398}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

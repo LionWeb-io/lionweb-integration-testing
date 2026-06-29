@@ -21,8 +21,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="! $(UseLionWebPackages)">
-      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />
-      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj" />
-      <ProjectReference Include="..\..\..\..\lionweb-csharp\src\LionWeb.WebSocket\LionWeb.WebSocket.csproj" />
+      <ProjectReference Include="..\..\..\lionweb-csharp\src\LionWeb.Core\LionWeb.Core.csproj" />
+      <ProjectReference Include="..\..\..\lionweb-csharp\src\LionWeb.Protocol.Delta\LionWeb.Protocol.Delta.csproj" />
+      <ProjectReference Include="..\..\..\lionweb-csharp\src\LionWeb.WebSocket\LionWeb.WebSocket.csproj" />
     </ItemGroup>
 </Project>
