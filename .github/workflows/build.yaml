@@ -4,9 +4,11 @@ on: [push, workflow_dispatch]
 
 env:
   NuGetDirectory: ${{github.workspace}}/nuget
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
-  test:
+
+  ts-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -41,6 +43,11 @@ jobs:
 
       - name: Run integration tests implemented in TS
         run: ./scripts/run-ts-tests.sh
+
+  cs-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
 
       - name: Build all C# projects
         run: dotnet build --configuration Release ./cs/LionWeb.Integration.WebSocket.Tests/
