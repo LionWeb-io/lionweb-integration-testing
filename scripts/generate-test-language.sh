@@ -2,7 +2,7 @@
 
 cd ts
 npm i
-./src/generate-test-language.ts
+./scripts/generate-test-language.ts
 cd ..
 
 cd cs/LionWeb.Integration.Build

@@ -60,14 +60,14 @@ The `validate-specific-message-json.ts` script can be used to troubleshoot messa
 ```shell
 $ ./scripts/download-json-schemas.sh   # (download full JSON Schema for delta protocol messages)
 
-$ ./ts/src/validate-specific-message-json.ts
+$ ./ts/scripts/validate-specific-message-json.ts
 Usage: execute
-    node ts/src/validate-specific-message-json.ts <path to JSON with message> [message kind]
+    node ts/scripts/validate-specific-message-json.ts <path to JSON with message> [message kind]
 to validate that JSON as a message of the indicated kind — hopefully producing more understandable errors.
 If the message kind is not given, we try to derive that from the file name, although that might fail.
 In addition, a JSON schema that only pertains to that message kind is saved to a file with path "schemas/<message kind>.specific-schema.json".
 
-$ ./ts/src/validate-specific-message-json.ts delta/event/ErrorEvent.delta.json
+$ ./ts/scripts/validate-specific-message-json.ts delta/event/ErrorEvent.delta.json
 Derived message kind from path of JSON file as: ErrorEvent
 JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message of kind ErrorEvent.
 ```
@@ -77,7 +77,7 @@ JSON file with path "delta/event/ErrorEvent.delta.json" contains a valid message
 
 ## Installation requirements
 
-* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 24.y.z — for running Node.js scripts such as `ts/src/validate-all-jsons.ts`.
+* [Node.js](https://nodejs.org/en/download) (including NPM), currently (at least) version 24.y.z — for running Node.js scripts such as `ts/scripts/validate-all-jsons.ts`.
 * Java 11 for the [`lionweb-jvm` repo](repos/lionweb-jvm).
 
 

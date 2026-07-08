@@ -15,6 +15,6 @@
     "@types/node": "26.0.1"
   },
   "scripts": {
-    "test": "mocha src/*.test.ts"
+    "test": "mocha tests/*.tests.ts"
   }
 }
