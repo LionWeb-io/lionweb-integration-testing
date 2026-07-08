@@ -29,13 +29,7 @@ public static class TsClientProcessesExtensions
         out string errorTrigger)
     {
         var cmdLine = $"{port} {clientId} {string.Join(",", tasks)}";
-
-// Accesses `<DefineConstants>USE_LION_WEB_PACKAGES</DefineConstants>` from .csproj 
-#if USE_LION_WEB_PACKAGES
-        var process = TsNpxClient(cmdLine);
-#else
         var process = TsRelativeDirectoryClient(cmdLine);
-#endif
 
         process.StartInfo.UseShellExecute = false;
         readyTrigger = "LionWeb delta protocol client";
@@ -43,24 +37,15 @@ public static class TsClientProcessesExtensions
         return process;
     }
 
-    /// <remarks>
-    /// This method assumes that
-    /// <list type="number">
-    ///  <item>the lionweb-typescript repo is located right next to the lionweb-integration-testing repo,</item>
-    ///  <item>that the latter repo has been checked out on the delta-protocol-impl branch,</item>
-    ///  <item>and that it's been built entirely successfully.</item>
-    /// </list>
-    /// </remarks>
     private static Process TsRelativeDirectoryClient(string cmdLine)
     {
         var process = new Process();
         process.StartInfo.FileName = "node";
         process.StartInfo.WorkingDirectory =
-            $"{Directory.GetCurrentDirectory()}/../../../../../../lionweb-typescript/packages/delta-protocol-test-cli";
+            $"{Directory.GetCurrentDirectory()}/../../../../../ts";
         // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
         // (hence 7x ../)
         process.StartInfo.Arguments = $"dist/cli-client.js {cmdLine}";
-
         return process;
     }
 
@@ -75,17 +60,6 @@ public static class TsClientProcessesExtensions
         return process;
     }
 
-    /// <remarks>
-    /// This method assumes that
-    /// <list type="number">
-    /// <item><i>Directory.Packages.props</i> property <c>LionWebTsVersion</c> is set.</item>
-    /// <item>the <c>@lionweb/delta-protocol-test-cli</c> NPM package has been downloaded and cached locally.</item>
-    /// </list>
-    /// </remarks>
-    // ReSharper disable once UnusedMember.Local
-    private static Process TsNpxClient(string cmdLine)
-        => CreateNodeUtilityProcess("npx", $"--package=@lionweb/delta-protocol-test-cli@{LionWebTsVersion}", "--cmd=cli-client", cmdLine);
-
     internal static string LionWebTsVersion => AssemblyConfigurationAttribute.Get("LionWebTsVersion");
 
     internal static Process TsInstallClientPackage()
@@ -93,11 +67,6 @@ public static class TsClientProcessesExtensions
 
     internal static Process? SetUpTsClient()
     {
-// Accesses `<DefineConstants>USE_LION_WEB_PACKAGES</DefineConstants>` from .csproj 
-#if USE_LION_WEB_PACKAGES
         return TsInstallClientPackage();
-#else
-        return null;
-#endif
     }
 }

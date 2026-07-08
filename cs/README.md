@@ -28,20 +28,6 @@ This guarantees no interference between server and client, and enables implement
 
 Client tests work exactly the same — we put `TestFixture(ServerProcesses.<foreignServerLiteral>)` attributes on `WebSocketClientTestBase` and use `ServerProcessesExtensions.Create()` to set up the "foreign" server process.
 
-### How to distinguish scenarios
-When setting up the process of the "foreign" implementation, we need to distinguish which scenario we're running in: see next section for a description of the scenarios.
-
-We use preprocessor directives to distinguish the scenarios:
-
-```csharp
-// Accesses `<DefineConstants>USE_LION_WEB_PACKAGES</DefineConstants>` from .csproj 
-#if USE_LION_WEB_PACKAGES
-    Process result = TsNpxPackageClient(cmdLine);
-#else
-    Process result = TsRelativeDirectoryClient(cmdLine);
-#endif
-```
-
 ## How to run different scenarios
 
 ### Using "foreign" implementations from packages

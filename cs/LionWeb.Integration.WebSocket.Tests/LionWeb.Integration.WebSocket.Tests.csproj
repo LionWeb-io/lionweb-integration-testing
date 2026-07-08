@@ -2,7 +2,6 @@
     <PropertyGroup>
         <RootNamespace>LionWeb.Integration.WebSocket.Tests</RootNamespace>
         <IsTestProject>true</IsTestProject>
-        <DefineConstants Condition="$(UseLionWebPackages)">USE_LION_WEB_PACKAGES</DefineConstants>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
