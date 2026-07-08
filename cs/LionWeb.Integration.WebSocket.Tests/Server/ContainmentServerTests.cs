@@ -90,16 +90,18 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         AssertEquals(expected, serverPartition);
     }
 
+    #region Move
+
     /// <summary>
-    /// Moves a child node from a single containment to another. Both containments have different parents.
+    /// Moves a child node within the same containment.
     /// </summary>
     [Test]
-    public void MoveChildFromOtherContainment_Single()
+    public void MoveChildInSameContainment()
     {
         var serverForest = CreateAndStartServer();
 
-        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
-            Tasks.MoveChildFromOtherContainment_Single);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
+            Tasks.MoveChildInSameContainment);
 
         WaitForSent(5);
 
@@ -110,102 +112,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
             [
                 new LinkTestConcept("link")
                 {
-                    Containment_0_1 = new LinkTestConcept("containment_0_1"),
-                    Containment_1 = new LinkTestConcept("containment_0_1_containment_0_1")
-                }
-            ]
-        };
-
-        var serverPartition = (TestPartition)serverForest.Partitions.First();
-        AssertEquals(expected, serverPartition);
-    }
-    
-    
-    /// <summary>
-    /// Moves a child node from a multiple containment to another. Both containments have different parents.
-    /// </summary>
-    [Test]
-    public void MoveChildFromOtherContainment_Multiple()
-    {
-        var serverForest = CreateAndStartServer();
-
-        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n,
-            Tasks.MoveChildFromOtherContainment_Multiple);
-
-        WaitForSent(6);
-
-        var expected = new TestPartition("partition")
-        {
-            Data = new DataTypeTestConcept("data"),
-            Links =
-            [
-                new LinkTestConcept("link")
-                {
-                    Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
-                    Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0"), new LinkTestConcept("containment_1_n_child1")]
-                }
-            ]
-           
-        };
-
-        var serverPartition = (TestPartition)serverForest.Partitions.First();
-        AssertEquals(expected, serverPartition);
-    }
-
-    /// <summary>
-    /// Moves and replaces a child node from a single containment to another. Both containments have different parents.
-    /// </summary>
-    [Test]
-    public void MoveAndReplaceChildFromOtherContainment_Single()
-    {
-        var serverForest = CreateAndStartServer();
-
-        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
-            Tasks.AddContainment_1, Tasks.AddContainment_1_Containment_0_1, Tasks.MoveAndReplaceChildFromOtherContainment_Single);
-
-        WaitForSent(7);
-
-        var expected = new TestPartition("partition")
-        {
-            Data = new DataTypeTestConcept("data"),
-            Links =
-            [
-                new LinkTestConcept("link")
-                {
-                    Containment_0_1 = new LinkTestConcept("containment_0_1"),
-                    Containment_1 = new LinkTestConcept("containment_1")
-                    {
-                        Containment_0_1 = new LinkTestConcept("containment_0_1_containment_0_1")
-                    }
-                }
-            ]
-        };
-
-        var serverPartition = (TestPartition)serverForest.Partitions.First();
-        AssertEquals(expected, serverPartition);
-    }
-    
-    /// <summary>
-    /// Moves and replaces a child node from a multiple containment to another. Both containments have different parents.
-    /// </summary>
-    [Test]
-    public void MoveAndReplaceChildFromOtherContainment_Multiple()
-    {
-        var serverForest = CreateAndStartServer();
-
-        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromOtherContainment_Multiple);
-
-        WaitForSent(6);
-
-        var expected = new TestPartition("partition")
-        {
-            Data = new DataTypeTestConcept("data"),
-            Links =
-            [
-                new LinkTestConcept("link")
-                {
-                    Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
-                    Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0")]
+                    Containment_0_n = [new LinkTestConcept("containment_0_n_child1"), new LinkTestConcept("containment_0_n_child0")],
                 }
             ]
         };
@@ -225,35 +132,6 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.MoveChildFromOtherContainmentInSameParent_Single);
 
         WaitForSent(4);
-
-        var expected = new TestPartition("partition")
-        {
-            Data = new DataTypeTestConcept("data"),
-            Links =
-            [
-                new LinkTestConcept("link")
-                {
-                    Containment_1 = new LinkTestConcept("containment_0_1")
-                }
-            ]
-        };
-
-        var serverPartition = (TestPartition)serverForest.Partitions.First();
-        AssertEquals(expected, serverPartition);
-    }
-
-    /// <summary>
-    /// Moves and replaces a child node within the same parent containment.
-    /// </summary>
-    [Test]
-    public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
-    {
-        var serverForest = CreateAndStartServer();
-
-        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
-            Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Single);
-
-        WaitForSent(5);
 
         var expected = new TestPartition("partition")
         {
@@ -302,15 +180,15 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     }
 
     /// <summary>
-    /// Moves a child node within the same containment.
+    /// Moves a child node from a single containment to another. Both containments have different parents.
     /// </summary>
     [Test]
-    public void MoveChildInSameContainment()
+    public void MoveChildFromOtherContainment_Single()
     {
         var serverForest = CreateAndStartServer();
 
-        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
-            Tasks.MoveChildInSameContainment);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
+            Tasks.MoveChildFromOtherContainment_Single);
 
         WaitForSent(5);
 
@@ -321,7 +199,8 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
             [
                 new LinkTestConcept("link")
                 {
-                    Containment_0_n = [new LinkTestConcept("containment_0_n_child1"), new LinkTestConcept("containment_0_n_child0")],
+                    Containment_0_1 = new LinkTestConcept("containment_0_1"),
+                    Containment_1 = new LinkTestConcept("containment_0_1_containment_0_1")
                 }
             ]
         };
@@ -329,4 +208,191 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
         var serverPartition = (TestPartition)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
     }
+
+
+    /// <summary>
+    /// Moves a child node from a multiple containment to another. Both containments have different parents.
+    /// </summary>
+    [Test]
+    public void MoveChildFromOtherContainment_Multiple()
+    {
+        var serverForest = CreateAndStartServer();
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n,
+            Tasks.MoveChildFromOtherContainment_Multiple);
+
+        WaitForSent(6);
+
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
+                    Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0"), new LinkTestConcept("containment_1_n_child1")]
+                }
+            ]
+        };
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+
+    #endregion
+
+    #region Move and replace
+
+    /// <summary>
+    /// Moves a child node within the same containment.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildInSameContainment()
+    {
+        var serverForest = CreateAndStartServer();
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
+            Tasks.MoveAndReplaceChildInSameContainment);
+
+        WaitForSent(5);
+
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_0_n = [new LinkTestConcept("containment_0_n_child1")],
+                }
+            ]
+        };
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
+    /// Moves and replaces a child node within the same parent containment.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainmentInSameParent_Single()
+    {
+        var serverForest = CreateAndStartServer();
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_1,
+            Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Single);
+
+        WaitForSent(5);
+
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_1 = new LinkTestConcept("containment_0_1")
+                }
+            ]
+        };
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
+    /// Moves a child node from a multiple containment to another within the same parent node.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple()
+    {
+        var serverForest = CreateAndStartServer();
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_1_n,
+            Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple);
+
+        WaitForSent(7);
+
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
+                    Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_child1")]
+                }
+            ]
+        };
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
+    /// Moves and replaces a child node from a single containment to another. Both containments have different parents.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainment_Single()
+    {
+        var serverForest = CreateAndStartServer();
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
+            Tasks.AddContainment_1, Tasks.AddContainment_1_Containment_0_1, Tasks.MoveAndReplaceChildFromOtherContainment_Single);
+
+        WaitForSent(7);
+
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_0_1 = new LinkTestConcept("containment_0_1"),
+                    Containment_1 = new LinkTestConcept("containment_1")
+                    {
+                        Containment_0_1 = new LinkTestConcept("containment_0_1_containment_0_1")
+                    }
+                }
+            ]
+        };
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
+    /// Moves and replaces a child node from a multiple containment to another. Both containments have different parents.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildFromOtherContainment_Multiple()
+    {
+        var serverForest = CreateAndStartServer();
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromOtherContainment_Multiple);
+
+        WaitForSent(6);
+
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
+                    Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0")]
+                }
+            ]
+        };
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+
+    #endregion
 }

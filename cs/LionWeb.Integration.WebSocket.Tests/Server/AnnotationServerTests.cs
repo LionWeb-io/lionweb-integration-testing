@@ -90,6 +90,39 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
     }
 
     /// <summary>
+    /// Moves an annotation from its current parent to replace an annotation within another parent within the server partition.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceAnnotationFromOtherParent()
+    {
+        var serverForest = CreateAndStartServer();
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1,
+            Tasks.AddAnnotations,
+            Tasks.AddAnnotation_to_Containment_0_1,
+            Tasks.MoveAndReplaceAnnotationFromOtherParent);
+
+        WaitForSent(7);
+
+        var expected = new TestPartition("partition")
+            {
+                Data = new DataTypeTestConcept("data"),
+                Links =
+                [
+                    new LinkTestConcept("link")
+                    {
+                        Containment_0_1 = new LinkTestConcept("containment_0_1")
+                    }
+                ]
+            }
+            .WithAnnotation(new TestAnnotation("annotation"))
+            .WithAnnotation(new TestAnnotation("annotation1"));
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
     /// Moves an annotation within the same parent.
     /// </summary>
     [Test]
@@ -110,6 +143,31 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
             ]
         };
         expected.AddAnnotations([new TestAnnotation("annotation1"), new TestAnnotation("annotation0")]);
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+    
+    /// <summary>
+    /// Moves and replaces an annotation within the same parent.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceAnnotationInSameParent()
+    {
+        var serverForest = CreateAndStartServer();
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddAnnotations, Tasks.MoveAndReplaceAnnotationInSameParent);
+
+        WaitForSent(5);
+
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+            ]
+        }.WithAnnotation(new TestAnnotation("annotation1"));
 
         var serverPartition = (TestPartition)serverForest.Partitions.First();
         AssertEquals(expected, serverPartition);
