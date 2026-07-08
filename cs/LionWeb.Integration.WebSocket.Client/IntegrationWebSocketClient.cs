@@ -86,7 +86,7 @@ public class IntegrationWebSocketClient
                     lionWeb.WaitForReceived(1);
                     break;
 
-                    #region Properties
+                #region Properties
 
                 case Tasks.AddStringValue_0_1:
                     partition.Data.StringValue_0_1 = "new property";
@@ -107,7 +107,7 @@ public class IntegrationWebSocketClient
                 
                 #endregion
 
-                    #region Annotations
+                #region Annotations
 
                 case Tasks.AddAnnotation:
                     partition.AddAnnotations([new TestAnnotation("annotation")]);
@@ -153,7 +153,7 @@ public class IntegrationWebSocketClient
                 
                 #endregion
 
-                    #region References
+                #region References
                     
                 case Tasks.AddReference_0_1_to_Containment_0_1:
                     partition.Links[0].Reference_0_1 = partition.Links[0].Containment_0_1;
