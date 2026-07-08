@@ -284,9 +284,5 @@ public class IntegrationWebSocketClient
             : message);
 
     private static void Log(string message) =>
-        Console.WriteLine(message
-            // TODO: Temporary workaround to https://youtrack.jetbrains.com/issue/RIDER-133132
-            .Replace(ILionWebClient.HeaderColor_Start, "CCC: ")
-            .Replace(ILionWebClient.HeaderColor_End, "")
-        );
+        Console.WriteLine(message);
 }
