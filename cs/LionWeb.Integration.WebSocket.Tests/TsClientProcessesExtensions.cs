@@ -29,7 +29,7 @@ public static class TsClientProcessesExtensions
         out string errorTrigger)
     {
         var cmdLine = $"{port} {clientId} {string.Join(",", tasks)}";
-        var process = TsRelativeDirectoryClient(cmdLine);
+        var process = LocalProcess("node", "ts/dist/cli-client.js", cmdLine);
 
         process.StartInfo.UseShellExecute = false;
         readyTrigger = "LionWeb delta protocol client";
@@ -37,36 +37,24 @@ public static class TsClientProcessesExtensions
         return process;
     }
 
-    private static Process TsRelativeDirectoryClient(string cmdLine)
+    private static Process LocalProcess(string executable, params string[] arguments)
     {
         var process = new Process();
-        process.StartInfo.FileName = "node";
+        process.StartInfo.FileName = executable;
         process.StartInfo.WorkingDirectory =
-            $"{Directory.GetCurrentDirectory()}/../../../../../ts";
+            $"{Directory.GetCurrentDirectory()}/../../../../..";
         // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
-        // (hence 7x ../)
-        process.StartInfo.Arguments = $"dist/cli-client.js {cmdLine}";
-        return process;
-    }
-
-    private static Process CreateNodeUtilityProcess(params string[] arguments)
-    {
-        var process = new Process();
-        var effectiveArguments = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? ["powershell", ..arguments]   // on Windows, we need to call `powershell npx` instead of `npx`
-            : arguments;
-        process.StartInfo.FileName = effectiveArguments[0];
-        process.StartInfo.Arguments = string.Join(" ", effectiveArguments[1..]);
+        // (hence 5x ../)
+        process.StartInfo.Arguments = string.Join(" ", arguments);
         return process;
     }
 
     internal static string LionWebTsVersion => AssemblyConfigurationAttribute.Get("LionWebTsVersion");
 
-    internal static Process TsInstallClientPackage()
-        => CreateNodeUtilityProcess("npm", "install", $"@lionweb/delta-protocol-test-cli@{LionWebTsVersion}");
-
-    internal static Process? SetUpTsClient()
-    {
-        return TsInstallClientPackage();
-    }
+    internal static Process? BuildTsClient()
+        => LocalProcess(
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "powershell" : "pwsh",
+            "scripts/build-ts-client.ps1",
+            LionWebTsVersion
+        );
 }

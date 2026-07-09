@@ -43,7 +43,7 @@ public class SetupTrace
     [Timeout(SetupTimeout * 1000)]
     public void SetUpTsClient()
     {
-        var process = TsClientProcessesExtensions.SetUpTsClient();
+        var process = TsClientProcessesExtensions.BuildTsClient();
         if (process == null)
             return;
         Assert.That(process.Start(), Is.True, process.ToString);
