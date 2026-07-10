@@ -16,8 +16,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { LionWebClient } from "@lionweb/delta-protocol-client"
-import { ansi, ClientReceivedMessage } from "@lionweb/delta-protocol-common"
 import type { ISemanticLogItem, Procedure } from "@lionweb/delta-protocol-common"
+import { ansi, ClientReceivedMessage } from "@lionweb/delta-protocol-common"
 import type { LionWebId } from "@lionweb/json"
 import { lastOfArray } from "@lionweb/ts-utils"
 import {
@@ -29,6 +29,7 @@ import {
 } from "@lionweb/class-core-test-language"
 
 import { waitUntil } from "./async.js"
+
 const { clientInfo, genericWarning } = ansi
 
 
@@ -41,8 +42,10 @@ const { clientInfo, genericWarning } = ansi
  */
 export const recognizedTasks: Record<string, boolean> = {
     "SignOn": true,
+    "SubscribeToChangingPartitions": true,
     "SignOff": true,
     "Wait": true,
+    "AddPartition": true,
     "AddStringValue_0_1": true,
     "SetStringValue_0_1": true,
     "DeleteStringValue_0_1": true,
@@ -54,6 +57,8 @@ export const recognizedTasks: Record<string, boolean> = {
     "DeleteAnnotation": true,
     "MoveAnnotationInSameParent": true,
     "MoveAnnotationFromOtherParent": true,
+    "MoveAndReplaceAnnotationInSameParent": true,
+    "MoveAndReplaceAnnotationFromOtherParent": true,
     "AddReference_0_1_to_Containment_0_1": true,
     "AddReference_0_1_to_Containment_1": true,
     "DeleteReference_0_1": true,
@@ -66,16 +71,16 @@ export const recognizedTasks: Record<string, boolean> = {
     "AddContainment_0_n": true,
     "AddContainment_0_n_Containment_0_n": true,
     "AddContainment_1_n": true,
-    "MoveAndReplaceChildFromOtherContainment_Single": true,
-    "MoveAndReplaceChildFromOtherContainmentInSameParent_Single": true,
-    "MoveAndReplaceChildFromOtherContainment_Multiple": true,
     "MoveChildInSameContainment": true,
+    "MoveChildFromOtherContainmentInSameParent_Single": true,
+    "MoveChildFromOtherContainmentInSameParent_Multiple": true,
     "MoveChildFromOtherContainment_Single": true,
     "MoveChildFromOtherContainment_Multiple": true,
-    "MoveChildFromOtherContainmentInSameParent_Single": true,
-    "AddPartition": true,
-    "MoveChildFromOtherContainmentInSameParent_Multiple": true,
-    "SubscribeToChangingPartitions": true,
+    "MoveAndReplaceChildInSameContainment": true,
+    "MoveAndReplaceChildFromOtherContainmentInSameParent_Single": true,
+    "MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple": true,
+    "MoveAndReplaceChildFromOtherContainment_Single": true,
+    "MoveAndReplaceChildFromOtherContainment_Multiple": true,
     "TryToWriteProtocolLog": true
 }
 
@@ -122,6 +127,8 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
         console.log(clientInfo(`client "${lionWebClient.clientId}" is executing task "${task}"`))
         switch (task) {
 
+            // queries:
+
             case "SignOn":
                 return await lionWebClient.signOn(queryId, "myRepo")
 
@@ -134,8 +141,8 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
             case "SignOff":
                 return await lionWebClient.signOff(queryId)
 
-            case "Wait":
-                return waitForReceivedMessages(1)
+
+            // {deltas} partitions:
 
             case "AddPartition": {
                 const partition = lionWebClient.forest.createNode(testLanguageBase.TestPartition, "partition") as TestPartition
@@ -144,6 +151,9 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
                 lionWebClient.addPartition(partition)
                 return waitForReceivedMessages(1)
             }
+
+
+            // {deltas} properties:
 
             case "AddStringValue_0_1":
                 dataTypeTestConcept().stringValue_0_1 = "new property"
@@ -160,6 +170,9 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
             case "AddName_Containment_0_1":
                 linkTestConcept().containment_0_1!.name = "my name"
                 return waitForReceivedMessages(1)
+
+
+            // {deltas} annotations:
 
             case "AddAnnotation":
                 thePartition().addAnnotation(annotation("annotation"))
@@ -197,6 +210,20 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
                 thePartition().addAnnotation(linkTestConcept().containment_0_1!.annotations[0])
                 return waitForReceivedMessages(1)
 
+            case "MoveAndReplaceAnnotationInSameParent": {
+                const oldIndex = thePartition().annotations.length - 1
+                thePartition().moveAndReplaceAnnotationOffsetBased(oldIndex, -oldIndex)
+                return waitForReceivedMessages(1)
+            }
+
+            case "MoveAndReplaceAnnotationFromOtherParent": {
+                thePartition().replaceAnnotationAtIndex(linkTestConcept().containment_0_1!.annotations[0], 0)
+                return waitForReceivedMessages(1)
+            }
+
+
+            // {deltas} references:
+
             case "AddReference_0_1_to_Containment_0_1":
                 linkTestConcept().reference_0_1 = linkTestConcept().containment_0_1
                 return waitForReceivedMessages(1)
@@ -208,6 +235,9 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
             case "DeleteReference_0_1":
                 linkTestConcept().reference_0_1 = undefined
                 return waitForReceivedMessages(1)
+
+
+            // {deltas} containments:
 
             case "AddContainment_0_1":
                 linkTestConcept().containment_0_1 = linkTestConcept("containment_0_1")
@@ -250,12 +280,48 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
                 linkTestConcept().addContainment_1_n(linkTestConcept("containment_1_n_child1"))
                 return waitForReceivedMessages(2)
 
-            case "MoveAndReplaceChildFromOtherContainment_Single":
-                linkTestConcept().containment_1.replaceContainment_0_1With(linkTestConcept().containment_0_1!.containment_0_1!)
+            // {deltas} (containments.)move:
+
+            case "MoveChildInSameContainment": {
+                const indexLastChild = linkTestConcept().containment_0_n.length - 1
+                linkTestConcept().moveContainment_0_nOffsetBased(indexLastChild, -indexLastChild)   // -> index 0
+                // Note: this is effectively a move rather than an insert — hence the name of the task.
+                return waitForReceivedMessages(1)
+            }
+
+            case "MoveChildFromOtherContainmentInSameParent_Single":
+                linkTestConcept().containment_1 = linkTestConcept().containment_0_1!
+                return waitForReceivedMessages(1)
+
+            case "MoveChildFromOtherContainmentInSameParent_Multiple":
+                linkTestConcept().addContainment_1_nAtIndex(lastOfArray(linkTestConcept().containment_0_n), 1)
+                return waitForReceivedMessages(1)
+
+            case "MoveChildFromOtherContainment_Single":
+                linkTestConcept().containment_1 = linkTestConcept().containment_0_1!.containment_0_1!
+                return waitForReceivedMessages(1)
+
+            case "MoveChildFromOtherContainment_Multiple":
+                linkTestConcept().addContainment_1_nAtIndex(lastOfArray(linkTestConcept().containment_0_n).containment_0_n[0], 1)
+                return waitForReceivedMessages(1)
+
+            // {deltas} (containments.)move+replace:
+
+            case "MoveAndReplaceChildInSameContainment":
+                const oldIndex = linkTestConcept().containment_0_n.length - 1
+                linkTestConcept().moveAndReplaceContainment_0_nOffsetBased(oldIndex, -oldIndex)
                 return waitForReceivedMessages(1)
 
             case "MoveAndReplaceChildFromOtherContainmentInSameParent_Single":
                 linkTestConcept().replaceContainment_1With(linkTestConcept().containment_0_1!)
+                return waitForReceivedMessages(1)
+
+            case "MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple":
+                linkTestConcept().replaceContainment_1_nAtIndex(lastOfArray(linkTestConcept().containment_0_n), 1)
+                return waitForReceivedMessages(1)
+
+            case "MoveAndReplaceChildFromOtherContainment_Single":
+                linkTestConcept().containment_1.replaceContainment_0_1With(linkTestConcept().containment_0_1!.containment_0_1!)
                 return waitForReceivedMessages(1)
 
             case "MoveAndReplaceChildFromOtherContainment_Multiple":
@@ -268,35 +334,18 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
                 )
                 return waitForReceivedMessages(1)
 
-            case "MoveChildInSameContainment": {
-                const indexLastChild = linkTestConcept().containment_0_n.length - 1
-                linkTestConcept().moveContainment_0_nOffsetBased(indexLastChild, -indexLastChild)   // -> index 0
-                // Note: this is effectively a move rather than an insert — hence the name of the task.
-                return waitForReceivedMessages(1)
-            }
 
-            case "MoveChildFromOtherContainment_Single":
-                linkTestConcept().containment_1 = linkTestConcept().containment_0_1!.containment_0_1!
-                return waitForReceivedMessages(1)
+            // (auxiliary/special:)
 
-            case "MoveChildFromOtherContainment_Multiple":
-                linkTestConcept().addContainment_1_nAtIndex(lastOfArray(linkTestConcept().containment_0_n).containment_0_n[0], 1)
-                return waitForReceivedMessages(1)
-
-            case "MoveChildFromOtherContainmentInSameParent_Single":
-                linkTestConcept().containment_1 = linkTestConcept().containment_0_1!
-                return waitForReceivedMessages(1)
-
-            case "MoveChildFromOtherContainmentInSameParent_Multiple":
-                linkTestConcept().addContainment_1_nAtIndex(lastOfArray(linkTestConcept().containment_0_n), 1)
+            case "Wait":
                 return waitForReceivedMessages(1)
 
             case "TryToWriteProtocolLog":
                 return tryToWriteProtocolLog()
 
+
             default: {
-                // (shouldn't happen because of upfront validation of tasks)
-                console.log(genericWarning(`task "${task}" is unknown => ignored`))
+                console.log(genericWarning(`task "${task}" is known but not implemented => ignored`))
                 return Promise.resolve()
             }
 
