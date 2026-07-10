@@ -35,9 +35,9 @@ const { clientInfo, genericWarning } = ansi
 /**
  * **DEV note**: run
  *
- *  $ node src/code-reading/tasks-from-csharp.js
+ *  $ ./ts/scripts/extract-tasks-from-csharp.ts
  *
-  * inside the build package to generate the contents of the following object.
+  * from this repo’s root to generate the contents of the following object.
  */
 export const recognizedTasks: Record<string, boolean> = {
     "SignOn": true,
