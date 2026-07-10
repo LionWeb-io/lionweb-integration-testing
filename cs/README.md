@@ -28,20 +28,6 @@ This guarantees no interference between server and client, and enables implement
 
 Client tests work exactly the same — we put `TestFixture(ServerProcesses.<foreignServerLiteral>)` attributes on `WebSocketClientTestBase` and use `ServerProcessesExtensions.Create()` to set up the "foreign" server process.
 
-### How to distinguish scenarios
-When setting up the process of the "foreign" implementation, we need to distinguish which scenario we're running in: see next section for a description of the scenarios.
-
-We use preprocessor directives to distinguish the scenarios:
-
-```csharp
-// Accesses `<DefineConstants>USE_LION_WEB_PACKAGES</DefineConstants>` from .csproj 
-#if USE_LION_WEB_PACKAGES
-    Process result = TsNpxPackageClient(cmdLine);
-#else
-    Process result = TsRelativeDirectoryClient(cmdLine);
-#endif
-```
-
 ## How to run different scenarios
 
 ### Using "foreign" implementations from packages
@@ -74,14 +60,17 @@ Example:
 <Project>
   <PropertyGroup>
     ...
-    <!-- Can be overwritten by environment variable TS_DELTA_CLI_VERSION -->
-    <TS_DELTA_CLI_VERSION Condition="'$(TS_DELTA_CLI_VERSION)' == ''">x.y.z</TS_DELTA_CLI_VERSION>
+    <!-- Can be overwritten by environment variable LW_TS_VERSION -->
+    <LW_TS_VERSION Condition="'$(LW_TS_VERSION)' == ''">x.y.z</LW_TS_VERSION>
   </PropertyGroup>
   ...
 </Project>
 ```
 
-where `x.y.z` is the NPM version for the LionWeb TypeScript packages.
+where `x.y.z` is the NPM version for the LionWeb TypeScript packages, as published on https://www.npmjs.com.
+There are two special values as well:
+* `local`: this corresponds to the _local directories_ scenario.
+* `specified`: use the version specified in [the `package.json` file](../ts/package.json) as it currently is.
 
 We need the following setting in `LionWeb.Integration.WebSocket.Tests.csproj` to smuggle the value into the runtime:
 
@@ -91,7 +80,7 @@ We need the following setting in `LionWeb.Integration.WebSocket.Tests.csproj` to
     <ItemGroup>
       <AssemblyAttribute Include="LionWeb.Integration.WebSocket.Tests.AssemblyConfigurationAttribute">
         <_Parameter1>LionWebTsVersion</_Parameter1>
-        <_Parameter2>$(TS_DELTA_CLI_VERSION)</_Parameter2>
+        <_Parameter2>$(LW_TS_VERSION)</_Parameter2>
       </AssemblyAttribute>
       ...
     </ItemGroup>
@@ -101,7 +90,7 @@ We need the following setting in `LionWeb.Integration.WebSocket.Tests.csproj` to
 
 Then we can access the value at runtime:
 ```csharp
-static string TsDeltaCliVersion => AssemblyConfigurationAttribute.Get("LionWebTsVersion");
+static string LionWebTsVersion => AssemblyConfigurationAttribute.Get("LionWebTsVersion");
 ```
 
 ### Using "foreign" implementations from local directories
@@ -142,10 +131,15 @@ The script outputs `stdout` into a file `logs/test-<configuration ID>.log`.
   Does not support _package_ scenario yet, thus disabled.
 
 ### Clients
-* `CSharp`:: Implementation in `LionWeb.Integration.WebSocket.Client` in this Git repository.  
+`CSharp`:: Implementation in `LionWeb.Integration.WebSocket.Client` in this Git repository.
   Uses either `LionWeb-CSharp` / `LionWeb-CSharp-Protocol-Delta` NuGet packages (_package_ scenario) or directory `<gitroot>/../lionweb-csharp` (_local directories_ scenario).
-* `Ts`:: <a href="https://github.com/LionWeb-io/lionweb-typescript">lionweb-typescript</a>.  
-  Uses either `lionweb/delta-protocol-test-cli` npm package in version `TS_DELTA_CLI_VERSION` (_package_ scenario) or directory `<gitroot>/../lionweb-typescript/packages/delta-protocol-test-cli` (_local directories_ scenario).
+
+`Ts`:: <a href="https://github.com/LionWeb-io/lionweb-typescript">lionweb-typescript</a>.
+  The value of `LW_TS_VERSION` determines what implementation of the LionWeb TypeScript packages is used:
+
+  * `local`: the implementation in directory `<gitroot>/../lionweb-typescript/` is used (_local directories_ scenario);
+  * `specified`: the version specified by [the `package.json` file](../ts/package.json) (as it currently is) is used;
+  * otherwise, that version of the published LionWeb TypeScript NPM packages is used (_package_ scenario).
 
 ## How to generate the sources for the language implementations
 

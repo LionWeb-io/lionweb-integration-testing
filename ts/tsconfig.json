@@ -1,10 +1,16 @@
 {
   "compilerOptions": {
-    "noEmit": true,
     "target": "esnext",
     "module": "nodenext",
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
-    "verbatimModuleSyntax": true
-  }
+    "verbatimModuleSyntax": true,
+    "rootDir": "client/",
+    "outDir": "dist/",
+    "types": ["node"]
+  },
+  "exclude": [
+    "scripts/",
+    "tests/"
+  ]
 }

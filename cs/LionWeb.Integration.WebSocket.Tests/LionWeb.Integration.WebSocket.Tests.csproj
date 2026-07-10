@@ -2,14 +2,13 @@
     <PropertyGroup>
         <RootNamespace>LionWeb.Integration.WebSocket.Tests</RootNamespace>
         <IsTestProject>true</IsTestProject>
-        <DefineConstants Condition="$(UseLionWebPackages)">USE_LION_WEB_PACKAGES</DefineConstants>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
       <AssemblyAttribute Include="LionWeb.Integration.WebSocket.Tests.AssemblyConfigurationAttribute">
         <_Parameter1>LionWebTsVersion</_Parameter1>
-        <_Parameter2>$(TS_DELTA_CLI_VERSION)</_Parameter2>
+        <_Parameter2>$(LW_TS_VERSION)</_Parameter2>
       </AssemblyAttribute>
       <AssemblyAttribute Include="LionWeb.Integration.WebSocket.Tests.AssemblyConfigurationAttribute">
         <_Parameter1>Configuration</_Parameter1>

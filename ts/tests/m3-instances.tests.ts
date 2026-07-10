@@ -26,11 +26,11 @@ describe("M3 instances", () => {
     const reposPath = "../../repos"
     const pathInRepos = (path: string) => join(reposPath, path)
     const javaSerializationPath = pathInRepos("lionweb-jvm/core/src/test/resources/serialization/lioncore.json")
-    const javaSerialization = sortedSerializationChunk(readFileAsJsonSync(javaSerializationPath) as LionWebJsonChunk)
+    const javaSerialization = sortedSerializationChunk(readFileAsJsonSync(javaSerializationPath) as LionWebJsonChunk, true)
     const tsSerializationPath = pathInRepos("lionweb-typescript/packages/build/artifacts/core/v2023_1/lioncore.json")
-    const tsSerialization = sortedSerializationChunk(readFileAsJsonSync(tsSerializationPath) as LionWebJsonChunk)
+    const tsSerialization = sortedSerializationChunk(readFileAsJsonSync(tsSerializationPath) as LionWebJsonChunk, true)
     const specSerializationPath = pathInRepos("specification/2023.1/metametamodel/lioncore.json")
-    const specSerialization = withBuiltins(sortedSerializationChunk(readFileAsJsonSync(specSerializationPath) as LionWebJsonChunk), "spec")
+    const specSerialization = withBuiltins(sortedSerializationChunk(readFileAsJsonSync(specSerializationPath) as LionWebJsonChunk, true), "spec")
 
     it("check whether Java serialization of LionCore/M3 deserializes in TypeScript impl. (no assertions)", () => {
         /* const deserializationJava = */ deserializeLanguages(javaSerialization)
