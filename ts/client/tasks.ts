@@ -15,7 +15,7 @@
 // SPDX-FileCopyrightText: 2025 TRUMPF Laser SE and other contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { LionWebClient } from "@lionweb/delta-protocol-client"
+import type { LionWebClient } from "@lionweb/delta-protocol-client"
 import type { ISemanticLogItem, Procedure } from "@lionweb/delta-protocol-common"
 import { ansi, ClientReceivedMessage } from "@lionweb/delta-protocol-common"
 import type { LionWebId } from "@lionweb/json"
@@ -307,10 +307,11 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
 
             // {deltas} (containments.)move+replace:
 
-            case "MoveAndReplaceChildInSameContainment":
+            case "MoveAndReplaceChildInSameContainment": {
                 const oldIndex = linkTestConcept().containment_0_n.length - 1
                 linkTestConcept().moveAndReplaceContainment_0_nOffsetBased(oldIndex, -oldIndex)
                 return waitForReceivedMessages(1)
+            }
 
             case "MoveAndReplaceChildFromOtherContainmentInSameParent_Single":
                 linkTestConcept().replaceContainment_1With(linkTestConcept().containment_0_1!)

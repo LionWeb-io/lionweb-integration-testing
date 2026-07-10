@@ -5,9 +5,10 @@
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
+    "types": ["node"],
+    "removeComments": true,
     "rootDir": "client/",
-    "outDir": "dist/",
-    "types": ["node"]
+    "outDir": "dist/"
   },
   "exclude": [
     "scripts/",
