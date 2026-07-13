@@ -85,6 +85,9 @@ public class IntegrationWebSocketClient
                     }]);
                     lionWeb.WaitForReceived(1);
                     break;
+
+                #region Properties
+
                 case Tasks.AddStringValue_0_1:
                     partition.Data.StringValue_0_1 = "new property";
                     lionWeb.WaitForReceived(1);
@@ -101,6 +104,11 @@ public class IntegrationWebSocketClient
                     partition.Links[0].Containment_0_1.Name = "my name";
                     lionWeb.WaitForReceived(1);
                     break;
+                
+                #endregion
+
+                #region Annotations
+
                 case Tasks.AddAnnotation:
                     partition.AddAnnotations([new TestAnnotation("annotation")]);
                     lionWeb.WaitForReceived(1);
@@ -134,6 +142,19 @@ public class IntegrationWebSocketClient
                     partition.AddAnnotations(partition.Links[0].Containment_0_1!.GetAnnotations());
                     lionWeb.WaitForReceived(1);
                     break;
+                case Tasks.MoveAndReplaceAnnotationInSameParent:
+                    partition.GetAnnotations()[0].ReplaceWith(partition.GetAnnotations()[^1]);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case Tasks.MoveAndReplaceAnnotationFromOtherParent:
+                    partition.GetAnnotations()[0].ReplaceWith(partition.Links[0].Containment_0_1!.GetAnnotations()[0]);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                
+                #endregion
+
+                #region References
+                    
                 case Tasks.AddReference_0_1_to_Containment_0_1:
                     partition.Links[0].Reference_0_1 = partition.Links[0].Containment_0_1;
                     lionWeb.WaitForReceived(1);
@@ -146,6 +167,11 @@ public class IntegrationWebSocketClient
                     partition.Links[0].Reference_0_1 = null;
                     lionWeb.WaitForReceived(1);
                     break;
+                
+                #endregion
+                
+                #region Containments
+
                 case Tasks.AddContainment_0_1:
                     partition.Links[0].Containment_0_1 = new LinkTestConcept("containment_0_1");
                     lionWeb.WaitForReceived(1);
@@ -191,29 +217,12 @@ public class IntegrationWebSocketClient
                     ]);
                     lionWeb.WaitForReceived(2);
                     break;
-                case Tasks.MoveAndReplaceChildFromOtherContainment_Single:
-                    partition.Links[0].Containment_1.Containment_0_1!.ReplaceWith(partition.Links[0].Containment_0_1!.Containment_0_1!);
-                    lionWeb.WaitForReceived(1);
-                    break;
-                case Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Single:
-                    partition.Links[0].Containment_1.ReplaceWith(partition.Links[0].Containment_0_1!);
-                    lionWeb.WaitForReceived(1);
-                    break;
-                case Tasks.MoveAndReplaceChildFromOtherContainment_Multiple:
-                    partition.Links[0].Containment_1_n[^1].ReplaceWith(partition.Links[0].Containment_0_n[^1].Containment_0_n[^1]);
-                    lionWeb.WaitForReceived(1);
-                    break;
+                
+                #region Move
+
                 case Tasks.MoveChildInSameContainment:
                     partition.Links[0].InsertContainment_0_n(0, [partition.Links[0].Containment_0_n[^1]]);
                     // Note: this is effectively a move rather than an insert — hence the name of the task.
-                    lionWeb.WaitForReceived(1);
-                    break;
-                case Tasks.MoveChildFromOtherContainment_Single:
-                    partition.Links[0].Containment_1 = partition.Links[0].Containment_0_1!.Containment_0_1!;
-                    lionWeb.WaitForReceived(1);
-                    break;
-                case Tasks.MoveChildFromOtherContainment_Multiple:
-                    partition.Links[0].InsertContainment_1_n(1, [partition.Links[0].Containment_0_n[^1].Containment_0_n[0]]);
                     lionWeb.WaitForReceived(1);
                     break;
                 case Tasks.MoveChildFromOtherContainmentInSameParent_Single:
@@ -224,6 +233,43 @@ public class IntegrationWebSocketClient
                     partition.Links[0].InsertContainment_1_n(1, [partition.Links[0].Containment_0_n[^1]]);
                     lionWeb.WaitForReceived(1);
                     break;
+                case Tasks.MoveChildFromOtherContainment_Single:
+                    partition.Links[0].Containment_1 = partition.Links[0].Containment_0_1!.Containment_0_1!;
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case Tasks.MoveChildFromOtherContainment_Multiple:
+                    partition.Links[0].InsertContainment_1_n(1, [partition.Links[0].Containment_0_n[^1].Containment_0_n[0]]);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                
+                #endregion
+
+                #region Move and Replace
+
+                case Tasks.MoveAndReplaceChildInSameContainment:
+                    partition.Links[0].Containment_0_n[0].ReplaceWith(partition.Links[0].Containment_0_n[^1]);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Single:
+                    partition.Links[0].Containment_1.ReplaceWith(partition.Links[0].Containment_0_1!);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case Tasks.MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple:
+                    partition.Links[0].Containment_1_n[1].ReplaceWith(partition.Links[0].Containment_0_n[^1]);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case Tasks.MoveAndReplaceChildFromOtherContainment_Single:
+                    partition.Links[0].Containment_1.Containment_0_1!.ReplaceWith(partition.Links[0].Containment_0_1!.Containment_0_1!);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case Tasks.MoveAndReplaceChildFromOtherContainment_Multiple:
+                    partition.Links[0].Containment_1_n[^1].ReplaceWith(partition.Links[0].Containment_0_n[^1].Containment_0_n[^1]);
+                    lionWeb.WaitForReceived(1);
+                    break;
+
+                #endregion
+
+                #endregion
                 default:
                     throw new ArgumentException($"Can't execute task {task}");
             }
@@ -238,9 +284,5 @@ public class IntegrationWebSocketClient
             : message);
 
     private static void Log(string message) =>
-        Console.WriteLine(message
-            // TODO: Temporary workaround to https://youtrack.jetbrains.com/issue/RIDER-133132
-            .Replace(ILionWebClient.HeaderColor_Start, "CCC: ")
-            .Replace(ILionWebClient.HeaderColor_End, "")
-        );
+        Console.WriteLine(message);
 }
