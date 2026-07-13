@@ -26,7 +26,7 @@ $ npm run lint:client
 The CLI client can then be started as follows:
 
 ```shell
-$ node dist/cli-client.js <port> <clientID> <partitionConcept> [tasks]
+$ node dist/cli-client.js <port> <clientID> [tasks]
 ```
 
 The arguments are as follows:
