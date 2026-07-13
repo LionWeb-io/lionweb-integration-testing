@@ -27,6 +27,6 @@
   "scripts": {
     "test": "mocha tests/*.tests.ts",
     "build:client": "tsc",
-    "lint": "eslint ."
+    "lint:client": "eslint ."
   }
 }

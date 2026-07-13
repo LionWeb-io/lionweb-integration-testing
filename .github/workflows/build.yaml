@@ -45,7 +45,7 @@ jobs:
         run: ./scripts/run-ts-tests.sh
 
       - name: Lint TS code
-        run: npm run lint
+        run: npm run lint:client
         working-directory: ts/
 
   cs-tests:

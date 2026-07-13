@@ -7,7 +7,7 @@
     "verbatimModuleSyntax": true,
     "types": ["node"],
     "removeComments": true,
-    "rootDir": "client/",
+    "rootDir": "delta-test-tools/",
     "outDir": "dist/"
   },
   "exclude": [
