@@ -5,9 +5,10 @@
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
-    "rootDir": "client/",
-    "outDir": "dist/",
-    "types": ["node"]
+    "types": ["node"],
+    "removeComments": true,
+    "rootDir": "delta-test-tools/",
+    "outDir": "dist/"
   },
   "exclude": [
     "scripts/",
