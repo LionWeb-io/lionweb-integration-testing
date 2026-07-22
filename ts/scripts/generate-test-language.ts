@@ -93,10 +93,16 @@ linkTypes.forEach((linkType) => {
 })
 
 
+// add a second single-optional containment:
+factory.containment(LinkTestConcept, "otherContainment_0_1").ofType(LinkTestConcept).isOptional()
+
 // generate a test annotation:
 const TestAnnotation = factory.annotation("TestAnnotation").annotating(builtinClassifiers.node).implementing(builtinClassifiers.inamed)
 factory.reference(TestAnnotation, "ref").ofType(builtinClassifiers.node)
 factory.containment(TestAnnotation, "containment").ofType(builtinClassifiers.node).isOptional()
+
+// generate a restricted annotation that only annotates LinkTestConcept (not Node):
+factory.annotation("RestrictedTestAnnotation").annotating(LinkTestConcept).implementing(builtinClassifiers.inamed)
 
 // generate a test partition:
 const TestPartition = factory.concept("TestPartition", false).implementing(builtinClassifiers.inamed).isPartition()
