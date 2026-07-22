@@ -1409,14 +1409,14 @@
             "id": "LinkTestConcept-otherContainment_0_1",
             "classifier": {
                 "language": "LionCore-M3",
-                "version": "2025.1",
+                "version": "2026.1",
                 "key": "Containment"
             },
             "properties": [
                 {
                     "property": {
                         "language": "LionCore-M3",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "Link-multiple"
                     },
                     "value": "false"
@@ -1424,7 +1424,7 @@
                 {
                     "property": {
                         "language": "LionCore-M3",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "Feature-optional"
                     },
                     "value": "true"
@@ -1432,7 +1432,7 @@
                 {
                     "property": {
                         "language": "LionCore-M3",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "IKeyed-key"
                     },
                     "value": "LinkTestConcept-otherContainment_0_1"
@@ -1440,7 +1440,7 @@
                 {
                     "property": {
                         "language": "LionCore-builtins",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "LionCore-builtins-INamed-name"
                     },
                     "value": "otherContainment_0_1"
@@ -1451,7 +1451,7 @@
                 {
                     "reference": {
                         "language": "LionCore-M3",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "Link-type"
                     },
                     "targets": [
@@ -1666,14 +1666,14 @@
             "id": "RestrictedTestAnnotation",
             "classifier": {
                 "language": "LionCore-M3",
-                "version": "2025.1",
+                "version": "2026.1",
                 "key": "Annotation"
             },
             "properties": [
                 {
                     "property": {
                         "language": "LionCore-M3",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "IKeyed-key"
                     },
                     "value": "RestrictedTestAnnotation"
@@ -1681,7 +1681,7 @@
                 {
                     "property": {
                         "language": "LionCore-builtins",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "LionCore-builtins-INamed-name"
                     },
                     "value": "RestrictedTestAnnotation"
@@ -1691,7 +1691,7 @@
                 {
                     "containment": {
                         "language": "LionCore-M3",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "Classifier-features"
                     },
                     "children": []
@@ -1701,7 +1701,7 @@
                 {
                     "reference": {
                         "language": "LionCore-M3",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "Annotation-annotates"
                     },
                     "targets": [
@@ -1714,7 +1714,7 @@
                 {
                     "reference": {
                         "language": "LionCore-M3",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "Annotation-extends"
                     },
                     "targets": []
@@ -1722,7 +1722,7 @@
                 {
                     "reference": {
                         "language": "LionCore-M3",
-                        "version": "2025.1",
+                        "version": "2026.1",
                         "key": "Annotation-implements"
                     },
                     "targets": [
