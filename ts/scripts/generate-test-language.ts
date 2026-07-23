@@ -157,5 +157,5 @@ writeFileSync(`${languagesPath}/testLanguage.2024.1.json`, jsonAsText(serialized
 // modify version for 2026.1 version, and persist:
 setVersion(serializedTestLanguage, "2026.1")
 // Note: reference objects were already modified to comply with the specification in the previous step!
-await Deno.writeTextFile(`${languagesPath}/testLanguage.2026.1.json`, jsonAsText(serializedTestLanguage))
+writeFileSync(`${languagesPath}/testLanguage.2026.1.json`, jsonAsText(serializedTestLanguage))
 console.log(`Generated artifacts for test language.`)
