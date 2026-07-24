@@ -113,7 +113,7 @@ factory.containment(TestPartition, "data").ofType(DataTypeTestConcept).isOptiona
 const testLanguage = factory.language
 
 const languagesPath = "../testLanguage"
-const jsonAsText = (json: unknown) => JSON.stringify(json, null, 4)
+const jsonAsText = (json: unknown) => JSON.stringify(json, null, 2)
 
 
 // persist a textualization and a PlantUML graph of the language:
