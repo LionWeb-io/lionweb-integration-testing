@@ -6,9 +6,8 @@ const { green, red} = ansiColors()
 
 import { deserializeLanguages, LionWebVersions } from "@lionweb/core"
 import type { LionWebJsonChunk } from "@lionweb/json"
-import { readFileAsJsonSync } from "@lionweb/node-utils"
+import { getFromHttps } from "@lionweb/node-utils"
 import { sortedSerializationChunk } from "@lionweb/utilities"
-import { join } from "node:path"
 
 
 describe("M3 instances", () => {
@@ -23,29 +22,39 @@ describe("M3 instances", () => {
         return serializationChunk
     }
 
-    const reposPath = "../../repos"
-    const pathInRepos = (path: string) => join(reposPath, path)
-    const javaSerializationPath = pathInRepos("lionweb-jvm/core/src/test/resources/serialization/lioncore.json")
-    const javaSerialization = sortedSerializationChunk(readFileAsJsonSync(javaSerializationPath) as LionWebJsonChunk, true)
-    const tsSerializationPath = pathInRepos("lionweb-typescript/packages/build/artifacts/core/v2023_1/lioncore.json")
-    const tsSerialization = sortedSerializationChunk(readFileAsJsonSync(tsSerializationPath) as LionWebJsonChunk, true)
-    const specSerializationPath = pathInRepos("specification/2023.1/metametamodel/lioncore.json")
-    const specSerialization = withBuiltins(sortedSerializationChunk(readFileAsJsonSync(specSerializationPath) as LionWebJsonChunk, true), "spec")
+    const javaSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/lionweb-jvm/refs/heads/main/core/src/test/resources/serialization/lioncore.json"
+    const tsSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/lionweb-typescript/refs/heads/develop/packages/build/artifacts/core/v2023_1/lioncore.json"
+    const specSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/2023.1/metametamodel/lioncore.json"
 
-    it("check whether Java serialization of LionCore/M3 deserializes in TypeScript impl. (no assertions)", () => {
-        /* const deserializationJava = */ deserializeLanguages(javaSerialization)
+    const getJsonFromHttps = async (url: string) =>
+        JSON.parse((await getFromHttps(url)).toString())
+
+    let _savedChunks: Record<string, unknown>
+    const chunks = async () => {
+        if (_savedChunks === undefined) {
+            _savedChunks = {
+                javaSerialization: sortedSerializationChunk(await getJsonFromHttps(javaSerializationUrl) as LionWebJsonChunk, true),
+                tsSerialization: sortedSerializationChunk(await getJsonFromHttps(tsSerializationUrl) as LionWebJsonChunk, true),
+                specSerialization: withBuiltins(sortedSerializationChunk(await getJsonFromHttps(specSerializationUrl) as LionWebJsonChunk, true), "spec")
+            }
+        }
+        return _savedChunks
+    }
+
+    it("check whether Java serialization of LionCore/M3 deserializes in TypeScript impl. (no assertions)", async () => {
+        /* const deserializationJava = */ deserializeLanguages((await chunks()).javaSerialization)
     })
 
-    it(`check whether Java (=${red("Actual")}/left, path=${javaSerializationPath}) and TypeScript (=${green("Expected")}/right, path=${tsSerializationPath}) serialization of LionCore/M3 match`, () => {
-        deepEqual(javaSerialization, tsSerialization)
+    it(`check whether Java (=${red("Actual")}/left, URL=${javaSerializationUrl}) and TypeScript (=${green("Expected")}/right, URL=${tsSerializationUrl}) serialization of LionCore/M3 match`, async () => {
+        deepEqual((await chunks()).javaSerialization, (await chunks()).tsSerialization)
     })
 
-    it(`check whether Java (=${red("Actual")}/left, path=${javaSerializationPath}) serialization of LionCore/M3 matches with the specification (=${green("Expected")}/right), path=${specSerializationPath}`, () => {
-        deepEqual(javaSerialization, specSerialization)
+    it(`check whether Java (=${red("Actual")}/left, URL=${javaSerializationUrl}) serialization of LionCore/M3 matches with the specification (=${green("Expected")}/right), URL=${specSerializationUrl}`, async () => {
+        deepEqual((await chunks()).javaSerialization, (await chunks()).specSerialization)
     })
 
-    it(`check whether TypeScript (=${red("Actual")}/left, path=${tsSerializationPath}) serialization of LionCore/M3 matches with the specification (=${green("Expected")}/right, path=${specSerializationPath})`, () => {
-        deepEqual(tsSerialization, specSerialization)
+    it(`check whether TypeScript (=${red("Actual")}/left, URL=${tsSerializationUrl}) serialization of LionCore/M3 matches with the specification (=${green("Expected")}/right, URL=${specSerializationUrl})`, async () => {
+        deepEqual((await chunks()).tsSerialization, (await chunks()).specSerialization)
     })
 
 })

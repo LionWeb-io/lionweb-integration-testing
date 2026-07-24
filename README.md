@@ -25,7 +25,6 @@ The build – in the form of a GitHub Action name “LionWeb integration tests�
 * validate the delta payloads under [`delta/`](delta) against the [Delta JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/delta/delta.schema.json) for those,
 * validate the _valid_ serialization chunks (recognizable as such by the presence of a `valid` fragment in their paths) under [`testchanges/`](testchanges) and [`testset/`](testset) against the [Serialization chunk JSON Schema](https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/serialization/serialization.schema.json) for those,
 * run the integration test suite implemented in TypeScript, by running `scripts/run-ts-tests.sh`.
-  For this suite to run, a number of the other repositories have to be cloned, by running `scripts/clone-repos.sh`.
 
 The automated tests in the cloned repositories are **not** run.
 
