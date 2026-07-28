@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <LionWebCSharpVersion>0.6.0-RC.2</LionWebCSharpVersion>
     <!-- Can be overwritten by environment variable LW_TS_VERSION -->
-    <LW_TS_VERSION Condition="'$(LW_TS_VERSION)' == ''">0.10.0-beta.4</LW_TS_VERSION>
+    <LW_TS_VERSION Condition="'$(LW_TS_VERSION)' == ''">0.10.0-beta.5</LW_TS_VERSION>
     <UseLionWebPackages>true</UseLionWebPackages>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='DEBUG'">

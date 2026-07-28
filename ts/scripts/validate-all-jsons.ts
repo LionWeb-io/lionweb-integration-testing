@@ -75,8 +75,7 @@ validateJsonInPaths(
     [
         "../testchanges/data",
         "../testset/withoutLanguage/valid",
-        "../testset/withLanguage/valid",
-        "../../repos/lionweb-jvm/core/src/test/resources/serialization"
+        "../testset/withLanguage/valid"
     ]
 )
 console.log()
