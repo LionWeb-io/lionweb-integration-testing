@@ -21,9 +21,10 @@
 
 import { DataType, Enumeration, LanguageFactory, Link, LionWebVersions, serializeLanguages } from "@lionweb/core"
 import type { LionWebJsonChunk } from "@lionweb/json"
-import { writeFileSync } from "node:fs"
 import type { StringsMapper } from "@lionweb/ts-utils"
+import { writeJsonAsFileSync } from "@lionweb/node-utils"
 import { generatePlantUmlForLanguage, languageAsText } from "@lionweb/utilities"
+import { writeFileSync } from "node:fs"
 
 
 // configure a convenient factory for producing a Language:
@@ -113,7 +114,9 @@ factory.containment(TestPartition, "data").ofType(DataTypeTestConcept).isOptiona
 
 const testLanguage = factory.language
 const languagesPath = "../testLanguage"
-const jsonAsText = (json: unknown) => JSON.stringify(json, null, 2)
+const writeJsonAsFileWith2SpacesSync = (path: string, json: unknown) => {
+    writeJsonAsFileSync(path, json, 2)
+}
 
 
 // persist a textualization and a PlantUML graph of the language:
@@ -123,7 +126,7 @@ writeFileSync(`${languagesPath}/testLanguage.puml`, generatePlantUmlForLanguage(
 
 // serialize in 2023.1 format (and persist):
 const serializedTestLanguage = serializeLanguages(testLanguage)
-writeFileSync(`${languagesPath}/testLanguage.2023.1.json`, jsonAsText(serializedTestLanguage))
+writeJsonAsFileWith2SpacesSync(`${languagesPath}/testLanguage.2023.1.json`, serializedTestLanguage)
 
 // function to set all "version" fields in the given serialization chunk to the specified version:
 const setVersion = (chunkJson: LionWebJsonChunk, version: string) => {
@@ -151,13 +154,13 @@ serializedTestLanguage.nodes.forEach(({ references }) => {
         })
     })
 })
-writeFileSync(`${languagesPath}/testLanguage.2024.1.json`, jsonAsText(serializedTestLanguage))
+writeJsonAsFileWith2SpacesSync(`${languagesPath}/testLanguage.2024.1.json`, serializedTestLanguage)
 
 
 // modify version for 2026.1 version, and persist:
 setVersion(serializedTestLanguage, "2026.1")
 // Note: reference objects were already modified to comply with the specification in the previous step.
-writeFileSync(`${languagesPath}/testLanguage.2026.1.json`, jsonAsText(serializedTestLanguage))
+writeJsonAsFileWith2SpacesSync(`${languagesPath}/testLanguage.2026.1.json`, serializedTestLanguage)
 
 
 console.log(`Generated artifacts for test language.`)
