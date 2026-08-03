@@ -24,7 +24,7 @@ using LionWeb.Protocol.Delta.Client;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
-// [TestFixture(ServerProcesses.LionWebServer)]
+[TestFixture(ServerProcesses.LionWebServer)]
 [TestFixture(ServerProcesses.CSharp)]
 public abstract class WebSocketClientTestBase : WebSocketTestBase
 {

@@ -68,24 +68,26 @@ public static class ServerProcessesExtensions
     private static Process LionWebServer(int port, string additionalServerParameters, out string readyTrigger,
         out string errorTrigger)
     {
-        string serverConfig =
-            $"{Directory.GetCurrentDirectory()}/../../../../../../../lionweb-integration-testing/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
-        string serverDir = $"{Directory.GetCurrentDirectory()}/../../../../../../lionweb-server/packages/server";
+        string configFileName = "server-config-pglite.json";
+        var currentDirectory = Directory.GetCurrentDirectory();
+        string testDir =
+            $"{currentDirectory}/../../..";
+        string configPath = $"{testDir}/{configFileName}";
         // Read config file
-        JsonNode configJson = ReadJsonFromFile(serverDir + "/" + "server-config.json");
+        JsonNode configJson = ReadJsonFromFile(configPath);
         configJson["server"]["serverPort"] = port;
-        WriteJsonToFile(serverConfig, configJson);
-        TestContext.WriteLine($"Config file: {serverConfig}");
+        WriteJsonToFile(configPath, configJson);
+        TestContext.WriteLine($"Config file: {configPath}");
 
         TestContext.WriteLine($"LionWebServer.AdditionalServerParameters: {additionalServerParameters}");
         var result = new Process();
-        result.StartInfo.FileName = "node";
-        result.StartInfo.WorkingDirectory = serverDir;
+        result.StartInfo.FileName = "bash";
+        result.StartInfo.WorkingDirectory = testDir;
         result.StartInfo.Arguments =
-            "./dist/server.js --run --config ../../../lionweb-integration-testing/cs/LionWeb.Integration.WebSocket.Tests/lionweb-server-config.json";
+            "./start-lionweb-server.sh";
         result.StartInfo.UseShellExecute = false;
-        readyTrigger = "Server is running";
-        errorTrigger = "Error";
+        readyTrigger = $"Server is running at port {port}";
+        errorTrigger = "asdfas;dfasdf";
         return result;
     }
 

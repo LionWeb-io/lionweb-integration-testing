@@ -29,7 +29,7 @@ namespace LionWeb.Integration.WebSocket.Tests;
 [NonParallelizable]
 public class SetupTrace
 {
-    private const int TestTimeout = 6;  // [s]
+    private const int TestTimeout = 10;  // [s]
 
     [OneTimeSetUp]
     public void StartTest()

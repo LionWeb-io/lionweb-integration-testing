@@ -1,0 +1,42 @@
+{
+  "server": {
+    "serverPort": 40001,
+    "expectedToken": null
+  },
+  "startup": {
+    "createDatabase": "always",
+    "createRepositories": [
+      {
+        "name": "myRepo",
+        "create": "always",
+        "history": false,
+        "lionWebVersion": "2023.1"
+      }
+    ]
+  },
+  "logging": {
+    "bulk": "trace",
+    "request": "info",
+    "trace": "silent",
+    "database": "info",
+    "query": "info",
+    "express": "info",
+    "delta": "info",
+    "message": "silent"
+  },
+  "postgres": {
+    "database": {
+      "type": "pglite",
+      "host": "127.0.0.1",
+      "user": "postgres",
+      "db": "postgres",
+      "password": "lionweb",
+      "port": "45432",
+      "maintenanceDb": "postgres"
+    },
+    "certificates": {
+      "rootcert": null,
+      "rootcertcontent": null
+    }
+  }
+}

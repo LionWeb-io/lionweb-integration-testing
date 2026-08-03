@@ -37,7 +37,10 @@ public class PropertyClientTests(ServerProcesses serverProcess)
         bForest = new Forest();
         bClient = ConnectWebSocket(bForest, "B", RepositoryId).Result;
 
-        aParent = new("parent");
+        aParent = new("parent")
+        {
+            StringValue_0_1 = "init prop"
+        };
         aForest.AddPartitions([new TestPartition("partition"){Data = aParent}]);
         WaitForReceived();
         bParent = ((TestPartition)bForest.Partitions.First()).Data!;
@@ -50,8 +53,11 @@ public class PropertyClientTests(ServerProcesses serverProcess)
     [Test]
     public void AddProperty()
     {
-        aParent.StringValue_0_1 = "new property";
-        WaitForReceived();
+        aParent.StringValue_0_1 = "very new property";
+        // WaitForReceived();
+        Log("Before sleep");
+        Thread.Sleep(2000);
+        Log("After sleep");
 
         AssertEquals(aParent, bParent);
     }
