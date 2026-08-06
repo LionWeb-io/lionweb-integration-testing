@@ -93,17 +93,17 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     #region Move
 
     /// <summary>
-    /// Moves a child node within the same containment.
+    /// Moves a child node forward (positive offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveChildInSameContainment()
+    public void MoveChildInSameContainment_Forward()
     {
         var serverForest = CreateAndStartServer();
 
-        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
-            Tasks.MoveChildInSameContainment);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_0_n_Containment_0_n,
+            Tasks.MoveChildInSameContainment_Forward);
 
-        WaitForSent(5);
+        WaitForSent(6);
 
         var expected = new TestPartition("partition")
         {
@@ -112,7 +112,53 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
             [
                 new LinkTestConcept("link")
                 {
-                    Containment_0_n = [new LinkTestConcept("containment_0_n_child1"), new LinkTestConcept("containment_0_n_child0")],
+                    Containment_0_n =
+                    [
+                        new LinkTestConcept("containment_0_n_child1"),
+                        new LinkTestConcept(id: "containment_0_n_child0_deep")
+                        {
+                            Containment_0_n = [new LinkTestConcept(id: "containment_0_n_containment_0_n_child0")]
+                        },
+                        new LinkTestConcept("containment_0_n_child0"),
+                    ]
+                }
+            ]
+        };
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
+    /// Moves a child node backward (negative offset) within the same containment.
+    /// </summary>
+    [Test]
+    public void MoveChildInSameContainment_Backward()
+    {
+        var serverForest = CreateAndStartServer();
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_0_n_Containment_0_n
+            , Tasks.MoveChildInSameContainment_Backward
+        );
+
+        WaitForSent(6);
+
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_0_n =
+                    [
+                        new LinkTestConcept(id: "containment_0_n_child0_deep")
+                        {
+                            Containment_0_n = [new LinkTestConcept(id: "containment_0_n_containment_0_n_child0")]
+                        },
+                        new LinkTestConcept("containment_0_n_child0"),
+                        new LinkTestConcept("containment_0_n_child1"),
+                    ],
                 }
             ]
         };
@@ -230,7 +276,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
             [
                 new LinkTestConcept("link")
                 {
-                    Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
+                    Containment_0_n = [new LinkTestConcept("containment_0_n_child0_deep")],
                     Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0"), new LinkTestConcept("containment_1_n_child1")]
                 }
             ]
@@ -245,17 +291,17 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     #region Move and replace
 
     /// <summary>
-    /// Moves a child node within the same containment.
+    /// Moves and replaces a child node forward (positive offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildInSameContainment()
+    public void MoveAndReplaceChildInSameContainment_Forward()
     {
         var serverForest = CreateAndStartServer();
 
-        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
-            Tasks.MoveAndReplaceChildInSameContainment);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_0_n_Containment_0_n,
+            Tasks.MoveAndReplaceChildInSameContainment_Forward);
 
-        WaitForSent(5);
+        WaitForSent(6);
 
         var expected = new TestPartition("partition")
         {
@@ -264,7 +310,47 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
             [
                 new LinkTestConcept("link")
                 {
-                    Containment_0_n = [new LinkTestConcept("containment_0_n_child1")],
+                    Containment_0_n =
+                    [
+                        new LinkTestConcept("containment_0_n_child1"),
+                        new LinkTestConcept("containment_0_n_child0"),
+                    ]
+                }
+            ]
+        };
+
+        var serverPartition = (TestPartition)serverForest.Partitions.First();
+        AssertEquals(expected, serverPartition);
+    }
+
+    /// <summary>
+    /// Moves and replaces a child node backward (negative offset) within the same containment.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildInSameContainment_Backward()
+    {
+        var serverForest = CreateAndStartServer();
+
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_0_n_Containment_0_n,
+            Tasks.MoveAndReplaceChildInSameContainment_Backward);
+
+        WaitForSent(6);
+
+        var expected = new TestPartition("partition")
+        {
+            Data = new DataTypeTestConcept("data"),
+            Links =
+            [
+                new LinkTestConcept("link")
+                {
+                    Containment_0_n =
+                    [
+                        new LinkTestConcept(id: "containment_0_n_child0_deep")
+                        {
+                            Containment_0_n = [new LinkTestConcept(id: "containment_0_n_containment_0_n_child0")]
+                        },
+                        new LinkTestConcept("containment_0_n_child1"),
+                    ],
                 }
             ]
         };
@@ -384,7 +470,7 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
             [
                 new LinkTestConcept("link")
                 {
-                    Containment_0_n = [new LinkTestConcept("containment_0_n_child0")],
+                    Containment_0_n = [new LinkTestConcept("containment_0_n_child0_deep")],
                     Containment_1_n = [new LinkTestConcept("containment_1_n_child0"), new LinkTestConcept("containment_0_n_containment_0_n_child0")]
                 }
             ]

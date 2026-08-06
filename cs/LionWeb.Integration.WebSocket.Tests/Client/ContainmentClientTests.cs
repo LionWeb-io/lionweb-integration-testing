@@ -366,14 +366,73 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         AssertEquals(aPartition, bPartition);
         Assert.That(aPartition.Links[0].Containment_1.GetId(), Is.EqualTo("moved-child"));
     }
-
+    
     /// <summary>
-    /// Moves child within the same containment to a new index
+    /// Moves and replaces a child node backward (negative offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveChildInSameContainment()
+    public void MoveAndReplaceChildInSameContainment_Backward()
     {
-        aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_n=[new LinkTestConcept("child0"), new LinkTestConcept("child1")]}]);
+        aPartition.AddLinks([
+            new LinkTestConcept("parent")
+                { Containment_0_n = [
+                    new LinkTestConcept("childA"),
+                    new LinkTestConcept("childB"),
+                    new LinkTestConcept("childC")
+                ] }
+        ]);
+        WaitForReceived(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Links[0].Containment_0_n[0].ReplaceWith(bPartition.Links[0].Containment_0_n[^1]);
+        WaitForReceived();
+
+        AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_0_n[0].GetId(), Is.EqualTo("childC"));
+        Assert.That(aPartition.Links[0].Containment_0_n[1].GetId(), Is.EqualTo("childB"));
+    }
+
+    /// <summary>
+    /// Moves and replaces a child node forward (positive offset) within the same containment.
+    /// </summary>
+    [Test]
+    public void MoveAndReplaceChildInSameContainment_Forward()
+    {
+        aPartition.AddLinks([
+            new LinkTestConcept("parent")
+                { Containment_0_n = [
+                    new LinkTestConcept("childA"),
+                    new LinkTestConcept("childB"),
+                    new LinkTestConcept("childC")
+                ] }
+        ]);
+        WaitForReceived(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Links[0].Containment_0_n[^1].ReplaceWith(bPartition.Links[0].Containment_0_n[0]);
+        WaitForReceived();
+
+        AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_0_n[0].GetId(), Is.EqualTo("childB"));
+        Assert.That(aPartition.Links[0].Containment_0_n[1].GetId(), Is.EqualTo("childA"));
+    }
+
+    /// <summary>
+    /// Moves a child node backward (negative offset) within the same containment.
+    /// </summary>
+    [Test]
+    public void MoveChildInSameContainment_Backward()
+    {
+        aPartition.AddLinks([
+            new LinkTestConcept("parent")
+                { Containment_0_n = [
+                    new LinkTestConcept("childA"),
+                    new LinkTestConcept("childB"),
+                    new LinkTestConcept("childC")
+                ] }
+        ]);
         WaitForReceived(1);
 
         AssertEquals(aPartition, bPartition);
@@ -382,6 +441,35 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
         WaitForReceived();
 
         AssertEquals(aPartition, bPartition);
-        Assert.That(aPartition.Links[0].Containment_0_n[0].GetId(), Is.EqualTo("child1"));
+        Assert.That(aPartition.Links[0].Containment_0_n[0].GetId(), Is.EqualTo("childC"));
+        Assert.That(aPartition.Links[0].Containment_0_n[1].GetId(), Is.EqualTo("childA"));
+        Assert.That(aPartition.Links[0].Containment_0_n[2].GetId(), Is.EqualTo("childB"));
+    }
+
+    /// <summary>
+    /// Moves a child node forward (positive offset) within the same containment.
+    /// </summary>
+    [Test]
+    public void MoveChildInSameContainment_Forward()
+    {
+        aPartition.AddLinks([
+            new LinkTestConcept("parent")
+                { Containment_0_n = [
+                    new LinkTestConcept("childA"),
+                    new LinkTestConcept("childB"),
+                    new LinkTestConcept("childC")
+                ] }
+        ]);
+        WaitForReceived(1);
+
+        AssertEquals(aPartition, bPartition);
+
+        bPartition.Links[0].InsertContainment_0_n(2, [bPartition.Links[0].Containment_0_n.First()]);
+        WaitForReceived();
+
+        AssertEquals(aPartition, bPartition);
+        Assert.That(aPartition.Links[0].Containment_0_n[0].GetId(), Is.EqualTo("childB"));
+        Assert.That(aPartition.Links[0].Containment_0_n[1].GetId(), Is.EqualTo("childC"));
+        Assert.That(aPartition.Links[0].Containment_0_n[2].GetId(), Is.EqualTo("childA"));
     }
 }

@@ -71,12 +71,14 @@ export const recognizedTasks: Record<string, boolean> = {
     "AddContainment_0_n": true,
     "AddContainment_0_n_Containment_0_n": true,
     "AddContainment_1_n": true,
-    "MoveChildInSameContainment": true,
+    "MoveChildInSameContainment_Forward": true,
+    "MoveChildInSameContainment_Backward": true,
     "MoveChildFromOtherContainmentInSameParent_Single": true,
     "MoveChildFromOtherContainmentInSameParent_Multiple": true,
     "MoveChildFromOtherContainment_Single": true,
     "MoveChildFromOtherContainment_Multiple": true,
-    "MoveAndReplaceChildInSameContainment": true,
+    "MoveAndReplaceChildInSameContainment_Forward": true,
+    "MoveAndReplaceChildInSameContainment_Backward": true,
     "MoveAndReplaceChildFromOtherContainmentInSameParent_Single": true,
     "MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple": true,
     "MoveAndReplaceChildFromOtherContainment_Single": true,
@@ -274,7 +276,7 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
                 return waitForReceivedMessages(2)
 
             case "AddContainment_0_n_Containment_0_n": {
-                const outerChild = linkTestConcept("containment_0_n_child0")
+                const outerChild = linkTestConcept("containment_0_n_child0_deep")
                 outerChild.addContainment_0_n(linkTestConcept("containment_0_n_containment_0_n_child0"))
                 linkTestConcept().addContainment_0_n(outerChild)
                 return waitForReceivedMessages(1)
@@ -287,7 +289,14 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
 
             // {deltas} (containments.)move:
 
-            case "MoveChildInSameContainment": {
+            case "MoveChildInSameContainment_Forward": {
+                const indexLastChild = linkTestConcept().containment_0_n.length - 1
+                linkTestConcept().moveContainment_0_nOffsetBased(0, indexLastChild)   // -> index 0
+                // Note: this is effectively a move rather than an insert — hence the name of the task.
+                return waitForReceivedMessages(1)
+            }
+
+            case "MoveChildInSameContainment_Backward": {
                 const indexLastChild = linkTestConcept().containment_0_n.length - 1
                 linkTestConcept().moveContainment_0_nOffsetBased(indexLastChild, -indexLastChild)   // -> index 0
                 return waitForReceivedMessages(1)
@@ -311,7 +320,13 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
 
             // {deltas} (containments.)move+replace:
 
-            case "MoveAndReplaceChildInSameContainment": {
+            case "MoveAndReplaceChildInSameContainment_Forward": {
+                const indexLastChild = linkTestConcept().containment_0_n.length - 1
+                linkTestConcept().moveAndReplaceContainment_0_nOffsetBased(0, indexLastChild)
+                return waitForReceivedMessages(1)
+            }
+
+            case "MoveAndReplaceChildInSameContainment_Backward": {
                 const oldIndex = linkTestConcept().containment_0_n.length - 1
                 linkTestConcept().moveAndReplaceContainment_0_nOffsetBased(oldIndex, -oldIndex)
                 return waitForReceivedMessages(1)
