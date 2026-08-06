@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <LionWebCSharpVersion>0.6.0-RC.3</LionWebCSharpVersion>
+    <LionWebCSharpVersion>0.6.0-RC.4</LionWebCSharpVersion>
     <!-- Can be overwritten by environment variable LW_TS_VERSION -->
     <LW_TS_VERSION Condition="'$(LW_TS_VERSION)' == ''">0.10.0-beta.5</LW_TS_VERSION>
     <UseLionWebPackages>true</UseLionWebPackages>
