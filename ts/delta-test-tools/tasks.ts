@@ -292,7 +292,6 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
             case "MoveChildInSameContainment_Forward": {
                 const indexLastChild = linkTestConcept().containment_0_n.length - 1
                 linkTestConcept().moveContainment_0_nOffsetBased(0, indexLastChild)   // -> index 0
-                // Note: this is effectively a move rather than an insert — hence the name of the task.
                 return waitForReceivedMessages(1)
             }
 

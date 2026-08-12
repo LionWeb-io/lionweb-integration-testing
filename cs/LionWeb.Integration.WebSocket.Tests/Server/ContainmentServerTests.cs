@@ -100,8 +100,8 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     {
         var serverForest = CreateAndStartServer();
 
-        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_0_n_Containment_0_n,
-            Tasks.MoveChildInSameContainment_Forward);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
+         Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveChildInSameContainment_Forward);
 
         WaitForSent(6);
 
@@ -115,9 +115,9 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
                     Containment_0_n =
                     [
                         new LinkTestConcept("containment_0_n_child1"),
-                        new LinkTestConcept(id: "containment_0_n_child0_deep")
+                        new LinkTestConcept("containment_0_n_child0_deep")
                         {
-                            Containment_0_n = [new LinkTestConcept(id: "containment_0_n_containment_0_n_child0")]
+                            Containment_0_n = [new LinkTestConcept("containment_0_n_containment_0_n_child0")]
                         },
                         new LinkTestConcept("containment_0_n_child0"),
                     ]
@@ -152,9 +152,9 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
                 {
                     Containment_0_n =
                     [
-                        new LinkTestConcept(id: "containment_0_n_child0_deep")
+                        new LinkTestConcept("containment_0_n_child0_deep")
                         {
-                            Containment_0_n = [new LinkTestConcept(id: "containment_0_n_containment_0_n_child0")]
+                            Containment_0_n = [new LinkTestConcept("containment_0_n_containment_0_n_child0")]
                         },
                         new LinkTestConcept("containment_0_n_child0"),
                         new LinkTestConcept("containment_0_n_child1"),
@@ -345,9 +345,9 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
                 {
                     Containment_0_n =
                     [
-                        new LinkTestConcept(id: "containment_0_n_child0_deep")
+                        new LinkTestConcept("containment_0_n_child0_deep")
                         {
-                            Containment_0_n = [new LinkTestConcept(id: "containment_0_n_containment_0_n_child0")]
+                            Containment_0_n = [new LinkTestConcept("containment_0_n_containment_0_n_child0")]
                         },
                         new LinkTestConcept("containment_0_n_child1"),
                     ],
