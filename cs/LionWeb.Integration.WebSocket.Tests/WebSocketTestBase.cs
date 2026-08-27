@@ -19,7 +19,6 @@ using LionWeb.Core;
 using LionWeb.Core.M3;
 using LionWeb.Core.Utilities;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
-using NUnit.Framework.Legacy;
 
 namespace LionWeb.Integration.WebSocket.Tests;
 
@@ -29,7 +28,7 @@ public abstract class WebSocketTestBase
     public const RepositoryId RepositoryId = "myRepo";
     protected int Port => NextPort;
     private static int NextPort = 40000;
-    protected static readonly ExternalProcessRunner _externalProcessRunner = new();
+    protected static ExternalProcessRunner _externalProcessRunner;
 
     protected readonly LionWebVersions _lionWebVersion;
     protected readonly List<Language> _languages;
@@ -50,7 +49,10 @@ public abstract class WebSocketTestBase
     [SetUp]
     public void CleanOutLeftoverProcesses()
     {
-        _externalProcessRunner.StopAllProcesses();
+        if (_externalProcessRunner is {} e)
+            e.StopAllProcesses();
+
+        _externalProcessRunner = new();
     }
 
     [TearDown]
@@ -60,54 +62,13 @@ public abstract class WebSocketTestBase
         _externalProcessRunner.StopAllProcesses();
     }
 
-    protected void AssertEquals(INode? a, INode? b) =>
-        AssertEquals([a], [b]);
+    protected void AssertEquals(INode? expected, INode? actual) =>
+        AssertEquals([expected], [actual]);
 
-    protected void AssertEquals(IEnumerable<INode?> a, IEnumerable<INode?> b)
+    protected void AssertEquals(IEnumerable<INode?> expected, IEnumerable<INode?> actual)
     {
-        List<IDifference> differences = new IdenticalIdComparer(a.ToList(), b.ToList()).Compare().ToList();
+        List<IDifference> differences = new IdenticalIdComparer(expected.ToList(), actual.ToList()).Compare().ToList();
         Assert.That(differences.Count == 0,
-            differences.DescribeAll(new() { LeftDescription = "a", RightDescription = "b" }));
-    }
-}
-
-internal class IdenticalIdComparer : Comparer
-{
-    public IdenticalIdComparer(IList<INode?> left, IList<INode?> right) : base(left, right)
-    {
-    }
-
-    protected override List<IDifference> CompareNode(IReadableNode? leftOwner, IReadableNode? left, Link? containment, IReadableNode? rightOwner,
-        IReadableNode? right)
-    {
-        var result = base.CompareNode(leftOwner, left, containment, rightOwner, right);
-        if (left is not null && right is not null && left.GetId() != right.GetId())
-        {
-            result.Insert(0, new NodeIdDifference(left, right));
-        }
-        return result;
-    }
-}
-
-public record NodeIdDifference(IReadableNode Left, IReadableNode Right) : DifferenceBase
-{
-    protected override string Describe() => 
-        $"Node id: {LeftDescription()}: {Left.GetId()} {NC(Left)} vs. {RightDescription()}: {Right.GetId()} {NC(Right)}";
-}
-
-public class IdenticalIdComparerTests
-{
-    [Test]
-    public void Same()
-    {
-        var differences = new IdenticalIdComparer([new LinkTestConcept("a")], [new LinkTestConcept("a")]).Compare();
-        ClassicAssert.IsEmpty(differences);
-    }
-    
-    [Test]
-    public void Different()
-    {
-        var differences = new IdenticalIdComparer([new LinkTestConcept("a")], [new LinkTestConcept("b")]).Compare();
-        ClassicAssert.IsNotEmpty(differences);
+            differences.DescribeAll(new() { LeftDescription = "expected", RightDescription = "actual" }));
     }
 }
