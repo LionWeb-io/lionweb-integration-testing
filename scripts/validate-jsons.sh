@@ -4,6 +4,7 @@
 
 cd ts
 npm i
-./scripts/validate-all-jsons.ts
 cd ..
+
+./ts/scripts/validate-all-jsons.ts
 
