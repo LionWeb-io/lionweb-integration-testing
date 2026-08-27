@@ -159,6 +159,7 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
 
             case "AddPartition": {
                 const partition = lionWebClient.forest.createNode(testLanguageBase.TestPartition, "partition") as TestPartition
+                partition.name = "my test partition"
                 partition.data = lionWebClient.forest.createNode(testLanguageBase.DataTypeTestConcept, "data") as DataTypeTestConcept
                 partition.addLinks(lionWebClient.forest.createNode(testLanguageBase.LinkTestConcept, "link") as LinkTestConcept)
                 lionWebClient.addPartition(partition)
