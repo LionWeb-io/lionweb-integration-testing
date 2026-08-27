@@ -65,17 +65,17 @@ const validateJsonInPaths = (schemaPath: string, fileNameEnding: string, paths: 
 
 
 console.log(`validating delta JSON files against delta JSON Schema:`)
-validateJsonInPaths("../schemas/delta.schema.json", ".delta.json", ["../delta"])
+validateJsonInPaths("schemas/delta.schema.json", ".delta.json", ["delta"])
 console.log()
 
 console.log(`validating various serialization chunks against serialization JSON Schema:`)
 validateJsonInPaths(
-    "../schemas/serialization.schema.json",
+    "schemas/serialization.schema.json",
     ".json",
     [
-        "../testchanges/data",
-        "../testset/withoutLanguage/valid",
-        "../testset/withLanguage/valid"
+        "testchanges/data",
+        "testset/withoutLanguage/valid",
+        "testset/withLanguage/valid"
     ]
 )
 console.log()

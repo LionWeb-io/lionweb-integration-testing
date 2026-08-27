@@ -44,7 +44,7 @@ public static class TsClientProcessesExtensions
         process.StartInfo.WorkingDirectory =
             $"{Directory.GetCurrentDirectory()}/../../../../..";
         // cwd is assumed to be: <LionWeb dir.>/lionweb-integration-testing/cs/LionWeb.Integration.WebSocket.Tests/bin/Debug/net8.0
-        // (hence 5x ../)
+        // (hence 5x ../, leading to the repo’s root)
         process.StartInfo.Arguments = string.Join(" ", arguments);
         return process;
     }
