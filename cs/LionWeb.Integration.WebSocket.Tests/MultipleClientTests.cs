@@ -23,7 +23,6 @@ namespace LionWeb.Integration.WebSocket.Tests;
 [TestFixture(ClientProcesses.CSharp)]
 [TestFixture(ClientProcesses.Ts)]
 [TestFixture(ClientProcesses.Ts, ClientProcesses.CSharp)]
-[Ignore("Test if follow-up issue")]
 public class MultipleClientTests(params ClientProcesses[] clientProcesses) : WebSocketServerTestBase(clientProcesses)
 {
     [Test]
