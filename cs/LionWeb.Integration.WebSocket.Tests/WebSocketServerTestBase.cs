@@ -62,12 +62,6 @@ public abstract class WebSocketServerTestBase : WebSocketTestBase
         ClassicAssert.IsFalse(process.HasExited);
     }
 
-    [TearDown]
-    [OneTimeTearDown]
-    public void StopServer()
-    {
-    }
-
     protected void WaitForSent(int numberOfMessages = 1)
     {
         long messageCount = lionWebServer.WaitSentCount += numberOfMessages;
