@@ -122,10 +122,16 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
         return as(lionWebClient.forest.partitions[0], TestPartition, `partition at index 0 in forest is not a ${testLanguageBase.TestPartition.name} but a ${lionWebClient.forest.partitions[0].constructor.name}`)
     }
 
-    const linkTestConcept = (id?: LionWebId) =>
-        id === undefined
-            ? thePartition().links[0]   // ~ partition.Links[0] in C#
-            : lionWebClient.forest.createNode(testLanguageBase.LinkTestConcept, id) as LinkTestConcept
+    const linkTestConcept = (id?: LionWebId) => {
+        if (id === undefined) {
+            const nLinks = thePartition().links.length
+            if (nLinks !== 1) {
+                throw new Error(`${nLinks > 1 ? `${nLinks} links` : `no links`} added to the test partition (=root of forest) on LionWeb client with ID="${lionWebClient.clientId}" — expected exactly 1`)
+            }
+            return thePartition().links[0]  // ~ partition.Links[0] in C#
+        }
+        return lionWebClient.forest.createNode(testLanguageBase.LinkTestConcept, id) as LinkTestConcept
+    }
 
     const dataTypeTestConcept = () =>
         thePartition().data!   // ~ partition.Data in C#
