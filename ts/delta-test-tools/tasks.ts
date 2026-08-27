@@ -109,11 +109,16 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
         if (obj instanceof classConstructor) {
             return obj as T
         }
-        throw new Error(customErrorMessage ?? `object is not of class ${classConstructor.name}`)
+        throw new Error(customErrorMessage ?? `object is not of class ${classConstructor.name} but of class ${obj.constructor.name}`)
     }
 
-    const thePartition = () =>
-        as(lionWebClient.forest.partitions[0], TestPartition, `partition at index 0 in forest is not a ${testLanguageBase.TestPartition.name}`)
+    const thePartition = () => {
+        const nPartitions = lionWebClient.forest.partitions.length
+        if (nPartitions !== 1) {
+            throw new Error(`${nPartitions > 1 ? `${nPartitions} partitions` : `no partition`} added to the forest of LionWeb client with ID="${lionWebClient.clientId}" — expected exactly 1`)
+        }
+        return as(lionWebClient.forest.partitions[0], TestPartition, `partition at index 0 in forest is not a ${testLanguageBase.TestPartition.name} but a ${lionWebClient.forest.partitions[0].constructor.name}`)
+    }
 
     const linkTestConcept = (id?: LionWebId) =>
         id === undefined
@@ -285,7 +290,6 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
             case "MoveChildInSameContainment": {
                 const indexLastChild = linkTestConcept().containment_0_n.length - 1
                 linkTestConcept().moveContainment_0_nOffsetBased(indexLastChild, -indexLastChild)   // -> index 0
-                // Note: this is effectively a move rather than an insert — hence the name of the task.
                 return waitForReceivedMessages(1)
             }
 
