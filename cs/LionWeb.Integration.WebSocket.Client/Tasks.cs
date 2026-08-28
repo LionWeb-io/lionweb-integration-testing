@@ -197,7 +197,7 @@ public enum Tasks
     AddContainment_0_n,
 
     /// Adds
-    /// LinkTestConcept(id: "containment_0_n_child0") {
+    /// LinkTestConcept(id: "containment_0_n_child0_deep") {
     ///   Containment_0_n = [LinkTestConcept(id: "containment_0_n_containment_0_n_child0")]
     /// }
     /// to
@@ -215,10 +215,16 @@ public enum Tasks
     #region Move
 
     /// Moves
+    /// the first entry of partition.Links[0].Containment_0_n
+    /// to
+    /// the last entry of partition.Links[0].Containment_0_n
+    MoveChildInSameContainment_Forward,
+
+    /// Moves
     /// the last entry of partition.Links[0].Containment_0_n
     /// to
     /// the first entry of partition.Links[0].Containment_0_n
-    MoveChildInSameContainment,
+    MoveChildInSameContainment_Backward,
 
     /// Sets
     /// partition.Links[0].Containment_1
@@ -249,10 +255,16 @@ public enum Tasks
     #region Move and Replace
 
     /// Replaces
+    /// the last entry of partition.Links[0].Containment_0_n
+    /// with
+    /// the first entry of partition.Links[0].Containment_0_n
+    MoveAndReplaceChildInSameContainment_Forward,
+
+    /// Replaces
     /// the first entry of partition.Links[0].Containment_0_n
     /// with
     /// the last entry of partition.Links[0].Containment_0_n
-    MoveAndReplaceChildInSameContainment,
+    MoveAndReplaceChildInSameContainment_Backward,
 
     /// Replaces
     /// partition.Links[0].Containment_1

@@ -204,7 +204,7 @@ public class IntegrationWebSocketClient
                     break;
                 case Tasks.AddContainment_0_n_Containment_0_n:
                     partition.Links[0].AddContainment_0_n([
-                        new LinkTestConcept("containment_0_n_child0")
+                        new LinkTestConcept("containment_0_n_child0_deep")
                         {
                             Containment_0_n = [new LinkTestConcept("containment_0_n_containment_0_n_child0")]
                         }
@@ -220,7 +220,12 @@ public class IntegrationWebSocketClient
                 
                 #region Move
 
-                case Tasks.MoveChildInSameContainment:
+                case Tasks.MoveChildInSameContainment_Forward:
+                    partition.Links[0].InsertContainment_0_n(partition.Links[0].Containment_0_n.Count - 1, [partition.Links[0].Containment_0_n[0]]);
+                    // Note: this is effectively a move rather than an insert — hence the name of the task.
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case Tasks.MoveChildInSameContainment_Backward:
                     partition.Links[0].InsertContainment_0_n(0, [partition.Links[0].Containment_0_n[^1]]);
                     // Note: this is effectively a move rather than an insert — hence the name of the task.
                     lionWeb.WaitForReceived(1);
@@ -246,7 +251,11 @@ public class IntegrationWebSocketClient
 
                 #region Move and Replace
 
-                case Tasks.MoveAndReplaceChildInSameContainment:
+                case Tasks.MoveAndReplaceChildInSameContainment_Forward:
+                    partition.Links[0].Containment_0_n[^1].ReplaceWith(partition.Links[0].Containment_0_n[0]);
+                    lionWeb.WaitForReceived(1);
+                    break;
+                case Tasks.MoveAndReplaceChildInSameContainment_Backward:
                     partition.Links[0].Containment_0_n[0].ReplaceWith(partition.Links[0].Containment_0_n[^1]);
                     lionWeb.WaitForReceived(1);
                     break;
