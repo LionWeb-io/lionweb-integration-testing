@@ -20,6 +20,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [
@@ -50,6 +51,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [
@@ -79,6 +81,7 @@ public class ReferenceServerTests(params ClientProcesses[] clientProcesses) : We
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [

@@ -19,6 +19,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data")
             {
                 StringValue_0_1 = "new property"
@@ -47,6 +48,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data")
             {
                 StringValue_0_1 = "changed property"
@@ -77,6 +79,7 @@ public class PropertyServerTests(params ClientProcesses[] clientProcesses) : Web
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data")
             {
                 StringValue_0_1 = null

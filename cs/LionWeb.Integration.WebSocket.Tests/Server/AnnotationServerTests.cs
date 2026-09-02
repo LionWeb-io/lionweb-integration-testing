@@ -20,6 +20,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [
@@ -47,6 +48,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [
@@ -74,6 +76,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [
@@ -106,6 +109,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         var expected = new TestPartition("partition")
             {
+                Name = "my test partition",
                 Data = new DataTypeTestConcept("data"),
                 Links =
                 [
@@ -136,6 +140,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [
@@ -162,6 +167,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [
@@ -187,6 +193,7 @@ public class AnnotationServerTests(params ClientProcesses[] clientProcesses) : W
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [

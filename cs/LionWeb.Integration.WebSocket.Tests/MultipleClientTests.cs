@@ -51,6 +51,7 @@ public class MultipleClientTests(params ClientProcesses[] clientProcesses) : Web
 
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [
@@ -81,6 +82,7 @@ public class MultipleClientTests(params ClientProcesses[] clientProcesses) : Web
         
         var expected = new TestPartition("partition")
         {
+            Name = "my test partition",
             Data = new DataTypeTestConcept("data"),
             Links =
             [

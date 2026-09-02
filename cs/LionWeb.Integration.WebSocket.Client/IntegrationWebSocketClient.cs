@@ -21,7 +21,6 @@ using LionWeb.Core.M1;
 using LionWeb.Core.M3;
 using LionWeb.Integration.Languages.Generated.V2023_1.TestLanguage.M2;
 using LionWeb.Protocol.Delta.Client;
-using LionWeb.WebSocket;
 
 namespace LionWeb.Integration.WebSocket.Client;
 
@@ -77,6 +76,7 @@ public class IntegrationWebSocketClient
                 case Tasks.AddPartition:
                     forest.AddPartitions([new TestPartition("partition")
                     {
+                        Name = "my test partition",
                         Data = new DataTypeTestConcept("data"),
                         Links =
                         [
