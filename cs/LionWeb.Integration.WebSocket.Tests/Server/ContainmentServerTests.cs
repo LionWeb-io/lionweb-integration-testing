@@ -99,12 +99,12 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves a child node forward (positive offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveChildInSameContainment_Forward()
+    public void MoveChildInSameContainmentInSameParent_Forward()
     {
         var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n,
-         Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveChildInSameContainment_Forward);
+         Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveChildInSameContainmentInSameParent_Forward);
 
         WaitForSent(6);
 
@@ -137,12 +137,12 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves a child node backward (negative offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveChildInSameContainment_Backward()
+    public void MoveChildInSameContainmentInSameParent_Backward()
     {
         var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_0_n_Containment_0_n
-            , Tasks.MoveChildInSameContainment_Backward
+            , Tasks.MoveChildInSameContainmentInSameParent_Backward
         );
 
         WaitForSent(6);
@@ -236,12 +236,12 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves a child node from a single containment to another. Both containments have different parents.
     /// </summary>
     [Test]
-    public void MoveChildFromOtherContainment_Single()
+    public void MoveChildFromContainmentInOtherParent_Single()
     {
         var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
-            Tasks.MoveChildFromOtherContainment_Single);
+            Tasks.MoveChildFromContainmentInOtherParent_Single);
 
         WaitForSent(5);
 
@@ -268,12 +268,12 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves a child node from a multiple containment to another. Both containments have different parents.
     /// </summary>
     [Test]
-    public void MoveChildFromOtherContainment_Multiple()
+    public void MoveChildFromContainmentInOtherParent_Multiple()
     {
         var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n,
-            Tasks.MoveChildFromOtherContainment_Multiple);
+            Tasks.MoveChildFromContainmentInOtherParent_Multiple);
 
         WaitForSent(6);
 
@@ -303,12 +303,12 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node forward (positive offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildInSameContainment_Forward()
+    public void MoveAndReplaceChildInSameContainmentInSameParent_Forward()
     {
         var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_0_n_Containment_0_n,
-            Tasks.MoveAndReplaceChildInSameContainment_Forward);
+            Tasks.MoveAndReplaceChildInSameContainmentInSameParent_Forward);
 
         WaitForSent(6);
 
@@ -337,12 +337,12 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node backward (negative offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildInSameContainment_Backward()
+    public void MoveAndReplaceChildInSameContainmentInSameParent_Backward()
     {
         var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_n, Tasks.AddContainment_0_n_Containment_0_n,
-            Tasks.MoveAndReplaceChildInSameContainment_Backward);
+            Tasks.MoveAndReplaceChildInSameContainmentInSameParent_Backward);
 
         WaitForSent(6);
 
@@ -435,12 +435,12 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node from a single containment to another. Both containments have different parents.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildFromOtherContainment_Single()
+    public void MoveAndReplaceChildFromContainmentInOtherParent_Single()
     {
         var serverForest = CreateAndStartServer();
 
         StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_0_1, Tasks.AddContainment_0_1_Containment_0_1,
-            Tasks.AddContainment_1, Tasks.AddContainment_1_Containment_0_1, Tasks.MoveAndReplaceChildFromOtherContainment_Single);
+            Tasks.AddContainment_1, Tasks.AddContainment_1_Containment_0_1, Tasks.MoveAndReplaceChildFromContainmentInOtherParent_Single);
 
         WaitForSent(7);
 
@@ -469,11 +469,11 @@ public class ContainmentServerTests(params ClientProcesses[] clientProcesses) : 
     /// Moves and replaces a child node from a multiple containment to another. Both containments have different parents.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildFromOtherContainment_Multiple()
+    public void MoveAndReplaceChildFromContainmentInOtherParent_Multiple()
     {
         var serverForest = CreateAndStartServer();
 
-        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromOtherContainment_Multiple);
+        StartClient("A", Tasks.SignOn, Tasks.AddPartition, Tasks.AddContainment_1_n, Tasks.AddContainment_0_n_Containment_0_n, Tasks.MoveAndReplaceChildFromContainmentInOtherParent_Multiple);
 
         WaitForSent(6);
 

@@ -189,7 +189,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Move a child node from a single containment to another. Both containments have different parents.
     /// </summary>
     [Test]
-    public void MoveChildFromOtherContainment_Single()
+    public void MoveChildFromContainmentInOtherParent_Single()
     {
         aPartition.AddLinks([new LinkTestConcept("parent") { Containment_0_1 = new LinkTestConcept("subHost") { Containment_0_1 = new LinkTestConcept("child") }}]);
         WaitForReceived();
@@ -207,7 +207,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Move a child node from a multiple containment to another.  Both containments have different parents.
     /// </summary>
     [Test]
-    public void MoveChildFromOtherContainment_Multiple()
+    public void MoveChildFromContainmentInOtherParent_Multiple()
     {
         aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_n = [new LinkTestConcept("child0") { Containment_0_n = [new LinkTestConcept("moved")] }]}]);
 
@@ -231,7 +231,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildFromOtherContainment_Single_WithAssignment()
+    public void MoveAndReplaceChildFromContainmentInOtherParent_Single_WithAssignment()
     {
         aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_1 =  new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") }}]);
         WaitForReceived(1);
@@ -254,7 +254,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from a single containment to other single containment (which has another parent) and replaces the existing child.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildFromOtherContainment_Single_WithReplaceWith()
+    public void MoveAndReplaceChildFromContainmentInOtherParent_Single_WithReplaceWith()
     {
         aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_1 = new LinkTestConcept("moved-subHost") { Containment_0_1 = new LinkTestConcept("moved-child") }}]);
         WaitForReceived(1);
@@ -301,7 +301,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child from a multiple containment to other multiple containment and replaces the existing child. Both containments have different parents.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildFromOtherContainment_Multiple()
+    public void MoveAndReplaceChildFromContainmentInOtherParent_Multiple()
     {
         //todo: MoveChildFromContainmentInOtherParent and DeleteChild commands are triggered
         aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_n = [new LinkTestConcept("child0"), new LinkTestConcept("moved")]}]);
@@ -371,7 +371,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves and replaces a child node backward (negative offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildInSameContainment_Backward()
+    public void MoveAndReplaceChildInSameContainmentInSameParent_Backward()
     {
         aPartition.AddLinks([
             new LinkTestConcept("parent")
@@ -397,7 +397,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves and replaces a child node forward (positive offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveAndReplaceChildInSameContainment_Forward()
+    public void MoveAndReplaceChildInSameContainmentInSameParent_Forward()
     {
         aPartition.AddLinks([
             new LinkTestConcept("parent")
@@ -423,7 +423,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child node backward (negative offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveChildInSameContainment_Backward()
+    public void MoveChildInSameContainmentInSameParent_Backward()
     {
         aPartition.AddLinks([
             new LinkTestConcept("parent")
@@ -450,7 +450,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     /// Moves a child node forward (positive offset) within the same containment.
     /// </summary>
     [Test]
-    public void MoveChildInSameContainment_Forward()
+    public void MoveChildInSameContainmentInSameParent_Forward()
     {
         aPartition.AddLinks([
             new LinkTestConcept("parent")
