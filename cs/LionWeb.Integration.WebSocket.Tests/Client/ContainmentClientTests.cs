@@ -303,7 +303,7 @@ public class ContainmentClientTests(ServerProcesses serverProcess) : LinkClientT
     [Test]
     public void MoveAndReplaceChildFromOtherContainment_Multiple()
     {
-        //todo: MoveChildFromOtherContainment and DeleteChild commands are triggered
+        //todo: MoveChildFromContainmentInOtherParent and DeleteChild commands are triggered
         aPartition.AddLinks([new LinkTestConcept("parent"){ Containment_0_n = [new LinkTestConcept("child0"), new LinkTestConcept("moved")]}]);
         WaitForReceived(1);
 
