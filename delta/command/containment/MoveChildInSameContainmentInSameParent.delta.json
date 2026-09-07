@@ -1,14 +1,13 @@
 {
-  "messageKind": "MoveAndReplaceChildInSameContainment",
-  "parent": "parentNodeId",
+  "messageKind": "MoveChildInSameContainmentInSameParent",
+  "parent": "parentId",
   "containment": {
     "language": "MyLang",
     "version": "4",
     "key": "MyContainment"
   },
   "oldIndex": 0,
-  "indexOffset": 4,
-  "replacedChild": "replacedNodeId",
+  "indexOffset": 3,
   "movedChild": "otherNodeId",
   "commandId": "cmdId",
   "additionalInfos": [

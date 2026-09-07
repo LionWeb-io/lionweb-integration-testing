@@ -1,5 +1,5 @@
 {
-  "messageKind": "ChildMovedAndReplacedInSameContainment",
+  "messageKind": "ChildMovedAndReplacedInSameContainmentInSameParent",
   "movedChild": "movedNodeId",
   "parent": "nodeId",
   "containment": {

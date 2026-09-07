@@ -1,24 +1,14 @@
 {
-  "messageKind": "ChildMovedAndReplacedFromOtherContainment",
-  "newParent": "nodeId",
-  "newContainment": {
-    "language": "MyLang",
-    "version": "4",
-    "key": "MyNewContainment"
-  },
-  "newIndex": 3,
+  "messageKind": "ChildMovedInSameContainmentInSameParent",
   "movedChild": "movedNodeId",
-  "oldParent": "oldNodeId",
-  "oldContainment": {
+  "parent": "nodeId",
+  "containment": {
     "language": "MyLang",
     "version": "4",
-    "key": "MyOldContainment"
+    "key": "MyContainment"
   },
   "oldIndex": 55,
-  "replacedChild": "a",
-  "replacedDescendants": [
-    "b"
-  ],
+  "indexOffset": -52,
   "originCommands": [
     {
       "participationId": "partId",

@@ -1,5 +1,5 @@
 {
-  "messageKind": "ChildMovedFromOtherContainment",
+  "messageKind": "ChildMovedAndReplacedFromContainmentInOtherParent",
   "newParent": "nodeId",
   "newContainment": {
     "language": "MyLang",
@@ -15,6 +15,10 @@
     "key": "MyOldContainment"
   },
   "oldIndex": 55,
+  "replacedChild": "a",
+  "replacedDescendants": [
+    "b"
+  ],
   "originCommands": [
     {
       "participationId": "partId",

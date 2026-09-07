@@ -218,13 +218,13 @@ public enum Tasks
     /// the first entry of partition.Links[0].Containment_0_n
     /// to
     /// the last entry of partition.Links[0].Containment_0_n
-    MoveChildInSameContainment_Forward,
+    MoveChildInSameContainmentInSameParent_Forward,
 
     /// Moves
     /// the last entry of partition.Links[0].Containment_0_n
     /// to
     /// the first entry of partition.Links[0].Containment_0_n
-    MoveChildInSameContainment_Backward,
+    MoveChildInSameContainmentInSameParent_Backward,
 
     /// Sets
     /// partition.Links[0].Containment_1
@@ -242,13 +242,13 @@ public enum Tasks
     /// partition.Links[0].Containment_1
     /// to
     /// partition.Links[0].Containment_0_1!.Containment_0_1
-    MoveChildFromOtherContainment_Single,
+    MoveChildFromContainmentInOtherParent_Single,
 
     /// Moves
     /// the first entry of Containment_0_n of the last entry of partition.Links[0].Containment_0_n
     /// to
     /// the second entry of partition.Links[0].Containment_1_n
-    MoveChildFromOtherContainment_Multiple,
+    MoveChildFromContainmentInOtherParent_Multiple,
 
     #endregion
 
@@ -258,13 +258,13 @@ public enum Tasks
     /// the last entry of partition.Links[0].Containment_0_n
     /// with
     /// the first entry of partition.Links[0].Containment_0_n
-    MoveAndReplaceChildInSameContainment_Forward,
+    MoveAndReplaceChildInSameContainmentInSameParent_Forward,
 
     /// Replaces
     /// the first entry of partition.Links[0].Containment_0_n
     /// with
     /// the last entry of partition.Links[0].Containment_0_n
-    MoveAndReplaceChildInSameContainment_Backward,
+    MoveAndReplaceChildInSameContainmentInSameParent_Backward,
 
     /// Replaces
     /// partition.Links[0].Containment_1
@@ -282,13 +282,13 @@ public enum Tasks
     /// partition.Links[0].Containment_1.Containment_0_1
     /// with
     /// partition.Links[0].Containment_0_1.Containment_0_1
-    MoveAndReplaceChildFromOtherContainment_Single,
+    MoveAndReplaceChildFromContainmentInOtherParent_Single,
 
     /// Replaces
     /// the last entry of partition.Links[0].Containment_1_n
     /// with
     /// the last entry of Containment_0_n of the last entry of partition.Links[0].Containment_0_n 
-    MoveAndReplaceChildFromOtherContainment_Multiple
+    MoveAndReplaceChildFromContainmentInOtherParent_Multiple
 
     #endregion
 

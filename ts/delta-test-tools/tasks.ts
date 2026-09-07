@@ -71,18 +71,18 @@ export const recognizedTasks: Record<string, boolean> = {
     "AddContainment_0_n": true,
     "AddContainment_0_n_Containment_0_n": true,
     "AddContainment_1_n": true,
-    "MoveChildInSameContainment_Forward": true,
-    "MoveChildInSameContainment_Backward": true,
+    "MoveChildInSameContainmentInSameParent_Forward": true,
+    "MoveChildInSameContainmentInSameParent_Backward": true,
     "MoveChildFromOtherContainmentInSameParent_Single": true,
     "MoveChildFromOtherContainmentInSameParent_Multiple": true,
-    "MoveChildFromOtherContainment_Single": true,
-    "MoveChildFromOtherContainment_Multiple": true,
-    "MoveAndReplaceChildInSameContainment_Forward": true,
-    "MoveAndReplaceChildInSameContainment_Backward": true,
+    "MoveChildFromContainmentInOtherParent_Single": true,
+    "MoveChildFromContainmentInOtherParent_Multiple": true,
+    "MoveAndReplaceChildInSameContainmentInSameParent_Forward": true,
+    "MoveAndReplaceChildInSameContainmentInSameParent_Backward": true,
     "MoveAndReplaceChildFromOtherContainmentInSameParent_Single": true,
     "MoveAndReplaceChildFromOtherContainmentInSameParent_Multiple": true,
-    "MoveAndReplaceChildFromOtherContainment_Single": true,
-    "MoveAndReplaceChildFromOtherContainment_Multiple": true,
+    "MoveAndReplaceChildFromContainmentInOtherParent_Single": true,
+    "MoveAndReplaceChildFromContainmentInOtherParent_Multiple": true,
     "TryToWriteProtocolLog": true
 }
 
@@ -296,13 +296,13 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
 
             // {deltas} (containments.)move:
 
-            case "MoveChildInSameContainment_Forward": {
+            case "MoveChildInSameContainmentInSameParent_Forward": {
                 const indexLastChild = linkTestConcept().containment_0_n.length - 1
                 linkTestConcept().moveContainment_0_nOffsetBased(0, indexLastChild)   // -> index ^1
                 return waitForReceivedMessages(1)
             }
 
-            case "MoveChildInSameContainment_Backward": {
+            case "MoveChildInSameContainmentInSameParent_Backward": {
                 const indexLastChild = linkTestConcept().containment_0_n.length - 1
                 linkTestConcept().moveContainment_0_nOffsetBased(indexLastChild, -indexLastChild)   // -> index 0
                 return waitForReceivedMessages(1)
@@ -316,23 +316,23 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
                 linkTestConcept().addContainment_1_nAtIndex(lastOfArray(linkTestConcept().containment_0_n), 1)
                 return waitForReceivedMessages(1)
 
-            case "MoveChildFromOtherContainment_Single":
+            case "MoveChildFromContainmentInOtherParent_Single":
                 linkTestConcept().containment_1 = linkTestConcept().containment_0_1!.containment_0_1!
                 return waitForReceivedMessages(1)
 
-            case "MoveChildFromOtherContainment_Multiple":
+            case "MoveChildFromContainmentInOtherParent_Multiple":
                 linkTestConcept().addContainment_1_nAtIndex(lastOfArray(linkTestConcept().containment_0_n).containment_0_n[0], 1)
                 return waitForReceivedMessages(1)
 
             // {deltas} (containments.)move+replace:
 
-            case "MoveAndReplaceChildInSameContainment_Forward": {
+            case "MoveAndReplaceChildInSameContainmentInSameParent_Forward": {
                 const indexLastChild = linkTestConcept().containment_0_n.length - 1
                 linkTestConcept().moveAndReplaceContainment_0_nOffsetBased(0, indexLastChild)
                 return waitForReceivedMessages(1)
             }
 
-            case "MoveAndReplaceChildInSameContainment_Backward": {
+            case "MoveAndReplaceChildInSameContainmentInSameParent_Backward": {
                 const oldIndex = linkTestConcept().containment_0_n.length - 1
                 linkTestConcept().moveAndReplaceContainment_0_nOffsetBased(oldIndex, -oldIndex)
                 return waitForReceivedMessages(1)
@@ -346,11 +346,11 @@ export const taskExecutor = (lionWebClient: LionWebClient, semanticLogItems: ISe
                 linkTestConcept().replaceContainment_1_nAtIndex(lastOfArray(linkTestConcept().containment_0_n), 1)
                 return waitForReceivedMessages(1)
 
-            case "MoveAndReplaceChildFromOtherContainment_Single":
+            case "MoveAndReplaceChildFromContainmentInOtherParent_Single":
                 linkTestConcept().containment_1.replaceContainment_0_1With(linkTestConcept().containment_0_1!.containment_0_1!)
                 return waitForReceivedMessages(1)
 
-            case "MoveAndReplaceChildFromOtherContainment_Multiple":
+            case "MoveAndReplaceChildFromContainmentInOtherParent_Multiple":
                 if (linkTestConcept().containment_1_n.length === 0) {
                     throw new Error(`can't replace an item of an array with no items`)
                 }
