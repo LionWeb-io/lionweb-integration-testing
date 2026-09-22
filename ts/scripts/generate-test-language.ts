@@ -48,11 +48,11 @@ const TestEnumeration = generateTestEnumeration("TestEnumeration")
 generateTestEnumeration("SecondTestEnumeration")
 
 
-const builtinPrimitives = LionWebVersions.v2023_1.builtinsFacade.primitiveTypes
-const builtinClassifiers = LionWebVersions.v2023_1.builtinsFacade.classifiers
+const { builtinsFacade } = LionWebVersions.v2023_1
+const { primitiveTypes: builtinPrimitives, classifiers: builtinClassifiers } = builtinsFacade
 
 // generate a `DataTypeTestConcept` concept with boolean-, integer-, string-, and TestEnumeration-typed properties, both required and optional:
-const {booleanDataType, integerDataType, stringDataType} = builtinPrimitives
+const { booleanDataType, integerDataType, stringDataType } = builtinPrimitives
 const DataTypeTestConcept = factory.concept("DataTypeTestConcept", false)
 const namedDataTypes: Record<string, DataType> = {
     "boolean": booleanDataType,
@@ -73,7 +73,7 @@ const namedDataTypes: Record<string, DataType> = {
 
 
 // generate a `LinkTestConcept` concept with containments and references in all cardinalities:
-const LinkTestConcept = factory.concept("LinkTestConcept", false).implementing(LionWebVersions.v2023_1.builtinsFacade.classifiers.inamed)
+const LinkTestConcept = factory.concept("LinkTestConcept", false).implementing(builtinClassifiers.inamed)
 type LinkType = "containment" | "reference"
 const linkTypes: LinkType[] = ["containment", "reference"]
 linkTypes.forEach((linkType) => {
