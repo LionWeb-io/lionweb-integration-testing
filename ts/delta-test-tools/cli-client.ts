@@ -95,7 +95,9 @@ await runAsApp(async () => {
         repositoryId: "myRepo",
         clientId,
         url,
-        languageBases,
+        serializationConfiguration: {
+            languageBases
+        },
         semanticLogger: combine(semanticConsoleLogger, storingLogger),
         lowLevelClientInstantiator: async (lowLevelClientParameters) =>
             await createWSLowLevelClient(
