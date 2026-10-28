@@ -4,7 +4,7 @@ export const { deepEqual } = assert
 import { create as ansiColors } from "ansi-colors"
 const { green, red} = ansiColors()
 
-import { deserializeLanguages, LionWebVersions } from "@lionweb/core"
+import { deserializeLanguagesFrom, LionWebVersions } from "@lionweb/core"
 import type { LionWebJsonChunk } from "@lionweb/json"
 import { getFromHttps } from "@lionweb/node-utils"
 import { sortedSerializationChunk } from "@lionweb/utilities"
@@ -23,7 +23,7 @@ describe("M3 instances", () => {
     }
 
     const javaSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/lionweb-jvm/refs/heads/main/core/src/test/resources/serialization/lioncore.json"
-    const tsSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/lionweb-typescript/refs/heads/develop/packages/build/artifacts/core/v2023_1/lioncore.json"
+    const tsSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/lionweb-typescript/refs/heads/develop/packages/build/artifacts/core/2023.1/lioncore.json"
     const specSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/2023.1/metametamodel/lioncore.json"
 
     const getJsonFromHttps = async (url: string) =>
@@ -42,7 +42,7 @@ describe("M3 instances", () => {
     }
 
     it("check whether Java serialization of LionCore/M3 deserializes in TypeScript impl. (no assertions)", async () => {
-        /* const deserializationJava = */ deserializeLanguages((await chunks()).javaSerialization)
+        /* const deserializationJava = */ deserializeLanguagesFrom({ serializationChunk: (await chunks()).javaSerialization })
     })
 
     it(`check whether Java (=${red("Actual")}/left, URL=${javaSerializationUrl}) and TypeScript (=${green("Expected")}/right, URL=${tsSerializationUrl}) serialization of LionCore/M3 match`, async () => {
