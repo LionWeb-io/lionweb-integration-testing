@@ -23,7 +23,7 @@ describe("M3 instances", () => {
     }
 
     const javaSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/lionweb-jvm/refs/heads/main/core/src/test/resources/serialization/lioncore.json"
-    const tsSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/lionweb-typescript/refs/heads/develop/packages/build/artifacts/core/v2023_1/lioncore.json"
+    const tsSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/lionweb-typescript/refs/heads/develop/packages/build/artifacts/core/2023.1/lioncore.json"
     const specSerializationUrl = "https://raw.githubusercontent.com/LionWeb-io/specification/refs/heads/main/2023.1/metametamodel/lioncore.json"
 
     const getJsonFromHttps = async (url: string) =>
